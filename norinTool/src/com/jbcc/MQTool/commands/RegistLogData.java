@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.jbcc.MQTool.controller.ToolCommand;
+import com.jbcc.MQTool.controller.ToolException;
 import com.jbcc.MQTool.util.Utility;
 
 /**
@@ -17,7 +18,7 @@ import com.jbcc.MQTool.util.Utility;
 public class RegistLogData extends ToolCommand {
 
 	@Override
-	public int execute(String[] args) throws Exception {
+	public void execute(String[] args) throws Exception {
 
 		// insert update なので merge文
 		String sql = RESOURCE.getSql("ResistLogData1");
@@ -42,8 +43,9 @@ public class RegistLogData extends ToolCommand {
 		int counts = RESOURCE.updateDB(
 				MessageFormat.format(sql, updateQuery, insertQuery),
 				values.toArray());
-
-		return counts;
+		if (counts == 0) {
+			throw new ToolException("一行も追加、更新されませんでした");
+		}
 	}
 
 	private String insertQuery(Map<String, String> args) {

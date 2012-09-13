@@ -37,7 +37,7 @@ public class EntryPoint {
 			ToolCommand cmd = getCommand(commandName);
 			cmd.setDbManager(rcmng);
 
-			result = cmd.execute(args);
+			cmd.execute(args);
 
 		} catch (ToolException te) {
 
