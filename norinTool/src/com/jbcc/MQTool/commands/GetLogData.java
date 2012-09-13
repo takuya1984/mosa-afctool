@@ -86,8 +86,10 @@ public class GetLogData extends ToolCommand {
 			output.append("\n");
 
 		}
+
 		StdOut.write(output.toString());
 		return 0;
+
 	}
 
 }

@@ -66,11 +66,7 @@ public class EntryPoint {
 		} finally {
 
 			// リソースを開放
-			try {
-				rcmng.commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			rcmng.release();
 		}
 
 		System.exit(result);
