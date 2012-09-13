@@ -24,7 +24,7 @@ public class GetLogData extends ToolCommand {
 			"TRANSACTION_NUMBER", "LOG_TABLE_NAME", "LOG_DATE_NAME" };
 
 	@Override
-	public int execute(String[] args) throws Exception {
+	public void execute(String[] args) throws Exception {
 
 		// insert update ‚È‚Ì‚Å merge•¶
 		String sql = RESOURCE.getSql("GetLogList1");
@@ -86,8 +86,9 @@ public class GetLogData extends ToolCommand {
 			output.append("\n");
 
 		}
+
 		StdOut.write(output.toString());
-		return 0;
+
 	}
 
 }

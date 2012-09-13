@@ -18,7 +18,7 @@ import com.jbcc.MQTool.util.Utility;
 public class GetLogList extends ToolCommand {
 
 	@Override
-	public int execute(String[] args) throws Exception {
+	public void execute(String[] args) throws Exception {
 
 		// insert update ‚È‚Ì‚Å merge•¶
 		String sql = RESOURCE.getSql("GetLogList1");
@@ -65,7 +65,6 @@ public class GetLogList extends ToolCommand {
 
 		}
 		StdOut.write(output.toString());
-		return 0;
 	}
 
 }

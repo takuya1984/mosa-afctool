@@ -1,11 +1,17 @@
 package com.jbcc.MQTool.controller;
 
+import java.io.Closeable;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +25,65 @@ public class ResourceManager {
 	private final String CONNECTION_PROPERTY_NAME = "connection.properties";
 
 	ResourceManager() {
-		// TODO Auto-generated constructor stub
+		// パッケージ外でnew禁止
 	}
 
 	private Connection con;
+	private List<Closeable> streams = new ArrayList<Closeable>();
+
+	/**
+	 * ファイルstreamとDB接続を開放する
+	 */
+	void release() {
+
+		// ファイルの開放
+		for (Closeable stream : streams) {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// DBコネクションの開放
+		try {
+			if (con != null) {
+				con.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * FileInputStreamを取得する プロセス終了時に開放される
+	 * 
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
+	public InputStream getInputStream(String path) throws Exception {
+
+		InputStream stm = new FileInputStream(path);
+		streams.add(stm);
+		return stm;
+
+	}
+
+	/**
+	 * FileOutputStreamを取得する プロセス終了時に開放される
+	 * 
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
+	public OutputStream getOutputStream(String path) throws Exception {
+
+		OutputStream stm = new FileOutputStream(path);
+		streams.add(stm);
+		return stm;
+
+	}
 
 	/**
 	 * selectの実行

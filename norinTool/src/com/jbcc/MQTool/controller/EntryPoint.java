@@ -37,7 +37,7 @@ public class EntryPoint {
 			ToolCommand cmd = getCommand(commandName);
 			cmd.setDbManager(rcmng);
 
-			result = cmd.execute(args);
+			cmd.execute(args);
 
 		} catch (ToolException te) {
 
@@ -66,11 +66,7 @@ public class EntryPoint {
 		} finally {
 
 			// リソースを開放
-			try {
-				rcmng.commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			rcmng.release();
 		}
 
 		System.exit(result);
