@@ -15,7 +15,7 @@ COM="",ERR="",ONL="",CSS="";
 
 for file in $(ls ${CLIENT_LOG_DIR})
 do
-	LOG_CD="",LOG_OUTPUT_DATE="",UPDW_FLG="",CL_CD="",OPE_CD="",DENBUN_CD="",CLIENT_SERIAL_NUMBER="",CONTINUE_DENBUN_FLG="",TRANSACTION_NUMBER=""
+	LOG_CD="";LOG_OUTPUT_DATE="";UPDW_FLG="";CL_CD="";OPE_CD="";DENBUN_CD="";CLIENT_SERIAL_NUMBER="";CONTINUE_DENBUN_FLG="";TRANSACTION_NUMBER=""
 	while IFS= read LINE
 	do
 
@@ -39,6 +39,7 @@ do
 			LOG_OUTPUT_DATE=$(echo "${LINE}" | awk '{print $1 $2}' | sed -e "s/\///g" -e "s/://g")
 			LOG_CD="1"
 			CL_CD=$(echo "${COM}" | cut -b1-5)
+			OPE_CD=$(echo "${COM}" | cut -b6-6)
 			DENBUN_CD=$(echo "${COM}" | cut -b7-13)
 			CLIENT_SERIAL_NUMBER=$(echo "${COM}" | cut -b14-17)
 			CONTINUE_DENBUN_FLG=$(echo "${COM}" | cut -b18-18)
