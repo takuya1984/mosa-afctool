@@ -48,6 +48,13 @@ case "$MODE" in
 	${BASEDIR}/bin/log_regist_otx.sh $MODE
 	;;
 
+"7")
+	#--------------------------------------
+	# 登録 Tracelog
+	#--------------------------------------
+	${BASEDIR}/bin/log_regist_trace.sh
+	;;
+
 "9" | "10")
 	#--------------------------------------
 	# 登録 OTX-SQL,AP-SQL
