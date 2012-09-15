@@ -69,21 +69,21 @@ public class GetLogData extends ToolCommand {
 			if (!isColNamePrinted) {
 				for (String colName : COLUMN_NAMES) {
 					output.append(colName);
-					output.append("¥t");
+					output.append("\t");
 
 				}
-				output.append("¥n");
+				output.append("\n");
 				isColNamePrinted = true;
 			}
 
 			// 現在の行のデータ出力
 			for (String colName : COLUMN_NAMES) {
 				output.append(data.get(colName));
-				output.append("¥t");
+				output.append("\t");
 
 			}
 
-			output.append("¥n");
+			output.append("\n");
 
 		}
 
