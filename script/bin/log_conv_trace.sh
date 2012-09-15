@@ -5,7 +5,7 @@
 # return : 0 - normal
 #        : 1 - error
 #
-# 処理概要 : 指定されたログファイルからダンプファイルを生成する
+# 処理概要 : 指定されたログファイルからダンプファイルを抽出する
 #-----------------------------------------------------------------------
 
 . $(dirname $0)/../conf/script.conf
@@ -29,15 +29,24 @@ fi
 # 識別子リスト生成
 grep "DB:.*SELECT \|DB:.*UPDATE \|DB:.*INSERT \|DB:.*DELETE \|^BEFORE \|^AFTER \|^0" $LOG > ${TMP_FILE}
 
-status=0;FILE_NAME=""
+status=0;TMP_FILE_NAME=""
 while IFS= read LINE
 do
+	# DBアクセス処理部分から情報を抽出
 	if echo "${LINE}" | grep "DB:.*SELECT\|DB:.*UPDATE\|DB:.*INSERT\|DB:.*DELETE" > /dev/null 2>&1
 	then
+		# 1つ前の抽出情報を整形しファイル生成
+		if [ $status -eq 2 ];then
+			cat $TMP_FILE_NAME | awk -f trace_conv.awk > $FILE_NAME
+			rm -rf ${TMP_FILE_NAME}
+		fi
+
 		status=1
 		LOG_OUTPUT_DATE=$(echo "$LINE" | awk '{print $1}' | sed -e "s/://g")
 		LOG_TABLE_NAME=$(echo "$LINE" | awk '{print $(NF-1)}' | sed -e "s/.*\.//" -e "s/:.*//")
-		FILE_NAME="${TRACE_LOG_DIR}/${LOG_OUTPUT_DATE}_${ISPEC}_${LOG_TABLE_NAME}.log"
+		NAME="${LOG_OUTPUT_DATE}_${ISPEC}_${LOG_TABLE_NAME}.log"
+		TMP_FILE_NAME="${TMP_DIR}/$NAME"
+		FILE_NAME="${TRACE_LOG_DIR}/$NAME"
 		continue
 	fi
 
@@ -50,7 +59,7 @@ do
 	if [ $status -eq 2 ];then
 		if echo "${LINE}" | grep "^0" > /dev/null 2>&1
 		then
-			echo "${LINE}" >> $FILE_NAME
+			echo "${LINE}"| cut -b1-79 >> $TMP_FILE_NAME
 			continue
 		fi
 	fi
