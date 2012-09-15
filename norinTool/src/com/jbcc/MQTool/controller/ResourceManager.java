@@ -1,4 +1,4 @@
-package com.jbcc.MQTool.controller;
+ï»¿package com.jbcc.MQTool.controller;
 
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -25,18 +25,18 @@ public class ResourceManager {
 	private final String CONNECTION_PROPERTY_NAME = "connection.properties";
 
 	ResourceManager() {
-		// ƒpƒbƒP[ƒWŠO‚Ånew‹Ö~
+		// ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸å¤–ã§newç¦æ­¢
 	}
 
 	private Connection con;
 	private List<Closeable> streams = new ArrayList<Closeable>();
 
 	/**
-	 * ƒtƒ@ƒCƒ‹stream‚ÆDBÚ‘±‚ğŠJ•ú‚·‚é
+	 * ãƒ•ã‚¡ã‚¤ãƒ«streamã¨DBæ¥ç¶šã‚’é–‹æ”¾ã™ã‚‹
 	 */
 	void release() {
 
-		// ƒtƒ@ƒCƒ‹‚ÌŠJ•ú
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã®é–‹æ”¾
 		for (Closeable stream : streams) {
 			try {
 				stream.close();
@@ -45,7 +45,7 @@ public class ResourceManager {
 			}
 		}
 
-		// DBƒRƒlƒNƒVƒ‡ƒ“‚ÌŠJ•ú
+		// DBã‚³ãƒã‚¯ã‚·ãƒ§ãƒ³ã®é–‹æ”¾
 		try {
 			if (con != null) {
 				con.close();
@@ -56,7 +56,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * FileInputStream‚ğæ“¾‚·‚é ƒvƒƒZƒXI—¹‚ÉŠJ•ú‚³‚ê‚é
+	 * FileInputStreamã‚’å–å¾—ã™ã‚‹ ãƒ—ãƒ­ã‚»ã‚¹çµ‚äº†æ™‚ã«é–‹æ”¾ã•ã‚Œã‚‹
 	 * 
 	 * @param path
 	 * @return
@@ -71,7 +71,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * FileOutputStream‚ğæ“¾‚·‚é ƒvƒƒZƒXI—¹‚ÉŠJ•ú‚³‚ê‚é
+	 * FileOutputStreamã‚’å–å¾—ã™ã‚‹ ãƒ—ãƒ­ã‚»ã‚¹çµ‚äº†æ™‚ã«é–‹æ”¾ã•ã‚Œã‚‹
 	 * 
 	 * @param path
 	 * @return
@@ -86,7 +86,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * select‚ÌÀs
+	 * selectã®å®Ÿè¡Œ
 	 * 
 	 * @param sql
 	 * @return
@@ -100,7 +100,7 @@ public class ResourceManager {
 
 		try {
 
-			// SQL‚ÌÀs
+			// SQLã®å®Ÿè¡Œ
 			st = getConnection().prepareStatement(sql);
 			StdOut.writeDebug(sql);
 			int paramCount = 1;
@@ -110,12 +110,12 @@ public class ResourceManager {
 			}
 			result = st.executeQuery();
 
-			// Œ‹‰Ê •\ƒCƒ[ƒW‚Ìì¬
+			// çµæœ è¡¨ã‚¤ãƒ¡ãƒ¼ã‚¸ã®ä½œæˆ
 			List<Map<String, Object>> queryResult = new ArrayList<Map<String, Object>>();
 			ResultSetMetaData meta = result.getMetaData();
 			int columunCount = meta.getColumnCount();
 
-			// ˆês‚¸‚ÂŒŸõŒ‹‰Êƒf[ƒ^‚ğì¬‚µ‚Ä‚¢‚­ƒ‹[ƒv
+			// ä¸€è¡Œãšã¤æ¤œç´¢çµæœãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆã—ã¦ã„ããƒ«ãƒ¼ãƒ—
 			while (result.next()) {
 				Map<String, Object> row = new HashMap<String, Object>();
 				queryResult.add(row);
@@ -138,7 +138,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * preparedstatement‚Åinsert update delete‚ğÀs
+	 * preparedstatementã§insert update deleteã‚’å®Ÿè¡Œ
 	 * 
 	 * @param sql
 	 * @param params
@@ -151,7 +151,7 @@ public class ResourceManager {
 		int count = 0;
 		try {
 
-			// SQL‚ÌÀs
+			// SQLã®å®Ÿè¡Œ
 			st = getConnection().prepareStatement(sql);
 			StdOut.writeDebug(sql);
 
@@ -174,7 +174,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * ƒRƒlƒNƒVƒ‡ƒ“‚ğæ“¾
+	 * ã‚³ãƒã‚¯ã‚·ãƒ§ãƒ³ã‚’å–å¾—
 	 * 
 	 * @return
 	 * @throws Exception
@@ -192,7 +192,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * DBƒgƒ‰ƒ“ƒUƒNƒVƒ‡ƒ“‚ÌƒRƒ~ƒbƒg
+	 * DBãƒˆãƒ©ãƒ³ã‚¶ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚³ãƒŸãƒƒãƒˆ
 	 * 
 	 * @throws Exception
 	 */
@@ -206,7 +206,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * DBƒgƒ‰ƒ“ƒUƒNƒVƒ‡ƒ“‚Ìƒ[ƒ‹ƒoƒbƒN
+	 * DBãƒˆãƒ©ãƒ³ã‚¶ã‚¯ã‚·ãƒ§ãƒ³ã®ãƒ­ãƒ¼ãƒ«ãƒãƒƒã‚¯
 	 * 
 	 * @throws Exception
 	 */
@@ -218,11 +218,11 @@ public class ResourceManager {
 		}
 	}
 
-	// ƒvƒƒpƒeƒBŒQ
+	// ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ç¾¤
 	private Map<String, Properties> sqlProperty = new HashMap<String, Properties>();
 
 	/**
-	 * ƒvƒƒpƒeƒBƒtƒ@ƒCƒ‹‚©‚ç’læ“¾
+	 * ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰å€¤å–å¾—
 	 * 
 	 * @param id
 	 * @return
@@ -233,12 +233,18 @@ public class ResourceManager {
 		if (!sqlProperty.containsKey(propFilename)) {
 			InputStream stream = this.getClass().getClassLoader()
 					.getResourceAsStream(propFilename);
+			if (stream == null) {
+				throw new ToolException(propFilename + "ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
+			}
 			try {
 				Properties prop = new Properties();
 				prop.loadFromXML(stream);
 				sqlProperty.put(propFilename, prop);
 			} finally {
-				stream.close();
+				try {
+					stream.close();
+				} catch (Throwable t) {
+				}
 			}
 		}
 		return sqlProperty.get(propFilename).getProperty(id);
@@ -246,7 +252,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * SQL‚ğæ“¾
+	 * SQLã‚’å–å¾—
 	 * 
 	 * @param id
 	 * @return

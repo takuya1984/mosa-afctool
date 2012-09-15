@@ -1,4 +1,4 @@
-package com.jbcc.MQTool.util;
+﻿package com.jbcc.MQTool.util;
 
 public class StdOut {
 
