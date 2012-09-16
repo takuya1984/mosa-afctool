@@ -61,7 +61,7 @@ public class GetLogList extends ToolCommand {
 		for (Map<String, Object> data : result) {
 			output.append(data.get("ID"));
 
-			output.append("¥n");
+			output.append("\n");
 
 		}
 		StdOut.write(output.toString());
