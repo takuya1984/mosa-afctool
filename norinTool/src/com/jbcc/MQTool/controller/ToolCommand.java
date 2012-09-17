@@ -1,7 +1,7 @@
-package com.jbcc.MQTool.controller;
+ï»¿package com.jbcc.MQTool.controller;
 
 /**
- * ‚±‚ÌƒNƒ‰ƒX‚ğŒp³‚µ‚ÄƒRƒ}ƒ“ƒh‚ğÀ‘•‚·‚é DB‚ÉÚ‘±Aƒgƒ‰ƒ“ƒUƒNƒVƒ‡ƒ“ŠÇ—‹@”\‚ªg‚¦‚é‚æ‚¤‚É‚È‚é
+ * ã“ã®ã‚¯ãƒ©ã‚¹ã‚’ç¶™æ‰¿ã—ã¦ã‚³ãƒãƒ³ãƒ‰ã‚’å®Ÿè£…ã™ã‚‹ DBã«æ¥ç¶šã€ãƒˆãƒ©ãƒ³ã‚¶ã‚¯ã‚·ãƒ§ãƒ³ç®¡ç†æ©Ÿèƒ½ãŒä½¿ãˆã‚‹ã‚ˆã†ã«ãªã‚‹
  * 
  * @author jetbrand
  * 
@@ -9,7 +9,7 @@ package com.jbcc.MQTool.controller;
 public abstract class ToolCommand {
 
 	/**
-	 * ‚±‚Ìƒ}ƒl[ƒWƒƒ‚ğg‚Á‚ÄDBƒAƒNƒZƒX‚·‚é
+	 * ã“ã®ãƒãƒãƒ¼ã‚¸ãƒ£ã‚’ä½¿ã£ã¦DBã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹
 	 */
 	protected ResourceManager RESOURCE;
 
@@ -17,7 +17,7 @@ public abstract class ToolCommand {
 		this.RESOURCE = resourceManager;
 	}
 
-	// ƒRƒ}ƒ“ƒh‚ÅÀs‚³‚ê‚éˆ—
+	// ã‚³ãƒãƒ³ãƒ‰ã§å®Ÿè¡Œã•ã‚Œã‚‹å‡¦ç†
 	public abstract void execute(String[] args) throws Exception;
 
 }

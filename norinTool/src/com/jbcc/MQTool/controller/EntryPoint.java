@@ -1,4 +1,4 @@
-package com.jbcc.MQTool.controller;
+ï»¿package com.jbcc.MQTool.controller;
 
 import com.jbcc.MQTool.util.StdOut;
 
@@ -9,9 +9,9 @@ public class EntryPoint {
 	private final static int RESULT_EXCEPTION = -1;
 
 	/**
-	 * ‚±‚ÌƒAƒvƒŠ‚ÌƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg ƒŠƒ\[ƒXŠÇ—‚Æ—áŠOƒnƒ“ƒhƒŠƒ“ƒO‚ğs‚¤
+	 * ã“ã®ã‚¢ãƒ—ãƒªã®ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆ ãƒªã‚½ãƒ¼ã‚¹ç®¡ç†ã¨ä¾‹å¤–ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°ã‚’è¡Œã†
 	 * 
-	 * ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‘æˆêˆø”‚Ì•¶š—ñ‚ÅAÀsƒRƒ}ƒ“ƒhƒNƒ‰ƒX‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»‚µÀs‚·‚éB
+	 * ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç¬¬ä¸€å¼•æ•°ã®æ–‡å­—åˆ—ã§ã€å®Ÿè¡Œã‚³ãƒãƒ³ãƒ‰ã‚¯ãƒ©ã‚¹ã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã—å®Ÿè¡Œã™ã‚‹ã€‚
 	 * 
 	 * @param args
 	 */
@@ -21,14 +21,14 @@ public class EntryPoint {
 		ResourceManager rcmng = new ResourceManager();
 		try {
 
-			// ˆø”ƒ`ƒFƒbƒN
+			// å¼•æ•°ãƒã‚§ãƒƒã‚¯
 			if (args.length < 1) {
-				StdOut.write("ˆø”‚ª•s³‚Å‚·B‘æˆêˆø”‚ÍÀsƒNƒ‰ƒX–¼");
+				StdOut.write("å¼•æ•°ãŒä¸æ­£ã§ã™ã€‚ç¬¬ä¸€å¼•æ•°ã¯å®Ÿè¡Œã‚¯ãƒ©ã‚¹å");
 				System.exit(RESULT_ERROR);
 				return;
 			}
 
-			// ƒRƒ}ƒ“ƒhˆ—‚Ì§Œä
+			// ã‚³ãƒãƒ³ãƒ‰å‡¦ç†ã®åˆ¶å¾¡
 			String commandName = args[0];
 			if (commandName.endsWith("_d")) {
 				StdOut.isDebug = true;
@@ -41,7 +41,7 @@ public class EntryPoint {
 
 		} catch (ToolException te) {
 
-			// ƒRƒ}ƒ“ƒh‚Åˆ—‚³‚ê‚½—áŠO ƒƒbƒZ[ƒW‚ğo—Í‚µ‚ÄAƒGƒ‰[‚ÅI—¹
+			// ã‚³ãƒãƒ³ãƒ‰ã§å‡¦ç†ã•ã‚ŒãŸä¾‹å¤– ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‡ºåŠ›ã—ã¦ã€ã‚¨ãƒ©ãƒ¼ã§çµ‚äº†
 			te.printStackTrace();
 			try {
 				rcmng.rollback();
@@ -53,7 +53,7 @@ public class EntryPoint {
 
 		} catch (Exception e) {
 
-			// ƒnƒ“ƒhƒŠƒ“ƒO‚³‚ê‚È‚¢—áŠO‚ğW–ñ‚µ‚ÄƒLƒƒƒbƒ`
+			// ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°ã•ã‚Œãªã„ä¾‹å¤–ã‚’é›†ç´„ã—ã¦ã‚­ãƒ£ãƒƒãƒ
 			e.printStackTrace();
 			try {
 				rcmng.rollback();
@@ -65,7 +65,7 @@ public class EntryPoint {
 
 		} finally {
 
-			// ƒŠƒ\[ƒX‚ğŠJ•ú
+			// ãƒªã‚½ãƒ¼ã‚¹ã‚’é–‹æ”¾
 			rcmng.release();
 		}
 
@@ -78,7 +78,7 @@ public class EntryPoint {
 			Class<?> clazz = Class.forName("com.jbcc.MQTool.commands." + name);
 			return (ToolCommand) clazz.newInstance();
 		} catch (Exception e) {
-			throw new IllegalArgumentException("ƒRƒ}ƒ“ƒhÀsƒNƒ‰ƒX‚Ìæ“¾‚É¸”s‚µ‚Ü‚µ‚½B", e);
+			throw new IllegalArgumentException("ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œã‚¯ãƒ©ã‚¹ã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸã€‚", e);
 		}
 
 	}

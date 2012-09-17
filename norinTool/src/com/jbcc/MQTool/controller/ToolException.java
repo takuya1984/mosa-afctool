@@ -1,4 +1,4 @@
-package com.jbcc.MQTool.controller;
+﻿package com.jbcc.MQTool.controller;
 
 public class ToolException extends Exception {
 

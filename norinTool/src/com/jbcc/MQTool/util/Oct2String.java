@@ -1,4 +1,4 @@
-package com.jbcc.MQTool.util;
+﻿package com.jbcc.MQTool.util;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;

@@ -1,4 +1,4 @@
-import org.junit.Test;
+﻿import org.junit.Test;
 
 import com.jbcc.MQTool.controller.EntryPoint;
 

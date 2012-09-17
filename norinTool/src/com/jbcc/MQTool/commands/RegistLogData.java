@@ -1,4 +1,4 @@
-package com.jbcc.MQTool.commands;
+ï»¿package com.jbcc.MQTool.commands;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import com.jbcc.MQTool.controller.ToolException;
 import com.jbcc.MQTool.util.Utility;
 
 /**
- * ƒƒOƒf[ƒ^‚ğ“o˜^‚·‚é ID‚ªd•¡‚·‚éê‡‚Íupdate ID‚ª‘¶İ‚µ‚È‚¢ê‡‚Íinsert‚É‚È‚é
+ * ãƒ­ã‚°ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²ã™ã‚‹ IDãŒé‡è¤‡ã™ã‚‹å ´åˆã¯update IDãŒå­˜åœ¨ã—ãªã„å ´åˆã¯insertã«ãªã‚‹
  * 
  * @author jetbrand
  * 
@@ -20,31 +20,31 @@ public class RegistLogData extends ToolCommand {
 	@Override
 	public void execute(String[] args) throws Exception {
 
-		// insert update ‚È‚Ì‚Å merge•¶
+		// insert update ãªã®ã§ mergeæ–‡
 		String sql = RESOURCE.getSql("ResistLogData1");
 
-		// ˆø”‚ğ«‘‚©‚µ‚ÄSQL•¶ì¬
+		// å¼•æ•°ã‚’è¾æ›¸ã‹ã—ã¦SQLæ–‡ä½œæˆ
 		Map<String, String> datas = Utility.splitArgs(args);
 		String dataid = datas.get("id");
 		datas.remove("id");
 		String insertQuery = insertQuery(datas);
 		String updateQuery = Utility.updateQuery(datas);
 
-		// preparedstatement‚Ìƒpƒ‰ƒ[ƒ^ì¬
+		// preparedstatementã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä½œæˆ
 		Collection<String> values = new ArrayList<String>();
-		// ğŒ‹å‚ÌID
+		// æ¡ä»¶å¥ã®ID
 		values.add(dataid);
-		// update‹å‚Ì’l
+		// updateå¥ã®å€¤
 		values.addAll(datas.values());
-		// insert‹å‚Ì’l
+		// insertå¥ã®å€¤
 		values.addAll(datas.values());
 
-		// SQLÀs
+		// SQLå®Ÿè¡Œ
 		int counts = RESOURCE.updateDB(
 				MessageFormat.format(sql, updateQuery, insertQuery),
 				values.toArray());
 		if (counts == 0) {
-			throw new ToolException("ˆês‚à’Ç‰ÁAXV‚³‚ê‚Ü‚¹‚ñ‚Å‚µ‚½");
+			throw new ToolException("ä¸€è¡Œã‚‚è¿½åŠ ã€æ›´æ–°ã•ã‚Œã¾ã›ã‚“ã§ã—ãŸ");
 		}
 	}
 
@@ -61,7 +61,7 @@ public class RegistLogData extends ToolCommand {
 			places.append("?");
 		}
 
-		// ƒCƒ“ƒT[ƒg ID‚Í©“®Ì”Ô‚É‚·‚é
+		// ã‚¤ãƒ³ã‚µãƒ¼ãƒˆæ™‚ IDã¯è‡ªå‹•æ¡ç•ªã«ã™ã‚‹
 		cols.append(",ID ) values (");
 		cols.append(places.toString());
 		cols.append(" ,(select nvl((select Max(id) from kanri),0) from dual) + 1)");

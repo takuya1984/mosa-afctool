@@ -1,4 +1,4 @@
-package com.jbcc.MQTool.commands;
+ï»¿package com.jbcc.MQTool.commands;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import com.jbcc.MQTool.controller.ToolCommand;
 import com.jbcc.MQTool.util.StdOut;
 
 /**
- * ƒƒOƒf[ƒ^‚ğ“o˜^‚·‚é ID‚ªd•¡‚·‚éê‡‚Íupdate ID‚ª‘¶İ‚µ‚È‚¢ê‡‚Íinsert‚É‚È‚é
+ * ãƒ­ã‚°ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²ã™ã‚‹ IDãŒé‡è¤‡ã™ã‚‹å ´åˆã¯update IDãŒå­˜åœ¨ã—ãªã„å ´åˆã¯insertã«ãªã‚‹
  * 
  * @author jetbrand
  * 
@@ -26,17 +26,17 @@ public class GetLogData extends ToolCommand {
 	@Override
 	public void execute(String[] args) throws Exception {
 
-		// insert update ‚È‚Ì‚Å merge•¶
+		// insert update ãªã®ã§ mergeæ–‡
 		String sql = RESOURCE.getSql("GetLogList1");
 
-		// where‹å‚Ìì¬
+		// whereå¥ã®ä½œæˆ
 		String strOr = "";
 		StringBuilder whereQuery = new StringBuilder();
 		List<String> vals = new ArrayList<String>();
 		String[] queryArgs = Arrays.copyOfRange(args, 1, args.length);
 		for (String arg : queryArgs) {
 
-			// and‚ğ‚Â‚¯‚éi2‰ñ–ÚˆÈ~j
+			// andã‚’ã¤ã‘ã‚‹ï¼ˆ2å›ç›®ä»¥é™ï¼‰
 			whereQuery.append(strOr);
 			strOr = " Or ";
 
@@ -56,7 +56,7 @@ public class GetLogData extends ToolCommand {
 			whereQuery = new StringBuilder("Where " + whereQuery.toString());
 		}
 
-		// SQLÀs
+		// SQLå®Ÿè¡Œ
 		List<Map<String, Object>> result = RESOURCE.selectDB(
 				MessageFormat.format(sql, whereQuery.toString()),
 				vals.toArray());
@@ -65,7 +65,7 @@ public class GetLogData extends ToolCommand {
 		boolean isColNamePrinted = false;
 		for (Map<String, Object> data : result) {
 
-			// ˆê‰ñ–Ú‚ÍƒJƒ‰ƒ€–¼o—Í
+			// ä¸€å›ç›®ã¯ã‚«ãƒ©ãƒ åå‡ºåŠ›
 			if (!isColNamePrinted) {
 				for (String colName : COLUMN_NAMES) {
 					output.append(colName);
@@ -76,7 +76,7 @@ public class GetLogData extends ToolCommand {
 				isColNamePrinted = true;
 			}
 
-			// Œ»İ‚Ìs‚Ìƒf[ƒ^o—Í
+			// ç¾åœ¨ã®è¡Œã®ãƒ‡ãƒ¼ã‚¿å‡ºåŠ›
 			for (String colName : COLUMN_NAMES) {
 				output.append(data.get(colName));
 				output.append("\t");
