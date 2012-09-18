@@ -1,4 +1,4 @@
-﻿package com.jbcc.MQTool.compare;
+package com.jbcc.MQTool.compare;
 
 import java.util.List;
 

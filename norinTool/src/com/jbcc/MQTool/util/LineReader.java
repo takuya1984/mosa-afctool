@@ -1,10 +1,12 @@
-﻿package com.jbcc.MQTool.util;
+package com.jbcc.MQTool.util;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class LineReader extends BufferedReader {
@@ -52,6 +54,19 @@ public class LineReader extends BufferedReader {
 	}
 
 	/**
+	 *
+	 */
+	public String readLine() throws IOException {
+		String ret = super.readLine();
+
+		// EOFならクローズ
+		if (ret == null) {
+			close();
+		}
+		return ret;
+	}
+
+	/**
 	 * keyが出現するまでテキスト行を読み込みます。1 行の終端は、改行 ('\n') か、復帰
 	 * ('\r')、または復行とそれに続く改行のいずれかで認識されます。
 	 *
@@ -66,16 +81,27 @@ public class LineReader extends BufferedReader {
 		String ret = null;
 
 		while ((ret = readLine()) != null) {
-			if (ret.indexOf(key) >= 0) {
+			if (ret.toUpperCase().indexOf(key.toUpperCase()) >= 0) {
 				break;
 			}
 		}
 
-		// EOFならクローズ
-		if (ret == null) {
-			close();
-		}
 		return ret;
+	}
+
+	/**
+	 *
+	 * @param key
+	 * @return
+	 * @throws IOException
+	 */
+	public List<String> readLinesByKey(String key) throws IOException {
+		String ret = null;
+		List<String> rets = new ArrayList<String>();
+		while ((ret = readLineByKey(key)) != null) {
+			rets.add(ret);
+		}
+		return rets;
 	}
 
 	/**
@@ -105,16 +131,29 @@ public class LineReader extends BufferedReader {
 				work = token.nextToken();
 			}
 
-			if (work.indexOf(key) >= 0) {
+			// 大文字、小文字を判断しない
+			if (work.toUpperCase().indexOf(key.toUpperCase()) >= 0) {
 				break;
 			}
 		}
 
-		// EOFならクローズ
-		if (ret == null) {
-			close();
-		}
-
 		return ret;
+	}
+
+	/**
+	 *
+	 * @param key
+	 * @param columnIndex
+	 * @return
+	 * @throws IOException
+	 */
+	public List<String> readLinesByKey(String key, int columnIndex)
+			throws IOException {
+		String ret = null;
+		List<String> rets = new ArrayList<String>();
+		while ((ret = readLineByKey(key, columnIndex)) != null) {
+			rets.add(ret);
+		}
+		return rets;
 	}
 }
