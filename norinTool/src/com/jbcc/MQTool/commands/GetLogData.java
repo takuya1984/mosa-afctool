@@ -21,7 +21,7 @@ public class GetLogData extends ToolCommand {
 			"LOG_OUTPUT_DATE", "FUNCTION_CD", "CL_CD", "OPE_CD", "DENBUN_CD",
 			"EMP_NO", "HOST_DATE", "CLIENT_SERIAL_NUMBER",
 			"CONTINUE_DENBUN_FLG", "MULTI_DENBUN_TYPE", "DENBUN_KIND",
-			"TRANSACTION_NUMBER", "LOG_TABLE_NAME", "LOG_DATE_NAME" };
+			"TRANSACTION_NUMBER", "LOG_TABLE_NAME", "LOG_DATA_FILE" };
 
 	@Override
 	public void execute(String[] args) throws Exception {
