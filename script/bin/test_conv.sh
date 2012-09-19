@@ -1,5 +1,5 @@
 #!/bin/bash
 
-. $(dirname $0)/../bin/log_conv.sh
+. $(dirname $0)/../bin/conv.sh
 
 func_conv_log $1
