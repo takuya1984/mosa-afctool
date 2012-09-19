@@ -135,7 +135,7 @@ do
 	done < ${TMP_OPE_FILE}
 	
 	# tempファイル削除
-#	rm -rf ${TMP_OPE_FILE}
+	rm -rf ${TMP_OPE_FILE}
 done
 
 

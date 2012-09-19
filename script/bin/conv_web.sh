@@ -86,6 +86,6 @@ do
 
 done < $TMPLOG
 
-# rm -f $TMPLOG
+rm -f $TMPLOG
 
 exit 0
