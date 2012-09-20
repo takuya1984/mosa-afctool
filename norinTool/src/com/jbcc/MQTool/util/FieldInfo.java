@@ -45,6 +45,7 @@ public class FieldInfo {
 			System.out.println("NOT FOUND:" + filePath);
 			return null;
 		}
+		System.out.println(filePath);
 		LineReader lr = new LineReader(filePath);
 		String buff = null;
 		while ((buff = lr.readLine()) != null) {

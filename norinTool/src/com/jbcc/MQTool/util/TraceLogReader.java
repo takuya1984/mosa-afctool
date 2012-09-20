@@ -19,16 +19,20 @@ public class TraceLogReader extends LineReader {
 	private FileInputStream fis = null;
 
 	private List<FieldInfo> fields = null;
-	private int i = 0;
+	private int i = 0, idx = 0;
+	private StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) {
 		try {
-			String fName = "130528.433_ICC09_OKGJ0.log";
+			String[] fNames = { "130528.402_ICC09_OKOS0.log",
+					"130529.421_ICC09_OJKF0.log" };
 
-			TraceLogReader tlr = new TraceLogReader(TRASE_BASE + fName);
-			String buff = null;
-			while ((buff = tlr.readNext()) != null) {
-				System.out.println(buff);
+			for (String fName : fNames) {
+				TraceLogReader tlr = new TraceLogReader(TRASE_BASE + fName);
+				String buff = null;
+				while ((buff = tlr.readNext()) != null) {
+					System.out.println(buff);
+				}
 			}
 
 		} catch (Exception e) {
@@ -59,35 +63,31 @@ public class TraceLogReader extends LineReader {
 			System.out.println(fi.toString());
 		}
 
-		// いったんバイナリファイルに出力する
-		FileOutputStream fos = new FileOutputStream(WORK_FILE);
-		byte[] buff = null;
-		while ((buff = Oct2String.record2bytes(readLine())) != null && buff.length>0) {
-			fos.write(buff, 0, buff.length);
+		String buff = null;
+		while ((buff = readLine()) != null) {
+			sb.append(buff.replaceAll(" ", ""));
 		}
-		fos.flush();
-		fos.close();
-		fos = null;
+		System.out.println(sb.toString());
 
-		//fis = new FileInputStream(WORK_FILE);
-
+		for (int i = 0; i < fields.size(); i++) {
+			// System.out.println(readNext());
+			readNext();
+		}
 	}
 
 	public String readNext() {
 		String ret = null;
 		try {
-			int size = Integer.valueOf(fields.get(i).getSize()).intValue();
-			byte[] buff = new byte[size];
-			for (int j = 0; j < buff.length; j++) {
-				// FIXME buff[j] = fis.read();
-			}
+			int size = fields.get(i).getByteSize();
+			byte[] buff = Oct2String.record2bytes(sb.substring(idx, idx + size
+					* 3));
 			ret = Oct2String.valueOf(buff);
-
+			idx += size * 3;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//FIXME
-		return null;
+		// FIXME
+		return ret;
 	}
 
 }
