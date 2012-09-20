@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_conv_client.sh
+# name   : conv_client.sh
 # param  : $1 - 抽出対象ログファイル
 # return : 0 - normal
 #        : 1 - error

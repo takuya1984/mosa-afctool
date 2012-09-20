@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_regist_otx.sh
+# name   : regist_otx.sh
 # param  : none
 # return : 0 - normal
 #        : 1 - error
@@ -40,7 +40,7 @@ case "$MODE" in
     LOG_DATA_DIR="${APHOST_LOG_DIR}"
 	;;
 *)
-    echo "Usage:log_regist_otx.sh [MODE:3|4]"
+    echo "Usage:regist_otx.sh [MODE:3|4]"
     exit 1
 esac
 
@@ -68,7 +68,7 @@ do
 		then
 			COM=$(echo "${LINE}" | sed -e "s/.*共通ヘッダ部=//")
 			LOG_OUTPUT_DATE=$(echo "${LINE}" | awk '{print $1 $2}' | sed -e "s/\///g" -e "s/://g")
-			LOG_CD="1"
+			LOG_CD=$MODE
 			CL_CD=$(echo "${COM}" | cut -b1-5)
 			OPE_CD=$(echo "${COM}" | cut -b6-6)
 			DENBUN_CD=$(echo "${COM}" | cut -b7-13)

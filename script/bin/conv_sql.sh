@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_conv_sql.sh
+# name   : conv_sql.sh
 # param  : $1 - log_filename
 # return : 0 - normal
 #        : 1 - error
@@ -35,7 +35,7 @@ case "$MODE" in
     LOG_DATA_DIR="${APSQL_LOG_DIR}"
 	;;
 *)
-    echo "Usage:log_conv_sql.sh [logfilename] [MODE:9|10]"
+    echo "Usage:conv_sql.sh [logfilename] [MODE:9|10]"
     exit 1
 esac
 
@@ -135,7 +135,7 @@ do
 	done < ${TMP_OPE_FILE}
 	
 	# tempファイル削除
-#	rm -rf ${TMP_OPE_FILE}
+	rm -rf ${TMP_OPE_FILE}
 done
 
 

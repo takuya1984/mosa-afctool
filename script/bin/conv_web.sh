@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_conv_web.sh
+# name   : conv_web.sh
 # param  : $1 - 抽出対象ログファイル
 # return : 0 - normal
 #        : 1 - error
@@ -12,7 +12,7 @@
 
 TODAY=`date +"%Y%m%d%H%M%S"`
 logfile=$1
-TMPLOG="${TMP_DIR}/log_conv_web.${TODAY}.tmp.$$"
+TMPLOG="${TMP_DIR}/conv_web.${TODAY}.tmp.$$"
 
 status=0    # 0:idle 1:prossecing 
 updw_flg=0  # 1:up 2:dw
@@ -86,6 +86,6 @@ do
 
 done < $TMPLOG
 
-# rm -f $TMPLOG
+rm -f $TMPLOG
 
 exit 0

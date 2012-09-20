@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_regist_client.sh
+# name   : regist_client.sh
 # param  : none
 # return : 0 - normal
 #        : 1 - error

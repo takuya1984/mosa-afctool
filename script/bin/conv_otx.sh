@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_conv_otx.sh
+# name   : conv_otx.sh
 # param  : $1 - log_filename
 # return : 0 - normal
 #        : 1 - error
@@ -43,7 +43,7 @@ case "$MODE" in
     LOG_DATA_DIR="${APHOST_LOG_DIR}"
 	;;
 *)
-    echo "Usage:log_conv_otx.sh [logfilename] [MODE:3|4|5|6]"
+    echo "Usage:conv_otx.sh [logfilename] [MODE:3|4|5|6]"
     exit 1
 esac
 

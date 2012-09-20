@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_regist_trace.sh
+# name   : regist_trace.sh
 # param  : none
 # return : 0 - normal
 #        : 1 - error

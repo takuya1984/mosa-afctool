@@ -1,6 +1,6 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_conv_trace.sh
+# name   : conv_trace.sh
 # param  : $1 - log_filename
 # return : 0 - normal
 #        : 1 - error

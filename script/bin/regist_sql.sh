@@ -1,11 +1,11 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
-# name   : log_regist_web.sh
+# name   : regist_sql.sh
 # param  : none
 # return : 0 - normal
 #        : 1 - error
 #
-# 処理概要 : WebServerログを管理DBに登録する.
+# 処理概要 : SQLログを管理DBに登録する.
 #-----------------------------------------------------------------------
 
 . $(dirname $0)/../conf/script.conf
@@ -14,49 +14,42 @@ MODE=$1
 TODAY=`date +"%Y%m%d%H%M%S"`
 COM="",ERR="",ONL="",CSS="";
 
-LOG_DATA_DIR=${WEB_LOG_DIR}
+# アーギュメントチェック
+if [ $# -ne 1 ]
+then
+	echo "error:引数は1つ指定してください" 1>&2
+	exit 1
+fi
+
+LOG_DATA_DIR=""
+case "$MODE" in
+"9")
+	# OTX-SQL
+    LOG_DATA_DIR="${OTXSQL_LOG_DIR}"
+	;;
+"10")
+	# AP-SQL
+    LOG_DATA_DIR="${APSQL_LOG_DIR}"
+	;;
+*)
+    echo "Usage:regist_sql.sh [MODE:9|10]"
+    exit 1
+esac
+
 
 for file in $(ls ${LOG_DATA_DIR})
 do
 	LOG_CD="";LOG_OUTPUT_DATE="";UPDW_FLG="";CL_CD="";OPE_CD="";DENBUN_CD="";CLIENT_SERIAL_NUMBER="";CONTINUE_DENBUN_FLG="";TRANSACTION_NUMBER="";FUNCTION_CD="";MULTI_DENBUN_TYPE="";DENBUN_KIND=""
-
-	# -------------------------------
-	# 上り下りの判定
-	# -------------------------------
-	if echo "${file}" | grep "1.dat$" > /dev/null 2>&1
-	then
-		UPDW_FLG="1"
-	else
-		UPDW_FLG="2"
-	fi
-	
 	while IFS= read LINE
 	do
 		# -------------------------------
-		# ログ時間取得
-		# -------------------------------
-		if echo "${LINE}" | grep " TRACE " > /dev/null 2>&1
-		then
-			LOG_OUTPUT_DATE=$(echo "${LINE}" | awk '{print $1 $2}' | sed -e "s/\///g" -e "s/://g")
-			continue
-		fi
-
-		# -------------------------------
-		# 機能ID取得
-		# -------------------------------
-		if echo "${LINE}" | grep "<ns1:RequestMessage" > /dev/null 2>&1
-		then
-			FUNCTION_CD=$(echo "${LINE}" | awk -F/ '{print $(NF-1)}' | sed -e "s/Service//")
-			continue
-		fi
-
-		# -------------------------------
 		# ヘッダ情報取得
 		# -------------------------------
-		if echo "${LINE}" | grep "<strComUpHeadDt>" > /dev/null 2>&1
+		if echo "${LINE}" | grep "共通ヘッダ部" > /dev/null 2>&1
 		then
-			COM=$(echo "${LINE}" | sed -e "s/.*<strComUpHeadDt>//" | sed -e "s/<\/strComUpHeadDt>//")
-			LOG_CD="2"
+			COM=$(echo "${LINE}" | sed -e "s/.*共通ヘッダ部=//")
+			LOG_OUTPUT_DATE=$(echo "${LINE}" | awk '{print $1 $2}' | sed -e "s/\///g" -e "s/://g" | sed -e "s/|.*//")
+			LOG_CD="1"
 			CL_CD=$(echo "${COM}" | cut -b1-5)
 			OPE_CD=$(echo "${COM}" | cut -b6-6)
 			DENBUN_CD=$(echo "${COM}" | cut -b7-13)
@@ -64,16 +57,22 @@ do
 			CONTINUE_DENBUN_FLG=$(echo "${COM}" | cut -b18-18)
 			MULTI_DENBUN_TYPE=$(echo "${COM}" | cut -b19-19)
 			# 下りの場合
-			if [ $UPDW_FLG == "2" ];then
+			if echo "${LINE}" | grep "下り" > /dev/null 2>&1
+			then
 				# トランザクション処理連番
 				TRANSACTION_NUMBER=$(echo "${COM}" | cut -b23-30)
 				# 電文種別
 				DENBUN_KIND=$(echo "${COM}" | cut -b21-22)
 			fi
-		else
-			continue
 		fi
 
+		# -------------------------------
+		# ヘッダ情報取得
+		# -------------------------------
+		if echo "${LINE}" | grep " Ope=" > /dev/null 2>&1
+		then
+			FUNCTION_CD=$(echo "${LINE}" | sed -e "s/.*Ope=//" | awk '{print $1}')
+		fi
 	done < ${LOG_DATA_DIR}/$file
 	
 	# -------------------------------

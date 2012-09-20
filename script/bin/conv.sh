@@ -45,7 +45,7 @@ case "$MODE" in
 #		${BIN_DIR}/log_conv_linefeed.sh "${CLIENT_LOG_UTF8_DIR}/${file}"
 
 		# ログ抽出
-		${BASEDIR}/bin/log_conv_client.sh "${CLIENT_LOG_DIR_UTF8}/${file}"
+		${BASEDIR}/bin/conv_client.sh "${CLIENT_LOG_DIR_UTF8}/${file}"
 		RC=$?
 		if [ $RC -ne 0 ]
 		then
@@ -53,9 +53,6 @@ case "$MODE" in
 			return -1
 		fi
 	done
-
-	# ログ情報登録
-#	${BASEDIR}/bin/log_regist_conv.sh
 
 	;;
 "2")
@@ -77,7 +74,7 @@ case "$MODE" in
 #		${BIN_DIR}/log_conv_linefeed.sh "${WEB_LOG_UTF8_DIR}/${file}"
 
 		# ログ抽出
-		${BASEDIR}/bin/log_conv_web.sh "${WEB_LOG_DIR_UTF8}/${file}"
+		${BASEDIR}/bin/conv_web.sh "${WEB_LOG_DIR_UTF8}/${file}"
 		RC=$?
 		if [ $RC -ne 0 ]
 		then
@@ -86,8 +83,6 @@ case "$MODE" in
 		fi
 	done
 
-	# ログ情報登録
-#	${BASEDIR}/bin/log_regist_web.sh
 	;;
 
 "3" | "4" | "5" | "6")
@@ -119,7 +114,7 @@ case "$MODE" in
 	nkf -w8x --ms-ucs-map ${MARGE_FILE} > ${MARGE_FILE_UTF8}
 
 	# ログ抽出
-	${BASEDIR}/bin/log_conv_otx.sh "${MARGE_FILE_UTF8}" $MODE
+	${BASEDIR}/bin/conv_otx.sh "${MARGE_FILE_UTF8}" $MODE
 	RC=$?
 	if [ $RC -ne 0 ]
 	then
@@ -142,7 +137,7 @@ case "$MODE" in
 		fi
 
 		# ログ抽出
-		${BASEDIR}/bin/log_conv_trace.sh "${TRACE_LOG_DIR_TARGET}/${file}"
+		${BASEDIR}/bin/conv_trace.sh "${TRACE_LOG_DIR_TARGET}/${file}"
 		RC=$?
 		if [ $RC -ne 0 ]
 		then
@@ -174,7 +169,7 @@ case "$MODE" in
 	nkf -w8x --ms-ucs-map ${MARGE_FILE} > ${MARGE_FILE_UTF8}
 
 	# ログ抽出
-	${BASEDIR}/bin/log_conv_sql.sh "${MARGE_FILE_UTF8}" $MODE
+	${BASEDIR}/bin/conv_sql.sh "${MARGE_FILE_UTF8}" $MODE
 	RC=$?
 	if [ $RC -ne 0 ]
 	then
@@ -185,11 +180,10 @@ case "$MODE" in
 	rm -f ${MARGE_FILE} ${MARGE_FILE_UTF8}
 	;;
 *)
-	echo "Usage : log_conv.sh [1-10]"
+	echo "Usage : conv.sh [1-10]"
 	return -1
 esac
 
-echo "success"
 return 0
 
 }
