@@ -15,7 +15,7 @@ public class TraceLogReader extends LineReader {
 	private File file = null;
 
 	private List<FieldInfo> fields = null;
-	private int idx = 0;
+
 	private StringBuilder sb = new StringBuilder();
 	private int[] offset = null;
 
@@ -73,6 +73,11 @@ public class TraceLogReader extends LineReader {
 		try {
 			FieldInfo f = fields.get(i);
 
+			// FIXME
+			if(f.getType().equals("SKIP")){
+				return null;
+			}
+
 			byte[] buff = Oct2String.record2bytes(sb.substring(f.getOffset(), f
 					.getOffset()
 					+ f.getByteSize()*3));
@@ -80,7 +85,6 @@ public class TraceLogReader extends LineReader {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// FIXME
 		return ret;
 	}
 

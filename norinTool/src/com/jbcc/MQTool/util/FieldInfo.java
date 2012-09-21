@@ -3,6 +3,7 @@ package com.jbcc.MQTool.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FieldInfo {
@@ -11,6 +12,7 @@ public class FieldInfo {
 	private String fieldNameJ = null;
 	private String size = null;
 	private int offset = 0;
+	private boolean isPrimary = false;
 
 	private final static String NUMBER = "NUMBER";
 
@@ -29,7 +31,9 @@ public class FieldInfo {
 	 *             入出力エラーが発生した場合
 	 */
 	public static List<FieldInfo> getFieldInfo(File f) throws IOException {
+
 		ArrayList<FieldInfo> al = new ArrayList<FieldInfo>();
+		HashMap<String, FieldInfo> hm = new HashMap<String, FieldInfo>();
 
 		String tableInfoFile = f.getName();
 		/**
@@ -46,21 +50,31 @@ public class FieldInfo {
 
 		LineReader lr = new LineReader(filePath, "Shift_JIS");
 		String buff = null;
+		FieldInfo fi = null;
 		while ((buff = lr.readLine()) != null) {
 			if (buff.indexOf("CHAR") >= 0 || buff.indexOf("NUMBER") >= 0) {
 				// FIELD定義項目ならFieldInfoをリストに追加
-				al.add(new FieldInfo(buff));
+				fi = new FieldInfo(buff);
+				al.add(fi);
+				hm.put(fi.getFieldName(), fi);
 			} else if (buff.indexOf("COMMENT ON COLUMN") >= 0) {
-				// FIELDの日本語コメントを付与(なぜ文字化けする？)
+				// FIELDの日本語コメントを付与
 				buff = buff.replaceAll("^.*" + xxxxx + "\\.", "");
 				String[] work = buff.split(" IS ");
-				for (int i = 0; i < al.size(); i++) {
-					if (al.get(i).getFieldName().equals(work[0])) {
-						al.get(i).setFieldNameJ(work[1].replaceAll("[';]", ""));
-					}
+				fi = hm.get(work[0]);
+				fi.setFieldNameJ(work[1].replaceAll("[';]", ""));
+
+			} else if (buff.indexOf("PRIMARY KEY") >= 0) {
+				// プライマリキーの設定
+				String[] keys = buff.replaceAll("^.*\\(| |\\)", "").split(",");
+				for (int i = 0; i < keys.length; i++) {
+					hm.get(keys[i]).setPrimary(true);
 				}
+
 			}
 		}
+
+		// TODO プライマリキーを除いてGLOBAL,MAINTをadd
 
 		// 開始オフセットのセット
 		int prev = 0;// 1つ前のオフセット
@@ -72,6 +86,14 @@ public class FieldInfo {
 		}
 
 		return al;
+	}
+
+	private FieldInfo getGlobal() {
+		return new FieldInfo("GLOBAL SKIP(8)");
+	}
+
+	private FieldInfo getMaint() {
+		return new FieldInfo("MAINT SKIP(8)");
 	}
 
 	public int getOffset() {
@@ -146,7 +168,15 @@ public class FieldInfo {
 
 	public String toString() {
 		return getFieldName() + ":" + getType() + "(" + getSize() + ") offset:"
-				+ getOffset() + " / " + getFieldNameJ();
+				+ getOffset() + " " + isPrimary() + " / " + getFieldNameJ();
+	}
+
+	private void setPrimary(boolean isPrimary) {
+		this.isPrimary = isPrimary;
+	}
+
+	private boolean isPrimary() {
+		return isPrimary;
 	}
 
 }
