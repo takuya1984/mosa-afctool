@@ -1,8 +1,6 @@
 package com.jbcc.MQTool.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -12,15 +10,14 @@ public class TraceLogReader extends LineReader {
 	// "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\LOG\\資料20120911\\TABLE\\";
 
 	private static String TRASE_BASE = "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\script\\log\\07_trace\\";
-	private static String WORK_FILE = "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\script\\log\\07_trace_2_byte\\work.bin";
+	// private static String WORK_FILE =
+	// "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\script\\log\\07_trace_2_byte\\work.bin";
 	private File file = null;
-	// private File ddlFile = null;
-
-	private FileInputStream fis = null;
 
 	private List<FieldInfo> fields = null;
-	private int i = 0, idx = 0;
+	private int idx = 0;
 	private StringBuilder sb = new StringBuilder();
+	private int[] offset = null;
 
 	public static void main(String[] args) {
 		try {
@@ -29,9 +26,10 @@ public class TraceLogReader extends LineReader {
 
 			for (String fName : fNames) {
 				TraceLogReader tlr = new TraceLogReader(TRASE_BASE + fName);
-				String buff = null;
-				while ((buff = tlr.readNext()) != null) {
-					System.out.println(buff);
+
+				for (int i = 0; i < tlr.fields.size(); i++) {
+					// System.out.println(readNext());
+					System.out.println(tlr.read(i));
 				}
 			}
 
@@ -53,36 +51,32 @@ public class TraceLogReader extends LineReader {
 	}
 
 	private void init() throws IOException {
-		// String s = file.getName();
-		// ddlFile = new File(DDL_BASE + "KANJOU."
-		// + s.substring(s.length() - 9, s.length() - 4) + ".sql");
-
 		// traceログのフィールド情報を取得
 		fields = FieldInfo.getFieldInfo(file);
-		for (FieldInfo fi : fields) {
-			System.out.println(fi.toString());
+		offset = new int[fields.size()];
+		offset[0] = 0;
+		for (int i = 0; i < fields.size(); i++) {
+			System.out.println(fields.get(i).toString());
 		}
 
+		// バイナリデータのバッファリング
+		LineReader lr = new LineReader(file);
 		String buff = null;
-		while ((buff = readLine()) != null) {
+		while ((buff = lr.readLine()) != null) {
 			sb.append(buff.replaceAll(" ", ""));
 		}
-		System.out.println(sb.toString());
 
-		for (int i = 0; i < fields.size(); i++) {
-			// System.out.println(readNext());
-			readNext();
-		}
 	}
 
-	public String readNext() {
+	public String read(int i) {
 		String ret = null;
 		try {
-			int size = fields.get(i).getByteSize();
-			byte[] buff = Oct2String.record2bytes(sb.substring(idx, idx + size
-					* 3));
+			FieldInfo f = fields.get(i);
+
+			byte[] buff = Oct2String.record2bytes(sb.substring(f.getOffset(), f
+					.getOffset()
+					+ f.getByteSize()*3));
 			ret = Oct2String.valueOf(buff);
-			idx += size * 3;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -35,14 +35,22 @@ public class Oct2String {
 				"313334305271040040040040040040040040",
 				"313334305271040040040040040040040040040040040040040040040040040040040040040040040040040040",
 //				"101000000000",
-				"011040",
+				"001076",
 		};
 
+//		values = new String[]{"313334305271040040040040040040040040"};
 
 		for (int i = 0; i < values.length; i++) {
 			System.out
 					.println((i + 1) + ":" + valueOf(record2bytes(values[i])));
 		}
+
+//		if(true){
+//			for(String s:Charset.availableCharsets().keySet()){
+//				setCharset(s);
+//				System.out.println(s+":"+valueOf(record2bytes(values[0])));
+//			}
+//		}
 
 	}
 

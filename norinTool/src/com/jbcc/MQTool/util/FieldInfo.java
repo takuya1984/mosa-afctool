@@ -8,11 +8,10 @@ import java.util.List;
 public class FieldInfo {
 	private String fieldName = null;
 	private String type = null;
-	private String size = null;
 	private String fieldNameJ = null;
-	private int byteSize = 0;
+	private String size = null;
+	private int offset = 0;
 
-	private final static String CHAR = "CHAR";
 	private final static String NUMBER = "NUMBER";
 
 	private static String TABLE_INFO_PATH = "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\LOG\\資料20120911\\TABLE\\";
@@ -42,24 +41,45 @@ public class FieldInfo {
 		String filePath = TABLE_INFO_PATH + "KANJOU." + xxxxx + ".sql";
 
 		if (!new File(filePath).exists()) {
-			System.out.println("NOT FOUND:" + filePath);
 			return null;
 		}
-		System.out.println(filePath);
-		LineReader lr = new LineReader(filePath);
+
+		LineReader lr = new LineReader(filePath, "Shift_JIS");
 		String buff = null;
 		while ((buff = lr.readLine()) != null) {
 			if (buff.indexOf("CHAR") >= 0 || buff.indexOf("NUMBER") >= 0) {
 				// FIELD定義項目ならFieldInfoをリストに追加
 				al.add(new FieldInfo(buff));
-			} else if (buff.indexOf("CONSTRAINT") >= 0
-					|| buff.indexOf("USING") >= 0) {
-				// 定義情報が終わったら抜ける
-				break;
+			} else if (buff.indexOf("COMMENT ON COLUMN") >= 0) {
+				// FIELDの日本語コメントを付与(なぜ文字化けする？)
+				buff = buff.replaceAll("^.*" + xxxxx + "\\.", "");
+				String[] work = buff.split(" IS ");
+				for (int i = 0; i < al.size(); i++) {
+					if (al.get(i).getFieldName().equals(work[0])) {
+						al.get(i).setFieldNameJ(work[1].replaceAll("[';]", ""));
+					}
+				}
 			}
 		}
 
+		// 開始オフセットのセット
+		int prev = 0;// 1つ前のオフセット
+		for (int i = 0; i < al.size(); i++) {
+			if (i > 0) {
+				al.get(i).setOffset(prev);
+			}
+			prev += al.get(i).getByteSize();
+		}
+
 		return al;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
 	public FieldInfo(String fieldInfo) {
@@ -81,7 +101,7 @@ public class FieldInfo {
 
 	public int getByteSize() {
 		int i = 0;
-		if (CHAR.equals(type)) {
+		if (NUMBER.equals(type)) {
 			i = Integer.valueOf(getSize());
 			if (i <= 5) {
 				i = 2;
@@ -91,7 +111,7 @@ public class FieldInfo {
 				i = 8;
 			}
 		} else {
-			getSize();
+			i = Integer.parseInt(getSize());
 		}
 		return i;
 	}
@@ -125,8 +145,8 @@ public class FieldInfo {
 	}
 
 	public String toString() {
-		return getFieldName() + ":" + getType() + "(" + getSize() + ") / "
-				+ getFieldNameJ();
+		return getFieldName() + ":" + getType() + "(" + getSize() + ") offset:"
+				+ getOffset() + " / " + getFieldNameJ();
 	}
 
 }
