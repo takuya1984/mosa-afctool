@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FieldInfo {
+	// properties
 	private String fieldName = null;
 	private String type = null;
 	private String fieldNameJ = null;
@@ -14,9 +15,14 @@ public class FieldInfo {
 	private int offset = 0;
 	private boolean isPrimary = false;
 
+	// const
 	private final static String NUMBER = "NUMBER";
+	private static FieldInfo GLOBAL = new FieldInfo(
+			"GLOBAL SKIP(8)スキップ項目GLOBAL");
+	private static FieldInfo MAINT = new FieldInfo("MAINT SKIP(1)スキップ項目MAINT");
 
-	private static String TABLE_INFO_PATH = "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\LOG\\資料20120911\\TABLE\\";
+	// リリース時には変更が必要
+	private static String TABLE_INFO_PATH = "/Users/MOSA/Dropbox/【農林】統合テスト支援ツール/LOG/資料20120911/TABLE/";
 
 	// private static String TRACE_LOG_BASE =
 	// "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\script\\log\\07_trace\\";
@@ -74,7 +80,28 @@ public class FieldInfo {
 			}
 		}
 
-		// TODO プライマリキーを除いてGLOBAL,MAINTをadd
+		// プライマリキーを除いてGLOBAL,MAINTをadd
+		for (int i = 0; i < al.size(); i++) {
+			fi = al.get(i);
+			if (fi.isPrimary) {
+				continue;
+			}
+
+			// GLOBAL,MAINTを入れていいか？
+			if (!al.contains(GLOBAL) && fi.compareTo(GLOBAL) >= 0) {
+				al.add(i, GLOBAL);
+			}
+			if (!al.contains(MAINT) && fi.compareTo(MAINT) >= 0) {
+				al.add(i, MAINT);
+			}
+		}
+		// 最後までGLOBAL,MAINTが挿入されていなかったら？
+		if (!al.contains(GLOBAL)) {
+			al.add(GLOBAL);
+		}
+		if (!al.contains(MAINT)) {
+			al.add(MAINT);
+		}
 
 		// 開始オフセットのセット
 		int prev = 0;// 1つ前のオフセット
@@ -82,18 +109,22 @@ public class FieldInfo {
 			if (i > 0) {
 				al.get(i).setOffset(prev);
 			}
-			prev += al.get(i).getByteSize();
+			prev += al.get(i).getByteSize() * 3;
 		}
 
 		return al;
 	}
 
-	private FieldInfo getGlobal() {
-		return new FieldInfo("GLOBAL SKIP(8)");
-	}
-
-	private FieldInfo getMaint() {
-		return new FieldInfo("MAINT SKIP(8)");
+	/**
+	 * フィールド名称比較<br/>
+	 * 内部でしか意味を持たないためcomparableを継承せず、publicにはしない。
+	 *
+	 * @param fi2
+	 *            比較対象
+	 * @return FiledName同士のcompare結果
+	 */
+	private int compareTo(FieldInfo fi2) {
+		return this.getFieldName().compareTo(fi2.getFieldName());
 	}
 
 	public int getOffset() {
@@ -104,11 +135,17 @@ public class FieldInfo {
 		this.offset = offset;
 	}
 
+	/**
+	 * コンストラクタ
+	 *
+	 * @param fieldInfo
+	 *            フィールド情報
+	 */
 	public FieldInfo(String fieldInfo) {
 		int i = 0;
-		String[] values = fieldInfo.trim().replaceAll("[ \\(\\)]", "\t").split(
-				"\t");
-		// System.out.println(fieldInfo + ":" + values.length);
+		String[] values = fieldInfo.trim().replaceAll("[ \\(\\)]", "\t")
+				.split("\t");
+
 		setFieldName(values[i++]);
 		setType(values[i++]);
 		setSize(values[i++]);
@@ -125,9 +162,9 @@ public class FieldInfo {
 		int i = 0;
 		if (NUMBER.equals(type)) {
 			i = Integer.valueOf(getSize());
-			if (i <= 5) {
+			if (i <=5) {
 				i = 2;
-			} else if (i <= 10) {
+			} else if (i <=10) {
 				i = 4;
 			} else {
 				i = 8;

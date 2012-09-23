@@ -16,7 +16,7 @@ public class LineReader extends BufferedReader {
 	public static void main(String[] args) {
 		// test
 		try {
-			String s = "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\script\\log\\01_client\\2012-04-09_135749_00000_2_2301010_2.dat";
+			String s = "/Users/Shared/Dropbox/Dropbox/【農林】統合テスト支援ツール/LOG/01_client/2012-04-09_135749_00000_2_2301010_2.dat";
 			LineReader lr = null;
 
 			lr = new LineReader(s);
