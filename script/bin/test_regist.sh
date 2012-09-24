@@ -2,4 +2,4 @@
 
 . $(dirname $0)/../bin/regist.sh
 
-func_regist_log $1
+regist_log_data $1
