@@ -57,7 +57,7 @@ public class ResourceManager {
 
 	/**
 	 * FileInputStreamを取得する プロセス終了時に開放される
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 * @throws Exception
@@ -72,7 +72,7 @@ public class ResourceManager {
 
 	/**
 	 * FileOutputStreamを取得する プロセス終了時に開放される
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 * @throws Exception
@@ -87,7 +87,7 @@ public class ResourceManager {
 
 	/**
 	 * selectの実行
-	 * 
+	 *
 	 * @param sql
 	 * @return
 	 * @throws Exception
@@ -139,7 +139,7 @@ public class ResourceManager {
 
 	/**
 	 * preparedstatementでinsert update deleteを実行
-	 * 
+	 *
 	 * @param sql
 	 * @param params
 	 * @return
@@ -175,7 +175,7 @@ public class ResourceManager {
 
 	/**
 	 * コネクションを取得
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -193,7 +193,7 @@ public class ResourceManager {
 
 	/**
 	 * DBトランザクションのコミット
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	void commit() throws Exception {
@@ -207,7 +207,7 @@ public class ResourceManager {
 
 	/**
 	 * DBトランザクションのロールバック
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	void rollback() throws Exception {
@@ -223,7 +223,7 @@ public class ResourceManager {
 
 	/**
 	 * プロパティファイルから値取得
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 * @throws Exception
@@ -253,7 +253,7 @@ public class ResourceManager {
 
 	/**
 	 * SQLを取得
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 * @throws Exception

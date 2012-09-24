@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.controller.ToolException;
+
 public class FieldInfo {
 	// properties
 	private String fieldName = null;
@@ -22,10 +25,8 @@ public class FieldInfo {
 	private static FieldInfo MAINT = new FieldInfo("MAINT SKIP(1)スキップ項目MAINT");
 
 	// リリース時には変更が必要
-	private static String TABLE_INFO_PATH = "/Users/MOSA/Dropbox/【農林】統合テスト支援ツール/LOG/資料20120911/TABLE/";
-
-	// private static String TRACE_LOG_BASE =
-	// "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\script\\log\\07_trace\\";
+	private static String TABLE_INFO_PATH = PropertyLoader.getDirProp()
+			.getProperty("DDL");
 
 	/**
 	 * ファイルからフィールド定義情報を読み込む
@@ -35,9 +36,9 @@ public class FieldInfo {
 	 * @return フィールド情報リスト
 	 * @throws IOException
 	 *             入出力エラーが発生した場合
+	 * @throws ToolException
 	 */
 	public static List<FieldInfo> getFieldInfo(File f) throws IOException {
-
 		ArrayList<FieldInfo> al = new ArrayList<FieldInfo>();
 		HashMap<String, FieldInfo> hm = new HashMap<String, FieldInfo>();
 
@@ -48,9 +49,10 @@ public class FieldInfo {
 		 */
 		String xxxxx = tableInfoFile.substring(tableInfoFile.length() - 9,
 				tableInfoFile.length() - 4);
-		String filePath = TABLE_INFO_PATH + "KANJOU." + xxxxx + ".sql";
+		String filePath = TABLE_INFO_PATH + "/KANJOU." + xxxxx + ".sql";
 
 		if (!new File(filePath).exists()) {
+			System.out.println("can't get field info:" + filePath);
 			return null;
 		}
 
@@ -79,6 +81,7 @@ public class FieldInfo {
 
 			}
 		}
+		lr.close();
 
 		// プライマリキーを除いてGLOBAL,MAINTをadd
 		for (int i = 0; i < al.size(); i++) {
@@ -162,9 +165,9 @@ public class FieldInfo {
 		int i = 0;
 		if (NUMBER.equals(type)) {
 			i = Integer.valueOf(getSize());
-			if (i <=5) {
+			if (i <= 5) {
 				i = 2;
-			} else if (i <=10) {
+			} else if (i <= 10) {
 				i = 4;
 			} else {
 				i = 8;
@@ -205,7 +208,7 @@ public class FieldInfo {
 
 	public String toString() {
 		return getFieldName() + ":" + getType() + "(" + getSize() + ") offset:"
-				+ getOffset() + " " + isPrimary() + " / " + getFieldNameJ();
+				+ getOffset() + " PK:" + isPrimary() + " / " + getFieldNameJ();
 	}
 
 	private void setPrimary(boolean isPrimary) {

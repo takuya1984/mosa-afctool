@@ -7,10 +7,10 @@ import java.util.List;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
 
-public class TraceLogReader extends LineReader {
+public class DbioLogReader extends LineReader {
 
-	private static String TRACE_BASE = PropertyLoader.getDirProp().getProperty(
-			"07_trace");
+	private static String DBIO_BASE = PropertyLoader.getDirProp().getProperty(
+			"08_dbio");
 
 	private List<FieldInfo> fields = null;
 
@@ -19,11 +19,11 @@ public class TraceLogReader extends LineReader {
 
 	public static void main(String[] args) {
 		try {
-			File path = new File(TRACE_BASE);
+			File path = new File(DBIO_BASE);
 
 			for (File f : path.listFiles()) {
 				System.out.println(f.getName());
-				TraceLogReader tlr = new TraceLogReader(f);
+				DbioLogReader tlr = new DbioLogReader(f);
 				if (tlr.fields == null) {
 					continue;
 				}
@@ -40,12 +40,12 @@ public class TraceLogReader extends LineReader {
 		}
 	}
 
-	public TraceLogReader(String s) throws IOException {
+	public DbioLogReader(String s) throws IOException {
 		super(s);
 		init(new File(s));
 	}
 
-	public TraceLogReader(File f) throws IOException {
+	public DbioLogReader(File f) throws IOException {
 		super(f);
 		init(f);
 	}

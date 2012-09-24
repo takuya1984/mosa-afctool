@@ -12,7 +12,11 @@ import java.util.Set;
  */
 public class Oct2String {
 
-	private static String DEFAULT_CHARSET = "EUC-JP";// "Shift_JIS";;
+	public static String EUC = "EUC-JP";
+	public static String SJIS = "Shift-JIS";
+
+	//default chaset = "EUC-JP"
+	public static String DEFAULT_CHARSET = EUC;
 
 	/**
 	 * javaで使用可能な文字セットを標準出力にダンプ
