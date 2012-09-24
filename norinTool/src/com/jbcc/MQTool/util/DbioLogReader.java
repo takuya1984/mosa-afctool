@@ -17,22 +17,17 @@ public class DbioLogReader extends LineReader {
 	private StringBuilder sb = new StringBuilder();
 	private int[] offset = null;
 
+	private final int OFFSET = 87;// 固定オフセット(無視する部分)
+
 	public static void main(String[] args) {
 		try {
 			File path = new File(DBIO_BASE);
-
+			String buff = null;
 			for (File f : path.listFiles()) {
-				System.out.println(f.getName());
-				DbioLogReader tlr = new DbioLogReader(f);
-				if (tlr.fields == null) {
-					continue;
-				}
+				DbioLogReader dlr = new DbioLogReader(f);
 
-				for (int i = 0; i < tlr.fields.size(); i++) {
-					System.out.print(tlr.fields.get(i).toString());
-					System.out.println("'" + tlr.read(i) + "'");
-				}
-				tlr.close();
+				// TODO ここからDbioLog読み込みを実装
+
 			}
 
 		} catch (Exception e) {
@@ -59,13 +54,8 @@ public class DbioLogReader extends LineReader {
 		offset = new int[fields.size()];
 		offset[0] = 0;
 
-		// バイナリデータのバッファリング
-		LineReader lr = new LineReader(file);
-		String buff = null;
-		while ((buff = lr.readLine()) != null) {
-			sb.append(buff.replaceAll(" ", ""));
-		}
-		lr.close();
+		// データのバッファリング
+
 	}
 
 	public String read(int i) throws UnsupportedEncodingException {
