@@ -3,7 +3,7 @@
 . $(dirname $0)/../conf/script.conf
 
 #----------------------------------------------
-# function:func_conv_log
+# function:get_log_data
 # param $1:MODE ログ種別コード
 #
 # 処理概要:
