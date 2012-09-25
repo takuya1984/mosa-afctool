@@ -3,7 +3,7 @@
 . $(dirname $0)/../conf/script.conf
 
 #----------------------------------------------
-# function:func_conv_log
+# function:get_log_data
 # param $1:MODE ログ種別コード
 #
 # 処理概要:
@@ -11,7 +11,7 @@
 #    パラメータのログ種別コードに応じて、
 #    各処理をcallする.
 #----------------------------------------------
-func_conv_log() {
+get_log_data() {
 
 MODE=$1
 TODAY=`date +"%Y%m%d%H%M%S"`
@@ -144,6 +144,34 @@ case "$MODE" in
 			echo "error : ログ抽出エラー"
 			return -1
 		fi
+	done
+	;;
+"8")
+	#---------------------------------------------
+	# DBIOログ抽出処理
+	#---------------------------------------------
+
+	for file in $(ls ${DBIO_LOG_DIR_TARGET})
+	do
+		if [ -d $file ]
+		then
+			continue
+		fi
+
+	    # UTF-8変換
+		FILE_UTF8="${DBIO_LOG_DIR_UTF8}/${file}"
+		nkf -w8x --ms-ucs-map ${DBIO_LOG_DIR_TARGET}/${file} > ${FILE_UTF8}
+
+		# ログ抽出
+		${BASEDIR}/bin/conv_dbio.sh "${FILE_UTF8}"
+		RC=$?
+		if [ $RC -ne 0 ]
+		then
+			echo "error : ログ抽出エラー"
+			return -1
+		fi
+
+		rm -f ${FILE_UTF8}
 	done
 	;;
 "9" | "10")
