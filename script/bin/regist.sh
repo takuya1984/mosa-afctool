@@ -20,7 +20,7 @@
 #    ログ登録のラッパーfunciton.
 #    パラメータのログ種別コードに応じて、各処理をcallする.
 #----------------------------------------------
-regist_log_data() {
+func_regist_log() {
 
 	MODE=$1
 	TODAY=`date +"%Y%m%d%H%M%S"`
@@ -54,11 +54,6 @@ regist_log_data() {
 		"7")
 			# 登録 Tracelog
 			${BASEDIR}/bin/regist_trace.sh
-			;;
-
-		"8")
-			# 登録 DBIOログ
-			${BASEDIR}/bin/regist_dbio.sh
 			;;
 
 		"9" | "10")

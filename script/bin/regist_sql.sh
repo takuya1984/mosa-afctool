@@ -49,7 +49,7 @@ do
 		then
 			COM=$(echo "${LINE}" | sed -e "s/.*共通ヘッダ部=//")
 			LOG_OUTPUT_DATE=$(echo "${LINE}" | awk '{print $1 $2}' | sed -e "s/\///g" -e "s/://g" | sed -e "s/|.*//")
-			LOG_CD=$MODE
+			LOG_CD="1"
 			CL_CD=$(echo "${COM}" | cut -b1-5)
 			OPE_CD=$(echo "${COM}" | cut -b6-6)
 			DENBUN_CD=$(echo "${COM}" | cut -b7-13)

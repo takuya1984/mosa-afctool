@@ -29,7 +29,6 @@ do
 	else
 		UPDW_FLG="2"
 	fi
-	LOG_CD="2"
 	
 	while IFS= read LINE
 	do
@@ -57,6 +56,7 @@ do
 		if echo "${LINE}" | grep "<strComUpHeadDt>" > /dev/null 2>&1
 		then
 			COM=$(echo "${LINE}" | sed -e "s/.*<strComUpHeadDt>//" | sed -e "s/<\/strComUpHeadDt>//")
+			LOG_CD="2"
 			CL_CD=$(echo "${COM}" | cut -b1-5)
 			OPE_CD=$(echo "${COM}" | cut -b6-6)
 			DENBUN_CD=$(echo "${COM}" | cut -b7-13)

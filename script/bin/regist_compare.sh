@@ -43,13 +43,13 @@ regist_compare() {
 
 	MASTER_ID=$1
 	KEY=$2
-	ITEM_SEQ=$3
+	ITEM_NAME=$3
 	UP_DOWN_CD=$4
 
 	# -------------------------------
 	# 比較除外項目マスタDBに登録
 	# -------------------------------
-	java -jar ${JAVA_NORIN_JAR} RegistCompareData "id=${ID}" "master_id=${MASTER_ID}" "key=${KEY}" "item_seq=${ITEM_SEQ}" "up_down_cd=${UP_DOWN_CD}"
+	java -jar ${JAVA_NORIN_JAR} RegistCompareData "id=${ID}" "master_id=${MASTER_ID}" "key=${KEY}" "item_name=${ITEM_NAME}" "up_down_cd=${UP_DOWN_CD}"
 	RC=$?
 	return $RC
 

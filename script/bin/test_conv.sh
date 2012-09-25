@@ -2,4 +2,4 @@
 
 . $(dirname $0)/../bin/conv.sh
 
-get_log_data $1
+func_conv_log $1
