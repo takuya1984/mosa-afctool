@@ -65,17 +65,23 @@ regist_log_data() {
 		"7")
 			# 登録 Tracelog
 			${BASEDIR}/bin/regist_trace.sh
-			mv ${OTXCSS_LOG_DIR}/* ${OTXCSS_LOG_DIR_REGIST}/
+			mv ${TRACE_LOG_DIR}/* ${TRACE_LOG_DIR_REGIST}/
 			;;
 
 		"8")
 			# 登録 DBIOログ
 			${BASEDIR}/bin/regist_dbio.sh
+			mv ${DBIO_LOG_DIR}/* ${DBIO_LOG_DIR_REGIST}/
 			;;
 
 		"9" | "10")
 			# 登録 OTX-SQL,AP-SQL
 			${BASEDIR}/bin/regist_sql.sh $MODE
+			if [ $MODE == "9" ];then
+				mv ${OTXSQL_LOG_DIR}/* ${OTXSQL_LOG_DIR_REGIST}/
+			elif [ $MODE == "10" ];then
+				mv ${APSQL_LOG_DIR}/* ${APSQL_LOG_DIR_REGIST}/
+			fi
 			;;
 
 		*)
