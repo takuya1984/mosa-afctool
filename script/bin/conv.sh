@@ -11,7 +11,7 @@
 #    パラメータのログ種別コードに応じて、
 #    各処理をcallする.
 #----------------------------------------------
-get_log_data() {
+func_conv_log() {
 
 MODE=$1
 TODAY=`date +"%Y%m%d%H%M%S"`
@@ -144,34 +144,6 @@ case "$MODE" in
 			echo "error : ログ抽出エラー"
 			return -1
 		fi
-	done
-	;;
-"8")
-	#---------------------------------------------
-	# DBIOログ抽出処理
-	#---------------------------------------------
-
-	for file in $(ls ${DBIO_LOG_DIR_TARGET})
-	do
-		if [ -d $file ]
-		then
-			continue
-		fi
-
-	    # UTF-8変換
-		FILE_UTF8="${DBIO_LOG_DIR_UTF8}/${file}"
-		nkf -w8x --ms-ucs-map ${DBIO_LOG_DIR_TARGET}/${file} > ${FILE_UTF8}
-
-		# ログ抽出
-		${BASEDIR}/bin/conv_dbio.sh "${FILE_UTF8}"
-		RC=$?
-		if [ $RC -ne 0 ]
-		then
-			echo "error : ログ抽出エラー"
-			return -1
-		fi
-
-		rm -f ${FILE_UTF8}
 	done
 	;;
 "9" | "10")

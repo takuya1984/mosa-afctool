@@ -59,18 +59,13 @@ do
 		COM=$(echo "${LINE}" | sed -e "s/.*<strComUpHeadDt>//" | sed -e "s/<\/strComUpHeadDt>.*//")
 		
 	fi
-	if echo "${LINE}" | grep "<strbufComDwHeadDt>" > /dev/null 2>&1
-	then
-		COM=$(echo "${LINE}" | sed -e "s/.*<strbufComDwHeadDt>//" | sed -e "s/<\/strbufComDwHeadDt>.*//")
-		
-	fi
 
 	#--------------------------------
 	# Webサーバログかどうかの判定
 	# 情報系APor勘定系APログの場合、処理を終了
 	# (本番環境であればこの処理は該当しないはず)
 	#--------------------------------
-	if echo "${LINE}" | grep "<bon:ResponseMessageList\|<faultcode>" > /dev/null 2>&1
+	if echo "${LINE}" | grep "<ns1:ResponseMessageList\|<bon:ResponseMessageList\|<faultcode>" > /dev/null 2>&1
 	then
 		status=0
 		rm -f $tmpfile > /dev/null 2>&1
