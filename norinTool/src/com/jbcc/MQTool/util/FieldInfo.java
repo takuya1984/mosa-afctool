@@ -14,12 +14,14 @@ public class FieldInfo {
 	private String fieldName = null;
 	private String type = null;
 	private String fieldNameJ = null;
-	private String size = null;
+	private int size = 0;
 	private int offset = 0;
 	private boolean isPrimary = false;
 
 	// const
 	private final static String NUMBER = "NUMBER";
+	private final static String SKIP = "SKIP";
+
 	private static FieldInfo GLOBAL = new FieldInfo(
 			"GLOBAL SKIP(8)スキップ項目GLOBAL");
 	private static FieldInfo MAINT = new FieldInfo("MAINT SKIP(1)スキップ項目MAINT");
@@ -39,6 +41,11 @@ public class FieldInfo {
 	 * @throws ToolException
 	 */
 	public static List<FieldInfo> getFieldInfo(File f) throws IOException {
+		return getFieldInfo(f, false);
+	}
+
+	private static List<FieldInfo> getFieldInfo(File f, boolean isNew)
+			throws IOException {
 		ArrayList<FieldInfo> al = new ArrayList<FieldInfo>();
 		HashMap<String, FieldInfo> hm = new HashMap<String, FieldInfo>();
 
@@ -91,18 +98,18 @@ public class FieldInfo {
 			}
 
 			// GLOBAL,MAINTを入れていいか？
-			if (!al.contains(GLOBAL) && fi.compareTo(GLOBAL) >= 0) {
+			if (!isNew && !al.contains(GLOBAL) && fi.compareTo(GLOBAL) >= 0) {
 				al.add(i, GLOBAL);
 			}
-			if (!al.contains(MAINT) && fi.compareTo(MAINT) >= 0) {
+			if (!isNew && !al.contains(MAINT) && fi.compareTo(MAINT) >= 0) {
 				al.add(i, MAINT);
 			}
 		}
 		// 最後までGLOBAL,MAINTが挿入されていなかったら？
-		if (!al.contains(GLOBAL)) {
+		if (!isNew && !al.contains(GLOBAL)) {
 			al.add(GLOBAL);
 		}
-		if (!al.contains(MAINT)) {
+		if (!isNew && !al.contains(MAINT)) {
 			al.add(MAINT);
 		}
 
@@ -112,10 +119,20 @@ public class FieldInfo {
 			if (i > 0) {
 				al.get(i).setOffset(prev);
 			}
-			prev += al.get(i).getByteSize() * 3;
+			if (isNew) {
+				// 新ログならサイズがそのままバイト数
+				prev += al.get(i).getSize();
+			} else {
+				// 旧trace log なら８進数３つで１バイト
+				prev += al.get(i).getByteSize() * 3;
+			}
 		}
 
 		return al;
+	}
+
+	public static List<FieldInfo> getFieldInfoNew(File f) throws IOException {
+		return getFieldInfo(f, true);
 	}
 
 	/**
@@ -164,7 +181,7 @@ public class FieldInfo {
 	public int getByteSize() {
 		int i = 0;
 		if (NUMBER.equals(type)) {
-			i = Integer.valueOf(getSize());
+			i = getSize();
 			if (i <= 5) {
 				i = 2;
 			} else if (i <= 10) {
@@ -173,7 +190,7 @@ public class FieldInfo {
 				i = 8;
 			}
 		} else {
-			i = Integer.parseInt(getSize());
+			i = getSize();
 		}
 		return i;
 	}
@@ -190,12 +207,12 @@ public class FieldInfo {
 		this.type = type;
 	}
 
-	public String getSize() {
-		return size.split(",")[0];
+	public int getSize() {
+		return size;
 	}
 
 	public void setSize(String size) {
-		this.size = size;
+		this.size = Integer.valueOf(size.split(",")[0]);
 	}
 
 	public String getFieldNameJ() {
@@ -219,4 +236,7 @@ public class FieldInfo {
 		return isPrimary;
 	}
 
+	public boolean isSkip() {
+		return getType().equals(SKIP);
+	}
 }

@@ -3,18 +3,20 @@ package com.jbcc.MQTool.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
 
 public class DbioLogReader extends LineReader {
 
+	private static final String SJIS = "Shift-JIS";
 	private static String DBIO_BASE = PropertyLoader.getDirProp().getProperty(
 			"08_dbio");
 
 	private List<FieldInfo> fields = null;
 
-	private StringBuilder sb = new StringBuilder();
+	private byte[] record = null;
 	private int[] offset = null;
 
 	private final int OFFSET = 87;// 固定オフセット(無視する部分)
@@ -22,17 +24,31 @@ public class DbioLogReader extends LineReader {
 	public static void main(String[] args) {
 		try {
 			File path = new File(DBIO_BASE);
-			String buff = null;
 			for (File f : path.listFiles()) {
-				DbioLogReader dlr = new DbioLogReader(f);
-
-				// TODO ここからDbioLog読み込みを実装
-
+				new DbioLogReader(f).getList();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<String> getList() throws UnsupportedEncodingException,
+			IOException {
+		ArrayList<String> al = new ArrayList<String>();
+		if (fields == null) {
+			return al;
+		}
+		// ここからDbioLog読み込みを実装
+		for (int i = 0; i < fields.size(); i++) {
+			if (fields.get(i).isSkip()) {
+				continue;
+			}
+			al.add(read(i));
+			StdOut.write(fields.get(i).toString() + ":'" + al.get(i) + "'");
+		}
+		close();
+		return al;
 	}
 
 	public DbioLogReader(String s) throws IOException {
@@ -47,7 +63,8 @@ public class DbioLogReader extends LineReader {
 
 	private void init(File file) throws IOException {
 		// traceログのフィールド情報を取得
-		fields = FieldInfo.getFieldInfo(file);
+		StdOut.write(file.getPath());
+		fields = FieldInfo.getFieldInfoNew(file);
 		if (fields == null) {
 			return;
 		}
@@ -55,28 +72,38 @@ public class DbioLogReader extends LineReader {
 		offset[0] = 0;
 
 		// データのバッファリング
+		LineReader lr = new LineReader(file);
+		record = lr.readLine().getBytes(SJIS);
+		lr.close();
+		StdOut.write(record.length + ":" + new String(record, SJIS));
+
+		slideOffset(0, OFFSET);
 
 	}
 
-	public String read(int i) throws UnsupportedEncodingException {
-		String ret = null;
-		FieldInfo f = fields.get(i);
-
-		ret = sb.substring(f.getOffset(), f.getOffset() + f.getByteSize() * 3);
-		if (f.getType().equals("CHAR")) {
-			byte[] buff = Oct2String.record2bytes(ret);
-			if (f.getFieldName().startsWith("X")) {
-				ret = Oct2String.valueOf(buff, "Shift_JIS");
-			} else {
-				ret = Oct2String.valueOf(buff);
-			}
-		} else if (f.getType().equals("NUMBER")) {
-			ret = String.valueOf(Long.parseLong(ret, 8));
-		} else if (f.getFieldName().equals("MAINT")) {
-			byte[] buff = Oct2String.record2bytes(ret);
-			ret = Oct2String.valueOf(buff);
+	private void slideOffset(int idx, int len) {
+		int j = 0;
+		for (int i = idx; i < fields.size(); i++) {
+			j = fields.get(i).getOffset();
+			fields.get(i).setOffset(j + len);
 		}
-		return ret;
+	}
+
+	public String read(int i) throws UnsupportedEncodingException {
+		FieldInfo f = fields.get(i);
+		int size = f.getSize();
+		String s = null;
+		if (f.getType().equals("NUMBER")) {
+			s = new String(record, f.getOffset(), 1);
+			if (s.equals("+") || s.equals("-")) {
+				slideOffset(i + 1, 1);
+				size++;
+			}
+			s = new String(record, f.getOffset(), size, SJIS);
+		} else {
+			s = new String(record, f.getOffset(), size, SJIS);
+		}
+		return s;
 	}
 
 }

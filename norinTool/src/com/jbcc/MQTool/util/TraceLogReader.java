@@ -3,6 +3,7 @@ package com.jbcc.MQTool.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
@@ -22,22 +23,32 @@ public class TraceLogReader extends LineReader {
 			File path = new File(TRACE_BASE);
 
 			for (File f : path.listFiles()) {
-				System.out.println(f.getName());
-				TraceLogReader tlr = new TraceLogReader(f);
-				if (tlr.fields == null) {
-					continue;
-				}
-
-				for (int i = 0; i < tlr.fields.size(); i++) {
-					System.out.print(tlr.fields.get(i).toString());
-					System.out.println("'" + tlr.read(i) + "'");
-				}
-				tlr.close();
+				StdOut.write(f.getName());
+				new TraceLogReader(f).getList();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<String> getList() throws UnsupportedEncodingException,
+			IOException {
+		// TODO get list
+		ArrayList<String> al = new ArrayList<String>();
+		if (fields == null) {
+			close();
+			return al;
+		}
+		for (int i = 0; i < fields.size(); i++) {
+			if (!fields.get(i).isSkip()) {
+				System.out.print(fields.get(i).toString());
+				StdOut.write("'" + read(i) + "'");
+				al.add(read(i));
+			}
+		}
+		close();
+		return al;
 	}
 
 	public TraceLogReader(String s) throws IOException {
@@ -82,9 +93,10 @@ public class TraceLogReader extends LineReader {
 			}
 		} else if (f.getType().equals("NUMBER")) {
 			ret = String.valueOf(Long.parseLong(ret, 8));
-		} else if (f.getFieldName().equals("MAINT")) {
-			byte[] buff = Oct2String.record2bytes(ret);
-			ret = Oct2String.valueOf(buff);
+		} else if (f.isSkip()) {
+			// スキップ対象
+		} else {
+			StdOut.write("予想外の型:" + f.getType());
 		}
 		return ret;
 	}
