@@ -3,21 +3,32 @@ package com.jbcc.MQTool.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.controller.ToolException;
+
 public class FieldInfo {
+	// properties
 	private String fieldName = null;
 	private String type = null;
 	private String fieldNameJ = null;
-	private String size = null;
+	private int size = 0;
 	private int offset = 0;
+	private boolean isPrimary = false;
 
+	// const
 	private final static String NUMBER = "NUMBER";
+	private final static String SKIP = "SKIP";
 
-	private static String TABLE_INFO_PATH = "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\LOG\\資料20120911\\TABLE\\";
+	private static FieldInfo GLOBAL = new FieldInfo(
+			"GLOBAL SKIP(8)スキップ項目GLOBAL");
+	private static FieldInfo MAINT = new FieldInfo("MAINT SKIP(1)スキップ項目MAINT");
 
-	// private static String TRACE_LOG_BASE =
-	// "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\script\\log\\07_trace\\";
+	// リリース時には変更が必要
+	private static String TABLE_INFO_PATH = PropertyLoader.getDirProp()
+			.getProperty("DDL");
 
 	/**
 	 * ファイルからフィールド定義情報を読み込む
@@ -27,9 +38,16 @@ public class FieldInfo {
 	 * @return フィールド情報リスト
 	 * @throws IOException
 	 *             入出力エラーが発生した場合
+	 * @throws ToolException
 	 */
 	public static List<FieldInfo> getFieldInfo(File f) throws IOException {
+		return getFieldInfo(f, false);
+	}
+
+	private static List<FieldInfo> getFieldInfo(File f, boolean isNew)
+			throws IOException {
 		ArrayList<FieldInfo> al = new ArrayList<FieldInfo>();
+		HashMap<String, FieldInfo> hm = new HashMap<String, FieldInfo>();
 
 		String tableInfoFile = f.getName();
 		/**
@@ -38,28 +56,61 @@ public class FieldInfo {
 		 */
 		String xxxxx = tableInfoFile.substring(tableInfoFile.length() - 9,
 				tableInfoFile.length() - 4);
-		String filePath = TABLE_INFO_PATH + "KANJOU." + xxxxx + ".sql";
+		String filePath = TABLE_INFO_PATH + "/KANJOU." + xxxxx + ".sql";
 
 		if (!new File(filePath).exists()) {
+			System.out.println("can't get field info:" + filePath);
 			return null;
 		}
 
 		LineReader lr = new LineReader(filePath, "Shift_JIS");
 		String buff = null;
+		FieldInfo fi = null;
 		while ((buff = lr.readLine()) != null) {
 			if (buff.indexOf("CHAR") >= 0 || buff.indexOf("NUMBER") >= 0) {
 				// FIELD定義項目ならFieldInfoをリストに追加
-				al.add(new FieldInfo(buff));
+				fi = new FieldInfo(buff);
+				al.add(fi);
+				hm.put(fi.getFieldName(), fi);
 			} else if (buff.indexOf("COMMENT ON COLUMN") >= 0) {
-				// FIELDの日本語コメントを付与(なぜ文字化けする？)
+				// FIELDの日本語コメントを付与
 				buff = buff.replaceAll("^.*" + xxxxx + "\\.", "");
 				String[] work = buff.split(" IS ");
-				for (int i = 0; i < al.size(); i++) {
-					if (al.get(i).getFieldName().equals(work[0])) {
-						al.get(i).setFieldNameJ(work[1].replaceAll("[';]", ""));
-					}
+				fi = hm.get(work[0]);
+				fi.setFieldNameJ(work[1].replaceAll("[';]", ""));
+
+			} else if (buff.indexOf("PRIMARY KEY") >= 0) {
+				// プライマリキーの設定
+				String[] keys = buff.replaceAll("^.*\\(| |\\)", "").split(",");
+				for (int i = 0; i < keys.length; i++) {
+					hm.get(keys[i]).setPrimary(true);
 				}
+
 			}
+		}
+		lr.close();
+
+		// プライマリキーを除いてGLOBAL,MAINTをadd
+		for (int i = 0; i < al.size(); i++) {
+			fi = al.get(i);
+			if (fi.isPrimary) {
+				continue;
+			}
+
+			// GLOBAL,MAINTを入れていいか？
+			if (!isNew && !al.contains(GLOBAL) && fi.compareTo(GLOBAL) >= 0) {
+				al.add(i, GLOBAL);
+			}
+			if (!isNew && !al.contains(MAINT) && fi.compareTo(MAINT) >= 0) {
+				al.add(i, MAINT);
+			}
+		}
+		// 最後までGLOBAL,MAINTが挿入されていなかったら？
+		if (!isNew && !al.contains(GLOBAL)) {
+			al.add(GLOBAL);
+		}
+		if (!isNew && !al.contains(MAINT)) {
+			al.add(MAINT);
 		}
 
 		// 開始オフセットのセット
@@ -68,10 +119,32 @@ public class FieldInfo {
 			if (i > 0) {
 				al.get(i).setOffset(prev);
 			}
-			prev += al.get(i).getByteSize();
+			if (isNew) {
+				// 新ログならサイズがそのままバイト数
+				prev += al.get(i).getSize();
+			} else {
+				// 旧trace log なら８進数３つで１バイト
+				prev += al.get(i).getByteSize() * 3;
+			}
 		}
 
 		return al;
+	}
+
+	public static List<FieldInfo> getFieldInfoNew(File f) throws IOException {
+		return getFieldInfo(f, true);
+	}
+
+	/**
+	 * フィールド名称比較<br/>
+	 * 内部でしか意味を持たないためcomparableを継承せず、publicにはしない。
+	 *
+	 * @param fi2
+	 *            比較対象
+	 * @return FiledName同士のcompare結果
+	 */
+	private int compareTo(FieldInfo fi2) {
+		return this.getFieldName().compareTo(fi2.getFieldName());
 	}
 
 	public int getOffset() {
@@ -82,11 +155,17 @@ public class FieldInfo {
 		this.offset = offset;
 	}
 
+	/**
+	 * コンストラクタ
+	 *
+	 * @param fieldInfo
+	 *            フィールド情報
+	 */
 	public FieldInfo(String fieldInfo) {
 		int i = 0;
-		String[] values = fieldInfo.trim().replaceAll("[ \\(\\)]", "\t").split(
-				"\t");
-		// System.out.println(fieldInfo + ":" + values.length);
+		String[] values = fieldInfo.trim().replaceAll("[ \\(\\)]", "\t")
+				.split("\t");
+
 		setFieldName(values[i++]);
 		setType(values[i++]);
 		setSize(values[i++]);
@@ -102,7 +181,7 @@ public class FieldInfo {
 	public int getByteSize() {
 		int i = 0;
 		if (NUMBER.equals(type)) {
-			i = Integer.valueOf(getSize());
+			i = getSize();
 			if (i <= 5) {
 				i = 2;
 			} else if (i <= 10) {
@@ -111,7 +190,7 @@ public class FieldInfo {
 				i = 8;
 			}
 		} else {
-			i = Integer.parseInt(getSize());
+			i = getSize();
 		}
 		return i;
 	}
@@ -128,12 +207,12 @@ public class FieldInfo {
 		this.type = type;
 	}
 
-	public String getSize() {
-		return size.split(",")[0];
+	public int getSize() {
+		return size;
 	}
 
 	public void setSize(String size) {
-		this.size = size;
+		this.size = Integer.valueOf(size.split(",")[0]);
 	}
 
 	public String getFieldNameJ() {
@@ -146,7 +225,18 @@ public class FieldInfo {
 
 	public String toString() {
 		return getFieldName() + ":" + getType() + "(" + getSize() + ") offset:"
-				+ getOffset() + " / " + getFieldNameJ();
+				+ getOffset() + " PK:" + isPrimary() + " / " + getFieldNameJ();
 	}
 
+	private void setPrimary(boolean isPrimary) {
+		this.isPrimary = isPrimary;
+	}
+
+	private boolean isPrimary() {
+		return isPrimary;
+	}
+
+	public boolean isSkip() {
+		return getType().equals(SKIP);
+	}
 }

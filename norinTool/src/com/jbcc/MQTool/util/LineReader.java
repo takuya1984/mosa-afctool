@@ -13,24 +13,6 @@ import java.util.StringTokenizer;
 
 public class LineReader extends BufferedReader {
 
-	public static void main(String[] args) {
-		// test
-		try {
-			String s = "C:\\Users\\MOSA2\\Dropbox\\【農林】統合テスト支援ツール\\script\\log\\01_client\\2012-04-09_135749_00000_2_2301010_2.dat";
-			LineReader lr = null;
-
-			lr = new LineReader(s);
-
-			while ((s = lr.readLineByKey("Err", 5)) != null) {
-				StdOut.write(s);
-			}
-
-			lr.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * デフォルトサイズのバッファーでバッファリングされた、文字型入力ストリームを作成します。
 	 *

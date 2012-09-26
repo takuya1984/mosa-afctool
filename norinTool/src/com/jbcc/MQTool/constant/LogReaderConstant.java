@@ -17,19 +17,19 @@ public class LogReaderConstant {
 	public static final String[] MASTER_ID_LIST = {"12","21","35","53","46","64","78","87","910","109"};
 	
 	// TODO ローカルパス
-	public static final String BASIC_PATH = "C://Documents and Settings//daisuke//デスクトップ//吉田拓//log//";
+//	public static final String BASIC_PATH = "/Users/kohgami/tmp/script/log/";
 	
 	// 各抽出ログパス
-	public static final String CLIENT_PATH = "01_client//";
-	public static final String WEB_PATH = "02_web//";
-	public static final String OTX_CSS_PATH = "03_otx-css//";
-	public static final String OTX_ONL_PATH = "04_otx-onl//";
-	public static final String APINFO_PATH = "05_apinfo//";
-	public static final String APHOST_PATH = "06_aphost//";
-	public static final String TRACE_PATH = "07_trace//";
-	public static final String DBIO_PATH = "08_dbio//";
-	public static final String OTX_SQL_PATH = "09_otx-sql//";
-	public static final String AP_SQL_PATH = "10_ap-sql//";
+	public static final String CLIENT_PATH = "01_client/";
+	public static final String WEB_PATH = "02_web/";
+	public static final String OTX_CSS_PATH = "03_otx-css/";
+	public static final String OTX_ONL_PATH = "04_otx-onl/";
+	public static final String APINFO_PATH = "05_apinfo/";
+	public static final String APHOST_PATH = "06_aphost/";
+	public static final String TRACE_PATH = "07_trace/";
+	public static final String DBIO_PATH = "08_dbio/";
+	public static final String OTX_SQL_PATH = "09_otx-sql/";
+	public static final String AP_SQL_PATH = "10_ap-sql/";
 	
 	// 各業務固有部取得キー
 	public static final String CLIENT_UP_ONL_KEY = "送信 Onl ";

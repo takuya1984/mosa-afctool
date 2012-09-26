@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.jbcc.MQTool.constant.LogReaderConstant;
+import com.jbcc.MQTool.controller.PropertyLoader;
 
 
 public class GetCompareLog {
@@ -71,7 +72,7 @@ public class GetCompareLog {
 	 */
 	private static List<String> getLog(String path, String fileName, String key, int cutNumber) throws IOException {
 		
-		LineReader lR = new LineReader(LogReaderConstant.BASIC_PATH + path + fileName);
+		LineReader lR = new LineReader(PropertyLoader.getDirProp().getProperty("basedir") + path + fileName);
 		String line = lR.readLineByKey(key);
 		List<String> lines = new ArrayList<String>();
 		if (line != null){
@@ -97,7 +98,7 @@ public class GetCompareLog {
 	 */
 	private static List<String> getLogs(String path, String fileName, String key, int cutNumber) throws IOException {
 		
-		LineReader lR = new LineReader(LogReaderConstant.BASIC_PATH + path + fileName);
+		LineReader lR = new LineReader(PropertyLoader.getDirProp().getProperty("basedir") + path + fileName);
 		List<String> lines = lR.readLinesByKey(key);
 		
 		int i = 0;

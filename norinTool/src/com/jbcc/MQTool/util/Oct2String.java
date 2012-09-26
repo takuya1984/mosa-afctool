@@ -12,47 +12,11 @@ import java.util.Set;
  */
 public class Oct2String {
 
-	private static String DEFAULT_CHARSET = "EUC-JP";
+	public static String EUC = "EUC-JP";
+	public static String SJIS = "Shift-JIS";
 
-	/**
-	 *
-	 * @param args
-	 * @throws UnsupportedEncodingException
-	 */
-	public static void main(String[] args) throws UnsupportedEncodingException {
-
-		String[] values = {
-				"060061",
-				"060061",
-				"060061",
-				"060061",
-				"060061",
-				"040040040040040040",
-				"060060061",
-				"040040040040040040",
-//				"476456462425705173400000",
-				"061",
-				"313334305271040040040040040040040040",
-				"313334305271040040040040040040040040040040040040040040040040040040040040040040040040040040",
-//				"101000000000",
-				"001076",
-		};
-
-//		values = new String[]{"313334305271040040040040040040040040"};
-
-		for (int i = 0; i < values.length; i++) {
-			System.out
-					.println((i + 1) + ":" + valueOf(record2bytes(values[i])));
-		}
-
-//		if(true){
-//			for(String s:Charset.availableCharsets().keySet()){
-//				setCharset(s);
-//				System.out.println(s+":"+valueOf(record2bytes(values[0])));
-//			}
-//		}
-
-	}
+	//default chaset = "EUC-JP"
+	public static String DEFAULT_CHARSET = EUC;
 
 	/**
 	 * javaで使用可能な文字セットを標準出力にダンプ
@@ -145,5 +109,10 @@ public class Oct2String {
 	public static String valueOf(byte... bytes)
 			throws UnsupportedEncodingException {
 		return new String(bytes, DEFAULT_CHARSET);
+	}
+
+	public static String valueOf(byte[] bytes,String charSet)
+			throws UnsupportedEncodingException {
+		return new String(bytes, charSet);
 	}
 }
