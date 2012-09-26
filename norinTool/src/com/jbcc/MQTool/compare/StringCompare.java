@@ -1,10 +1,15 @@
-package com.jbcc.MQTool.compare;
+﻿package com.jbcc.MQTool.compare;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import com.jbcc.MQTool.util.StdOut;
 
 public class StringCompare {
+	
+	private int nonCompareNo = 0;
+	private Iterator<Integer> it = null;
 
 	public StringCompare() {
 	}
@@ -27,10 +32,19 @@ public class StringCompare {
 		if (i < n.size()) {
 			s2 = n.get(i);
 		}
+		if (i == 0 && it.hasNext()) {
+			nonCompareNo = (Integer) it.next();
+		}
 		i++;
 
+		
 		if (s1 == null && s2 == null) {
 			return null;
+		} else if (i == nonCompareNo) {
+			sb = new StringBuilder("－");
+			if (it.hasNext()) {
+				nonCompareNo = (Integer) it.next();
+			}
 		} else if (s1 != null && s2 != null && s1.equals(s2)) {
 			sb = new StringBuilder("○");
 		} else {
@@ -49,11 +63,14 @@ public class StringCompare {
 	 *            比較元(旧)
 	 * @param n
 	 *            比較先(新)
+	 * @param nonCompareList
+	 *            比較除外項目リスト
 	 */
-	public void compareAll(List<String> o, List<String> n) {
+	public void compareAll(List<String> o, List<String> n, TreeSet<Integer> nonCompareList) {
 
 		String s = null;
 		int i = 0;// oとnのlengthが違うかもしれないのでカウンタ
+		it = nonCompareList.iterator();
 
 		while ((s = compareNext(o, n, i++)) != null) {
 			StdOut.write(s);
