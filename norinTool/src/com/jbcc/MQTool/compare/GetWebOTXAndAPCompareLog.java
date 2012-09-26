@@ -11,7 +11,7 @@ import com.jbcc.MQTool.util.GetCompareLog;
  * 抽出されたWebOTX、APログから比較するデータを取得します。
  *
  */
-public class GetWebOTXAndAPCompareLog {
+public class GetWebOTXAndAPCompareLog implements Compare {
 	
 	/**
 	 * 抽出されたWebOTX、APログから比較するデータを取得します。
@@ -22,7 +22,8 @@ public class GetWebOTXAndAPCompareLog {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<String> getWebOTXAndAPCompareLog(final String LOG_PATH,String[] fileKye,String FileName) throws IOException{
+	@Override
+	public List<String> getCompareLog(String LOG_PATH, String[] fileKye,String FileName) throws IOException{
 
 		if (fileKye[3].equals(LogReaderConstant.ONL_LOG) && fileKye[5].equals(LogReaderConstant.UP_LOG)) {
 			// オンライン上り
