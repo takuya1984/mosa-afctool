@@ -6,9 +6,9 @@ import java.util.List;
 import com.jbcc.MQTool.constant.LogReaderConstant;
 import com.jbcc.MQTool.util.GetCompareLog;
 
-public class GetSqlCcompareLog {
+public class GetSqlCcompareLog implements Compare {
 	
-	public List<String> getSqlCcompareLog(final String LOG_PATH, String fileName) throws IOException{
+	public List<String> getCompareLog(final String LOG_PATH, String[] fileKye, String fileName) throws IOException{
 		
 		
 		return GetCompareLog.getTabDelimitedLogData(

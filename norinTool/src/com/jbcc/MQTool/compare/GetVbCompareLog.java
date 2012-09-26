@@ -11,7 +11,7 @@ import com.jbcc.MQTool.util.GetCompareLog;
  * 抽出されたWebServerログから比較するデータを取得します。
  *
  */
-public class GetVbCompareLog {
+public class GetVbCompareLog implements Compare {
 	
 	/**
 	 * 抽出されたWebServerログから比較するデータを取得します。
@@ -22,8 +22,10 @@ public class GetVbCompareLog {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<String> GetVbAndWebCompareLog(final String LOG_PATH, String[] fileKye,String fileName) throws IOException {
-		
+	@Override
+//	public List<String> GetVbAndWebCompareLog(String LOG_PATH, String[] fileKye,String fileName) throws IOException {
+	public List<String> getCompareLog(String LOG_PATH, String[] fileKye,String fileName) throws IOException {
+
 		if (fileKye[3].equals(LogReaderConstant.ONL_LOG) && fileKye[5].equals(LogReaderConstant.UP_LOG)) {
 			// オンライン上り
 			return GetCompareLog.getFixedLengthDataList(
@@ -46,4 +48,5 @@ public class GetVbCompareLog {
 		}	
 		return new ArrayList<String>();
 	}
+
 }
