@@ -11,7 +11,7 @@ import com.jbcc.MQTool.util.GetCompareLog;
  * 抽出されたWebServerログから比較するデータを取得します。
  *
  */
-public class GetWebServerCompareLog {
+public class GetWebServerCompareLog implements Compare {
 	
 	/**
 	 * 抽出されたWebServerログから比較するデータを取得します。
@@ -22,7 +22,8 @@ public class GetWebServerCompareLog {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<String> getWebServerCompareLog(final String LOG_PATH, String[] fileKye, String fileName) throws IOException {
+//	public List<String> getWebServerCompareLog(final String LOG_PATH, String[] fileKye, String fileName) throws IOException {
+	public List<String> getCompareLog(String LOG_PATH, String[] fileKye, String fileName) throws IOException {
 		
 		
 		
