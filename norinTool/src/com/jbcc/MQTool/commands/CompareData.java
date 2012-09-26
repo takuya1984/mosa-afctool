@@ -19,26 +19,26 @@ public class CompareData extends ToolCommand {
 	public void execute (String[] args) throws Exception {
 		
 		// ログ情報を取得
-		List<String[]> logInfoList = this.getCompareLog(args);
+		List<LogInfo> logInfoList = this.getCompareLog(args);
 		
 		CompareConfigMap configMap = new CompareConfigMap();
 		
-		LogInfo loginfo = new LogInfo();
+		LogInfo loginfo = logInfoList.get(0);
+		
 		List<List<String>> lists = new ArrayList<List<String>>();
 		for (int i = 0;i < 2; i++) {
-			String[] logInfo = logInfoList.get(i);
+			LogInfo logInfo = logInfoList.get(i);
 			
 			// ファイル名を分割
-			String[] fileKye = logInfo[1].substring(0, logInfo[1].length()-4).split("_");
-			loginfo.setNonCompareKye(fileKye[4]);
-			loginfo.setNonCompareUpDw(fileKye[5]);
+			String[] fileKye = logInfo.getLogDataFile().substring(0, logInfo.getLogDataFile().length()-4).split("_");
+			
 			try {
-				if (!configMap.getMap().containsKey(logInfo[0]))
+				if (!configMap.getMap().containsKey(logInfo.getLogCd()))
 					throw new ToolException(4);
 				
-				CompareConfig config = configMap.getMap().get(logInfo[0]);
+				CompareConfig config = configMap.getMap().get(logInfo.getLogCd());
 				Compare compare = getCompre(config.getCompareClass());
-				lists.add(compare.getCompareLog(config.getPath(), fileKye, logInfo[1]));
+				lists.add(compare.getCompareLog(config.getPath(), fileKye, logInfo.getLogDataFile()));
 				
 			} catch (FileNotFoundException e) {
 				// ファイルが存在しない場合
@@ -51,10 +51,15 @@ public class CompareData extends ToolCommand {
 		String where =  "where MASTER_ID = ? and KEY = ? ";
 		List<String> params = new ArrayList<String>();
 		params.add(args[1]);
-		params.add(loginfo.getNonCompareKye());
-		if (!loginfo.getNonCompareUpDw().equals("")) {
+		if (!loginfo.getDenbunCd().equals("")) {
+			params.add(loginfo.getDenbunCd());
+		}
+		if (!loginfo.getLogTableName().equals("")) {
+			params.add(loginfo.getLogTableName());
+		}
+		if (!loginfo.getCompareUpDw().equals("")) {
 			where = where + " and UP_DOWN_CD = ?";
-			params.add(loginfo.getNonCompareUpDw());
+			params.add(loginfo.getCompareUpDw());
 		}
 		List<Map<String, Object>> result = RESOURCE.selectDB(
 				MessageFormat.format(sql, where),params.toArray());
@@ -84,7 +89,7 @@ public class CompareData extends ToolCommand {
 		}
 	}
 
-	private List<String[]> getCompareLog(String[] args) throws Exception {
+	private List<LogInfo> getCompareLog(String[] args) throws Exception {
 		String[] params = new String[2];
 		params[0] = args[1];
 		params[1] = args[2];
@@ -94,14 +99,17 @@ public class CompareData extends ToolCommand {
 		String where =  "where ID in( ? , ? )";
 		List<Map<String, Object>> result = RESOURCE.selectDB(
 				MessageFormat.format(sql, where),params);
-		List<String[]> logInfoList = new ArrayList<String[]>();
+		List<LogInfo> logInfoList = new ArrayList<LogInfo>();
 		String masterId = "";
 		for (Map<String, Object> data : result) {
-			String[] logInfo = new String[2];
-			logInfo[0] = data.get("LOG_CD").toString();
-			logInfo[1] = data.get("LOG_DATA_FILE").toString();
-			logInfoList.add(logInfo);
-			masterId = masterId + logInfo[0];
+			LogInfo loginfo = new LogInfo();
+			loginfo.setLogCd(this.getString(data.get("LOG_CD")));
+			loginfo.setLogDataFile(this.getString(data.get("LOG_DATA_FILE")));
+			loginfo.setCompareUpDw(this.getString(data.get("UP_DOWN_CD")));
+			loginfo.setDenbunCd(this.getString(data.get("DENBUN_CD")));
+			loginfo.setLogTableName(this.getString(data.get("LOG_TABLE_NAME")));
+			logInfoList.add(loginfo);
+			masterId = masterId + loginfo.getLogCd();
 		}
 		
 		//ログファイルが２つ取得できない場合
@@ -123,25 +131,53 @@ public class CompareData extends ToolCommand {
 		return logInfoList;
 	}
 	
+	private String getString(Object obj) {
+		if (obj == null) {
+			return "";
+		}
+		return obj.toString();
+	}
+	
 	/**
 	 * ログ情報格納オブジェクト
 	 *
 	 */
 	private class LogInfo {
-		public String getNonCompareKye() {
-			return nonCompareKye;
+		public String getLogCd() {
+			return logCd;
 		}
-		public void setNonCompareKye(String nonCompareKye) {
-			this.nonCompareKye = nonCompareKye;
+		public void setLogCd(String logCd) {
+			this.logCd = logCd;
 		}
-		public String getNonCompareUpDw() {
-			return nonCompareUpDw;
+		public String getLogDataFile() {
+			return logDataFile;
 		}
-		public void setNonCompareUpDw(String nonCompareUpDw) {
-			this.nonCompareUpDw = nonCompareUpDw;
+		public void setLogDataFile(String logDataFile) {
+			this.logDataFile = logDataFile;
 		}
-		private String nonCompareKye = "";
-		private String nonCompareUpDw = "";
+		public String getDenbunCd() {
+			return denbunCd;
+		}
+		public void setDenbunCd(String denbunCd) {
+			this.denbunCd = denbunCd;
+		}
+		public String getLogTableName() {
+			return logTableName;
+		}
+		public void setLogTableName(String logTableName) {
+			this.logTableName = logTableName;
+		}
+		public String getCompareUpDw() {
+			return compareUpDw;
+		}
+		public void setCompareUpDw(String compareUpDw) {
+			this.compareUpDw = compareUpDw;
+		}
+		private String logCd = "";
+		private String logDataFile = "";
+		private String denbunCd = "";
+		private String logTableName = "";
+		private String compareUpDw = "";
 
 	}
 	
