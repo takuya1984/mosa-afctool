@@ -37,10 +37,16 @@ public class EntryPointTest {
 
 	}
 
-	@Test
+//	@Test
 	public void CompareMerge_update2() {
 		EntryPoint
 				.main(new String[] { "RegistCompareData_d", "ID=4", "MASTER_ID=3", "KEY=TESTKEY3", "ITEM_NAME=TESTITEM3", "UP_DOWN_CD=1"});
+
+	}
+	@Test
+	public void Compare1() {
+		EntryPoint
+				.main(new String[] { "CompareData_d", "1", "146"});
 
 	}
 

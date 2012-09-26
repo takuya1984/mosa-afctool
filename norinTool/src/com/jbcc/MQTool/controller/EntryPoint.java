@@ -48,7 +48,12 @@ public class EntryPoint {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.exit(RESULT_ERROR);
+			int err;
+			if (te.getErrcode() != 0)
+				err = te.getErrcode();
+			else
+				err = RESULT_ERROR;
+			System.exit(err);
 			return;
 
 		} catch (Exception e) {
