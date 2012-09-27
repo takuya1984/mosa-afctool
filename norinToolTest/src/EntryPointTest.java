@@ -43,11 +43,16 @@ public class EntryPointTest {
 				.main(new String[] { "RegistCompareData_d", "ID=4", "MASTER_ID=3", "KEY=TESTKEY3", "ITEM_NAME=TESTITEM3", "UP_DOWN_CD=1"});
 
 	}
-	@Test
+//	@Test
 	public void Compare1() {
 		EntryPoint
-				.main(new String[] { "CompareData_d", "264", "270"});
+				.main(new String[] { "CompareData", "264", "270"});
 
+	}
+	@Test
+	public void Compare2_JYOGAI() {
+		EntryPoint
+				.main(new String[] { "CompareData_d", "1", "190"});
 	}
 
 }
