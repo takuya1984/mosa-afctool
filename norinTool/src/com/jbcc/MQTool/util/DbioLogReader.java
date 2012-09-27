@@ -28,7 +28,7 @@ public class DbioLogReader extends LineReader {
 	public static void main(String[] args) {
 		try {
 			File path = new File(DBIO_BASE);
-			StdOut.write(path.toString());
+			StdOut.writeDebug(path.toString());
 			for (File f : path.listFiles()) {
 				new DbioLogReader(f).getList();
 			}
@@ -50,7 +50,7 @@ public class DbioLogReader extends LineReader {
 				continue;
 			}
 			al.add(read(i));
-			StdOut.write(fields.get(i).toString() + ":'" + al.get(i) + "'");
+			StdOut.writeDebug(fields.get(i).toString() + ":'" + al.get(i) + "'");
 		}
 		close();
 		return al;
@@ -68,7 +68,7 @@ public class DbioLogReader extends LineReader {
 
 	private void init(File file) throws IOException {
 		// traceログのフィールド情報を取得
-		StdOut.write(file.getPath());
+		StdOut.writeDebug(file.getPath());
 		fields = FieldInfo.getFieldInfoNew(file);
 		if (fields == null) {
 			return;
@@ -80,7 +80,7 @@ public class DbioLogReader extends LineReader {
 		LineReader lr = new LineReader(file);
 		record = lr.readLine().getBytes(SJIS);
 		lr.close();
-		StdOut.write(record.length + ":" + new String(record, SJIS));
+		StdOut.writeDebug(record.length + ":" + new String(record, SJIS));
 
 		slideOffset(0, OFFSET);
 
@@ -107,7 +107,7 @@ public class DbioLogReader extends LineReader {
 			s = new String(record, f.getOffset(), size, SJIS);
 			s = s.replaceAll("^\\+0{0,}", "");
 			s = s.replaceAll("^\\-0{0,}", "-");
-			if (s.equals("")) {
+			if (s.equals("") || s.equals("-")) {
 				s = "0";
 			}
 		} else {

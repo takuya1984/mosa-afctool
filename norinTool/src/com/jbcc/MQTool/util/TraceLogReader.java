@@ -27,7 +27,7 @@ public class TraceLogReader extends LineReader {
 			File path = new File(TRACE_BASE);
 
 			for (File f : path.listFiles()) {
-				StdOut.write(f.getName());
+				StdOut.writeDebug(f.getName());
 				new TraceLogReader(f).getList();
 			}
 
@@ -48,8 +48,7 @@ public class TraceLogReader extends LineReader {
 
 		for (int i = 0; i < fields.size(); i++) {
 			if (!fields.get(i).isSkip()) {
-				System.out.print(fields.get(i).toString());
-				StdOut.write("'" + read(i) + "'");
+				StdOut.writeDebug(fields.get(i).toString() + "'" + read(i) + "'");
 				al.add(read(i));
 			}
 		}
@@ -102,7 +101,7 @@ public class TraceLogReader extends LineReader {
 		} else if (f.isSkip()) {
 			// スキップ対象
 		} else {
-			StdOut.write("予想外の型:" + f.getType());
+			StdOut.writeDebug("予想外の型:" + f.getType());
 		}
 		return ret;
 	}
