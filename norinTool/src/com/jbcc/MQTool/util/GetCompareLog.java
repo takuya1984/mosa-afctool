@@ -1,11 +1,11 @@
 package com.jbcc.MQTool.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.jbcc.MQTool.constant.LogReaderConstant;
 import com.jbcc.MQTool.controller.PropertyLoader;
 
 
@@ -71,8 +71,13 @@ public class GetCompareLog {
 	 * @throws IOException
 	 */
 	private static List<String> getLog(String path, String fileName, String key, int cutNumber) throws IOException {
+		String BASE = PropertyLoader.getDirProp().getProperty(
+				"basedir")
+				+ File.separator
+				+ PropertyLoader.getDirProp().getProperty("logbase")
+				+ File.separator;
 		
-		LineReader lR = new LineReader(PropertyLoader.getDirProp().getProperty("basedir") + path + fileName);
+		LineReader lR = new LineReader(BASE + path + fileName);
 		String line = lR.readLineByKey(key);
 		List<String> lines = new ArrayList<String>();
 		if (line != null){
@@ -97,8 +102,13 @@ public class GetCompareLog {
 	 * @throws IOException
 	 */
 	private static List<String> getLogs(String path, String fileName, String key, int cutNumber) throws IOException {
-		
-		LineReader lR = new LineReader(PropertyLoader.getDirProp().getProperty("basedir") + path + fileName);
+		String BASE = PropertyLoader.getDirProp().getProperty(
+				"basedir")
+				+ File.separator
+				+ PropertyLoader.getDirProp().getProperty("logbase")
+				+ File.separator;
+
+		LineReader lR = new LineReader(BASE + path + fileName);
 		List<String> lines = lR.readLinesByKey(key);
 		
 		int i = 0;
