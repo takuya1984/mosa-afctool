@@ -20,7 +20,7 @@ public class GetTraceCompareLog extends StringCompare implements Compare {
 	public List<String> getCompareLog(String LOG_PATH, String[] fileKye,
 			String fileName) throws IOException {
 
-		//TODO filenameの生成
+		//filenameの生成
 		TraceLogReader tlr = new TraceLogReader(TRACE_BASE + File.separator + fileName);
 		List<String> ret = tlr.getList();
 		tlr.close();
