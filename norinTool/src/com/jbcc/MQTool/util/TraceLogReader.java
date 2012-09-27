@@ -10,8 +10,6 @@ import com.jbcc.MQTool.controller.PropertyLoader;
 
 public class TraceLogReader extends LineReader {
 
-	private static String TRACE_BASE = PropertyLoader.getDirProp().getProperty(
-			"07_trace");
 
 	private List<FieldInfo> fields = null;
 
@@ -20,6 +18,12 @@ public class TraceLogReader extends LineReader {
 
 	public static void main(String[] args) {
 		try {
+			String TRACE_BASE = PropertyLoader.getDirProp().getProperty(
+					"basedir")
+					+ File.separator
+					+ PropertyLoader.getDirProp().getProperty("logbase")
+					+ File.separator
+					+ PropertyLoader.getDirProp().getProperty("07_trace");
 			File path = new File(TRACE_BASE);
 
 			for (File f : path.listFiles()) {
@@ -34,12 +38,14 @@ public class TraceLogReader extends LineReader {
 
 	public List<String> getList() throws UnsupportedEncodingException,
 			IOException {
+
 		// TODO get list
 		ArrayList<String> al = new ArrayList<String>();
 		if (fields == null) {
 			close();
 			return al;
 		}
+
 		for (int i = 0; i < fields.size(); i++) {
 			if (!fields.get(i).isSkip()) {
 				System.out.print(fields.get(i).toString());

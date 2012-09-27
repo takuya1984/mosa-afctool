@@ -10,7 +10,7 @@ public class PropertyLoader extends Properties {
 	private static HashMap<String, Properties> map = new HashMap<String, Properties>();
 
 	public static void main(String[] args) {
-		System.out.println(getDirProp().getProperty("DDL"));
+		System.out.println(getDirProp().getProperty("ddl"));
 	}
 
 	public static Properties getDirProp() {
