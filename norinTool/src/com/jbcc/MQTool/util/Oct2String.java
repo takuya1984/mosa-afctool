@@ -24,7 +24,7 @@ public class Oct2String {
 	public static void dumpCharsetKeys() {
 		Set<String> set = Charset.availableCharsets().keySet();
 		for (String s : set) {
-			System.out.println(s);
+			StdOut.write(s);
 		}
 	}
 

@@ -4,14 +4,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
+import com.jbcc.MQTool.util.FieldInfo;
 import com.jbcc.MQTool.util.StdOut;
 
 public class StringCompare {
-	
+
 	private int nonCompareNo = 0;
 	private Iterator<Integer> it = null;
+	private List<FieldInfo> fields = null;
 
 	public StringCompare() {
+	}
+
+	public void setFieldInfo(List<FieldInfo> fields) {
+		this.fields = fields;
 	}
 
 	/**
@@ -35,9 +41,7 @@ public class StringCompare {
 		if (i == 0 && it.hasNext()) {
 			nonCompareNo = (Integer) it.next();
 		}
-		i++;
 
-		
 		if (s1 == null && s2 == null) {
 			return null;
 		} else if (i == nonCompareNo) {
@@ -49,6 +53,15 @@ public class StringCompare {
 			sb = new StringBuilder("○");
 		} else {
 			sb = new StringBuilder("×");
+		}
+
+		if (this.fields != null) {
+			if (i < fields.size()) {
+				sb.append("\t").append(fields.get(i).getFieldNameJ())
+						.append("\t");
+			} else {
+				sb.append("\t").append("null").append("\t");
+			}
 		}
 
 		sb.append("\t").append(s1).append("\t").append(s2);
@@ -66,7 +79,8 @@ public class StringCompare {
 	 * @param nonCompareList
 	 *            比較除外項目リスト
 	 */
-	public void compareAll(List<String> o, List<String> n, TreeSet<Integer> nonCompareList) {
+	public void compareAll(List<String> o, List<String> n,
+			TreeSet<Integer> nonCompareList) {
 
 		String s = null;
 		int i = 0;// oとnのlengthが違うかもしれないのでカウンタ

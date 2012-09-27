@@ -46,6 +46,10 @@ public class FieldInfo {
 		return getFieldInfo(f, false);
 	}
 
+	public static List<FieldInfo> getFieldInfo(String s,boolean isNew) throws IOException {
+		return getFieldInfo(new File(s), isNew);
+	}
+
 	private static List<FieldInfo> getFieldInfo(File f, boolean isNew)
 			throws IOException {
 		ArrayList<FieldInfo> al = new ArrayList<FieldInfo>();
@@ -61,7 +65,7 @@ public class FieldInfo {
 		String filePath = TABLE_INFO_PATH + "/KANJOU." + xxxxx + ".sql";
 
 		if (!new File(filePath).exists()) {
-			System.out.println("can't get field info:" + filePath);
+			StdOut.write("can't get field info:" + filePath);
 			return null;
 		}
 
