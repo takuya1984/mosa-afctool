@@ -15,38 +15,39 @@ import com.jbcc.MQTool.controller.ToolCommand;
 import com.jbcc.MQTool.controller.ToolException;
 
 public class CompareData extends ToolCommand {
-	
+
 	public void execute (String[] args) throws Exception {
-		
+
 		// ログ情報を取得
 		List<LogInfo> logInfoList = this.getCompareLog(args);
-		
+
 		CompareConfigMap configMap = new CompareConfigMap();
-		
+
 		LogInfo loginfo = logInfoList.get(0);
 		String masterId = "";
 		List<List<String>> lists = new ArrayList<List<String>>();
 		for (int i = 0;i < 2; i++) {
 			LogInfo logInfo = logInfoList.get(i);
 			masterId = masterId + logInfo.getLogCd();
-			
+
 			// ファイル名を分割
 			String[] fileKey = logInfo.getLogDataFile().substring(0, logInfo.getLogDataFile().length()-4).split("_");
-			
+
 			try {
 				if (!configMap.getMap().containsKey(logInfo.getLogCd()))
 					throw new ToolException(4);
-				
+
 				CompareConfig config = configMap.getMap().get(logInfo.getLogCd());
 				Compare compare = getCompre(config.getCompareClass());
 				lists.add(compare.getCompareLog(config.getPath(), fileKey, logInfo.getLogDataFile()));
-				
+
 			} catch (FileNotFoundException e) {
 				// ファイルが存在しない場合
+				e.printStackTrace();
 				throw new ToolException(4);
 			}
 		}
-		
+
 		// 比較除外項目の取得
 		String sql = RESOURCE.getSql("GetNonCompare");
 		String where =  "where MASTER_ID = ? and KEY = ? ";
@@ -68,15 +69,15 @@ public class CompareData extends ToolCommand {
 		for (Map<String, Object> data : result) {
 			nonCompareList.add(Integer.parseInt(data.get("ITEM_SEQ").toString()));
 		}
-		
+
 		// 比較の実行
 		StringCompare compeare = new StringCompare();
-		compeare.compareAll(lists.get(0), lists.get(1),nonCompareList);	
+		compeare.compareAll(lists.get(0), lists.get(1),nonCompareList);
 	}
-	
+
 	/**
 	 * Compare実行クラスの取得.
-	 * 
+	 *
 	 * @param name クラス名
 	 * @return Compareクラス
 	 * @throws Exception
@@ -94,7 +95,7 @@ public class CompareData extends ToolCommand {
 		String[] params = new String[2];
 		params[0] = args[1];
 		params[1] = args[2];
-		
+
 		// 管理テーブルより比較ログ情報を取得
 		String sql = RESOURCE.getSql("GetLogInfo");
 		String where =  "where ID in( ? , ? )";
@@ -112,12 +113,12 @@ public class CompareData extends ToolCommand {
 			logInfoList.add(loginfo);
 			masterId = masterId + loginfo.getLogCd();
 		}
-		
+
 		//ログファイルが２つ取得できない場合
 		if (masterId.length() < 2) {
 			throw new ToolException(2);
 		}
-		
+
 		// ログ比較の組み合わせチェック
 		boolean err = true;
 		for (String master_Id :LogReaderConstant.MASTER_ID_LIST) {
@@ -128,17 +129,17 @@ public class CompareData extends ToolCommand {
 		}
 		// ログ比較の組み合わせが不正な場合
 		if (err) throw new ToolException(3);
-		
+
 		return logInfoList;
 	}
-	
+
 	private String getString(Object obj) {
 		if (obj == null) {
 			return "";
 		}
 		return obj.toString();
 	}
-	
+
 	/**
 	 * ログ情報格納オブジェクト
 	 *
@@ -181,7 +182,7 @@ public class CompareData extends ToolCommand {
 		private String compareUpDw = "";
 
 	}
-	
+
 	/**
 	 * コンフィグ情報格納Map
 	 *
@@ -194,7 +195,7 @@ public class CompareData extends ToolCommand {
 		public CompareConfigMap() {
 			if (map == null)
 				map = new HashMap<String,CompareConfig>();
-			
+
 			// オブジェクト情報の初期設定
 			map.put(LogReaderConstant.MASTER_ID_CLIENT, initializeConfig("GetVbCompareLog", LogReaderConstant.CLIENT_PATH));
 			map.put(LogReaderConstant.MASTER_ID_WEB, initializeConfig("GetWebServerCompareLog", LogReaderConstant.WEB_PATH));
@@ -204,7 +205,10 @@ public class CompareData extends ToolCommand {
 			map.put(LogReaderConstant.MASTER_ID_APHOST, initializeConfig("GetWebOTXAndAPCompareLog", LogReaderConstant.APHOST_PATH));
 			map.put(LogReaderConstant.MASTER_ID_OTX_SQL, initializeConfig("GetSqlCcompareLog", LogReaderConstant.OTX_SQL_PATH));
 			map.put(LogReaderConstant.MASTER_ID_AP_SQL, initializeConfig("GetSqlCcompareLog", LogReaderConstant.AP_SQL_PATH));
-		}
+
+			map.put(LogReaderConstant.MASTER_ID_TRACE, initializeConfig("GetTraceCompareLog", LogReaderConstant.TRACE_PATH));
+			map.put(LogReaderConstant.MASTER_ID_DBIO, initializeConfig("GetDbioCompareLog", LogReaderConstant.DBIO_PATH));
+}
 		private CompareConfig initializeConfig(String name, String path) {
 			CompareConfig config = new CompareConfig();
 			config.compareClass = name;
@@ -212,7 +216,7 @@ public class CompareData extends ToolCommand {
 			return config;
 		}
 	}
-	
+
 	/**
 	 * コンフィグ情報
 	 *
