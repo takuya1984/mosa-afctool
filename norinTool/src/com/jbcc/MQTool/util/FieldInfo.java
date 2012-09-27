@@ -10,6 +10,12 @@ import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.controller.ToolException;
 
 public class FieldInfo {
+	// リリース時には変更が必要
+	private static String TABLE_INFO_PATH = PropertyLoader.getDirProp()
+			.getProperty("basedir")
+			+ File.separator
+			+ PropertyLoader.getDirProp().getProperty("ddl");
+
 	// properties
 	private String fieldName = null;
 	private String type = null;
@@ -25,10 +31,6 @@ public class FieldInfo {
 	private static FieldInfo GLOBAL = new FieldInfo(
 			"GLOBAL SKIP(8)スキップ項目GLOBAL");
 	private static FieldInfo MAINT = new FieldInfo("MAINT SKIP(1)スキップ項目MAINT");
-
-	// リリース時には変更が必要
-	private static String TABLE_INFO_PATH = PropertyLoader.getDirProp()
-			.getProperty("DDL");
 
 	/**
 	 * ファイルからフィールド定義情報を読み込む

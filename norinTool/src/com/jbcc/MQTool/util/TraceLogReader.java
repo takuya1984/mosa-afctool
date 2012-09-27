@@ -34,12 +34,14 @@ public class TraceLogReader extends LineReader {
 
 	public List<String> getList() throws UnsupportedEncodingException,
 			IOException {
+
 		// TODO get list
 		ArrayList<String> al = new ArrayList<String>();
 		if (fields == null) {
 			close();
 			return al;
 		}
+
 		for (int i = 0; i < fields.size(); i++) {
 			if (!fields.get(i).isSkip()) {
 				System.out.print(fields.get(i).toString());

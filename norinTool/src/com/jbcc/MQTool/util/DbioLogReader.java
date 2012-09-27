@@ -12,7 +12,11 @@ public class DbioLogReader extends LineReader {
 
 	private static final String SJIS = "Shift-JIS";
 	private static String DBIO_BASE = PropertyLoader.getDirProp().getProperty(
-			"08_dbio");
+			"basedir")
+			+ File.separator
+			+ PropertyLoader.getDirProp().getProperty("logbase")
+			+ File.separator
+			+ PropertyLoader.getDirProp().getProperty("08_dbio");
 
 	private List<FieldInfo> fields = null;
 
@@ -24,6 +28,7 @@ public class DbioLogReader extends LineReader {
 	public static void main(String[] args) {
 		try {
 			File path = new File(DBIO_BASE);
+			StdOut.write(path.toString());
 			for (File f : path.listFiles()) {
 				new DbioLogReader(f).getList();
 			}
@@ -100,6 +105,11 @@ public class DbioLogReader extends LineReader {
 				size++;
 			}
 			s = new String(record, f.getOffset(), size, SJIS);
+			s = s.replaceAll("^\\+0{0,}", "");
+			s = s.replaceAll("^\\-0{0,}", "-");
+			if (s.equals("")) {
+				s = "0";
+			}
 		} else {
 			s = new String(record, f.getOffset(), size, SJIS);
 		}
