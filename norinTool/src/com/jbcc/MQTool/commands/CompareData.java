@@ -24,13 +24,14 @@ public class CompareData extends ToolCommand {
 		CompareConfigMap configMap = new CompareConfigMap();
 		
 		LogInfo loginfo = logInfoList.get(0);
-		
+		String masterId = "";
 		List<List<String>> lists = new ArrayList<List<String>>();
 		for (int i = 0;i < 2; i++) {
 			LogInfo logInfo = logInfoList.get(i);
+			masterId = masterId + logInfo.getLogCd();
 			
 			// ファイル名を分割
-			String[] fileKye = logInfo.getLogDataFile().substring(0, logInfo.getLogDataFile().length()-4).split("_");
+			String[] fileKey = logInfo.getLogDataFile().substring(0, logInfo.getLogDataFile().length()-4).split("_");
 			
 			try {
 				if (!configMap.getMap().containsKey(logInfo.getLogCd()))
@@ -38,7 +39,7 @@ public class CompareData extends ToolCommand {
 				
 				CompareConfig config = configMap.getMap().get(logInfo.getLogCd());
 				Compare compare = getCompre(config.getCompareClass());
-				lists.add(compare.getCompareLog(config.getPath(), fileKye, logInfo.getLogDataFile()));
+				lists.add(compare.getCompareLog(config.getPath(), fileKey, logInfo.getLogDataFile()));
 				
 			} catch (FileNotFoundException e) {
 				// ファイルが存在しない場合
@@ -50,7 +51,7 @@ public class CompareData extends ToolCommand {
 		String sql = RESOURCE.getSql("GetNonCompare");
 		String where =  "where MASTER_ID = ? and KEY = ? ";
 		List<String> params = new ArrayList<String>();
-		params.add(args[1]);
+		params.add(masterId);
 		if (!loginfo.getDenbunCd().equals("")) {
 			params.add(loginfo.getDenbunCd());
 		}
