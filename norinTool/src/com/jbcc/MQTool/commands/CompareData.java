@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import com.jbcc.MQTool.compare.Compare;
 import com.jbcc.MQTool.compare.StringCompare;
@@ -70,7 +69,7 @@ public class CompareData extends ToolCommand {
 		}
 		List<Map<String, Object>> result = RESOURCE.selectDB(
 				MessageFormat.format(sql, where), params.toArray());
-		TreeSet<Integer> nonCompareList = new TreeSet<Integer>();
+		ArrayList<Integer> nonCompareList = new ArrayList<Integer>();
 		for (Map<String, Object> data : result) {
 			nonCompareList.add(Integer
 					.parseInt(data.get("ITEM_SEQ").toString()));

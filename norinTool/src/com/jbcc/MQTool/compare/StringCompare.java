@@ -1,16 +1,12 @@
 ﻿package com.jbcc.MQTool.compare;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 
 import com.jbcc.MQTool.util.FieldInfo;
 import com.jbcc.MQTool.util.StdOut;
 
 public class StringCompare {
 
-	private int nonCompareNo = -1;
-	private Iterator<Integer> it = null;
 	private List<FieldInfo> fields = null;
 
 	public StringCompare() {
@@ -23,9 +19,18 @@ public class StringCompare {
 	/**
 	 * ２つのList oとnの現在の要素を比較する。
 	 *
-	 * @return 比較結果
+	 * @param o
+	 *            比較元(旧)
+	 * @param n
+	 *            比較元(新)
+	 * @param i
+	 *            比較オブジェクトの位置インデックス
+	 * @param nonCompareList
+	 *            除外リスト
+	 * @return 比較結果のをタブ区切りにした文字列
 	 */
-	private String compareNext(List<String> o, List<String> n, int i) {
+	private String compareNext(List<String> o, List<String> n, int i,
+			List<Integer> nonCompareList) {
 
 		StringBuilder sb = null;
 
@@ -38,28 +43,27 @@ public class StringCompare {
 		if (i < n.size()) {
 			s2 = n.get(i);
 		}
-		if (i == -1 && it.hasNext()) {
-			nonCompareNo = (Integer) it.next();
-		}
 
 		if (s1 == null && s2 == null) {
 			return null;
-		} else if (i == nonCompareNo) {
+
+		} else if (nonCompareList.contains(i)) {
+			// 除外リストにあったら比較はしない
 			sb = new StringBuilder("－");
-			if (it.hasNext()) {
-				nonCompareNo = (Integer) it.next();
-			}
+
 		} else if (s1 != null && s2 != null && s1.equals(s2)) {
 			sb = new StringBuilder("○");
 		} else {
 			sb = new StringBuilder("×");
 		}
 
+		// フィールド名称
 		if (this.fields != null) {
 			if (i < fields.size()) {
 				sb.append("\t").append(fields.get(i).getFieldNameJ())
 						.append("\t");
 			} else {
+				// フィールド名リストより項目が多い場合
 				sb.append("\t").append("null").append("\t");
 			}
 		}
@@ -80,13 +84,12 @@ public class StringCompare {
 	 *            比較除外項目リスト
 	 */
 	public void compareAll(List<String> o, List<String> n,
-			TreeSet<Integer> nonCompareList) {
+			List<Integer> nonCompareList) {
 
 		String s = null;
 		int i = 0;// oとnのlengthが違うかもしれないのでカウンタ
-		it = nonCompareList.iterator();
 
-		while ((s = compareNext(o, n, i++)) != null) {
+		while ((s = compareNext(o, n, i++, nonCompareList)) != null) {
 			StdOut.write(s);
 		}
 	}
