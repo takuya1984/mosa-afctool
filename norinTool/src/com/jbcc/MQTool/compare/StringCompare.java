@@ -9,7 +9,7 @@ import com.jbcc.MQTool.util.StdOut;
 
 public class StringCompare {
 
-	private int nonCompareNo = 0;
+	private int nonCompareNo = -1;
 	private Iterator<Integer> it = null;
 	private List<FieldInfo> fields = null;
 
@@ -38,7 +38,7 @@ public class StringCompare {
 		if (i < n.size()) {
 			s2 = n.get(i);
 		}
-		if (i == 0 && it.hasNext()) {
+		if (i == -1 && it.hasNext()) {
 			nonCompareNo = (Integer) it.next();
 		}
 
