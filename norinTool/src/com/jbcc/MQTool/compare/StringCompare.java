@@ -49,7 +49,7 @@ public class StringCompare {
 
 		} else if (nonCompareList.contains(i)) {
 			// 除外リストにあったら比較はしない
-			sb = new StringBuilder("－");
+			sb = new StringBuilder("-");
 
 		} else if (s1 != null && s2 != null && s1.equals(s2)) {
 			sb = new StringBuilder("○");

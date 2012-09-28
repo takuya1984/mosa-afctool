@@ -42,11 +42,11 @@ public class EntryPoint {
 		} catch (ToolException te) {
 
 			// コマンドで処理された例外 メッセージを出力して、エラーで終了
-			te.printStackTrace();
+//			te.printStackTrace();
 			try {
 				rcmng.rollback();
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 			int err;
 			if (te.getErrcode() != 0)
@@ -59,11 +59,11 @@ public class EntryPoint {
 		} catch (Exception e) {
 
 			// ハンドリングされない例外を集約してキャッチ
-			e.printStackTrace();
+//			e.printStackTrace();
 			try {
 				rcmng.rollback();
 			} catch (Exception e1) {
-				e1.printStackTrace();
+//				e1.printStackTrace();
 			}
 			System.exit(RESULT_EXCEPTION);
 			return;
