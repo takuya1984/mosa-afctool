@@ -23,7 +23,7 @@ public class DbioLogReader extends LineReader {
 	private byte[] record = null;
 	private int[] offset = null;
 
-	private final int OFFSET = 87;// 固定オフセット(無視する部分)
+	private final int OFFSET = 53;// 固定オフセット(無視する部分)
 
 	public static void main(String[] args) {
 		try {

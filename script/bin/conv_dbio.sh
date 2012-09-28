@@ -13,6 +13,7 @@
 LOG=$1
 TODAY=`date +"%Y%m%d%H%M%S"`
 FILE=$(basename "${LOG}")
+IOCOPY_CSV=$(dirname $0)/../conf/IOCOPY.csv
 
 # ISPEC
 ISPEC=$(echo $FILE | awk 'BEGIN{FS="_"}{print $1}')
@@ -44,7 +45,17 @@ do
 
 			FILE_NAME="${DBIO_LOG_DIR}/$NAME"
 
-			echo "${LINE}" >> $FILE_NAME
+			if cat $IOCOPY_CSV | grep $LOG_TABLE_NAME > /dev/null 2>&1
+			then
+				start_index=$(cat $IOCOPY_CSV | grep $LOG_TABLE_NAME | awk '{print $2}' | sed -e "s/,.*//g")
+			else
+				continue
+			fi
+
+			s1=$(echo "${LINE}" | cut -b1-53)
+			s2=$(echo "${LINE}" | cut -b$((54 + $start_index))-)
+			echo -e "$s1$s2" >> $FILE_NAME
+
 		fi
 	done < ${logfile}
 done
