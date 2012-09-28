@@ -39,7 +39,7 @@ case "$MODE" in
 		fi
 
 		# UTF-8変換
-		nkf -w8x --ms-ucs-map ${CLIENT_LOG_DIR_TARGET}/${file} > ${CLIENT_LOG_DIR_UTF8}/${file}
+		iconv -f SJIS -t UTF8 ${CLIENT_LOG_DIR_TARGET}/${file} -o ${CLIENT_LOG_DIR_UTF8}/${file} > /dev/null 2>&1
 
 		# 改行対応
 #		${BIN_DIR}/log_conv_linefeed.sh "${CLIENT_LOG_UTF8_DIR}/${file}"
@@ -68,7 +68,7 @@ case "$MODE" in
 		fi
 
 		# UTF-8変換
-		nkf -w8x --ms-ucs-map ${WEB_LOG_DIR_TARGET}/${file} > ${WEB_LOG_DIR_UTF8}/${file}
+		iconv -f SJIS -t UTF8 ${WEB_LOG_DIR_TARGET}/${file} -o ${WEB_LOG_DIR_UTF8}/${file} > /dev/null 2>&1
 
 		# 改行対応
 #		${BIN_DIR}/log_conv_linefeed.sh "${WEB_LOG_UTF8_DIR}/${file}"
@@ -111,7 +111,7 @@ case "$MODE" in
 	sort -m -k2 ${LOG_DIR_TARGET}/*log* > ${MARGE_FILE} 2>&1
 
 	# UTF-8変換
-	nkf -w8x --ms-ucs-map ${MARGE_FILE} > ${MARGE_FILE_UTF8}
+	iconv -f SJIS -t UTF8 ${MARGE_FILE} -o ${MARGE_FILE_UTF8} > /dev/null 2>&1
 
 	# ログ抽出
 	${BASEDIR}/bin/conv_otx.sh "${MARGE_FILE_UTF8}" $MODE
@@ -158,9 +158,9 @@ case "$MODE" in
 			continue
 		fi
 
-	    # UTF-8変換
+		# UTF-8変換
 		FILE_UTF8="${DBIO_LOG_DIR_UTF8}/${file}"
-		nkf -w8x --ms-ucs-map ${DBIO_LOG_DIR_TARGET}/${file} > ${FILE_UTF8}
+		iconv -f SJIS -t UTF8 ${DBIO_LOG_DIR_TARGET}/${file} -o ${FILE_UTF8} > /dev/null 2>&1
 
 		# ログ抽出
 		${BASEDIR}/bin/conv_dbio.sh "${FILE_UTF8}"
@@ -194,7 +194,7 @@ case "$MODE" in
 	sort -m -k2 ${LOG_DIR_TARGET}/*log* > ${MARGE_FILE} 2>&1
 
 	# UTF-8変換
-	nkf -w8x --ms-ucs-map ${MARGE_FILE} > ${MARGE_FILE_UTF8}
+	iconv -f SJIS -t UTF8 ${MARGE_FILE} -o ${MARGE_FILE_UTF8} > /dev/null 2>&1
 
 	# ログ抽出
 	${BASEDIR}/bin/conv_sql.sh "${MARGE_FILE_UTF8}" $MODE
