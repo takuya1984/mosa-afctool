@@ -60,11 +60,11 @@ compare_log() {
 			;;
 		3)
 			# ログファイルが取得できなかった場合
-			echo "ログファイルが取得できませんでした"
+			echo "ログの組み合わせが不正です."
 			return $RC
 			;;
 		*)
-			echo "Usage : conv.sh [1-10]"
+			echo "error:exception"
 			return -1
 	esac
 
