@@ -39,7 +39,7 @@ public class TraceLogReader extends LineReader {
 	public List<String> getList() throws UnsupportedEncodingException,
 			IOException {
 
-		// TODO get list
+		// get list
 		ArrayList<String> al = new ArrayList<String>();
 		if (fields == null) {
 			close();
@@ -68,7 +68,8 @@ public class TraceLogReader extends LineReader {
 
 	private void init(File file) throws IOException {
 		// traceログのフィールド情報を取得
-		fields = FieldInfo.getFieldInfo(file);
+		StdOut.writeDebug(file.getPath());
+		fields = DbioFieldInfoLoader.getFieldInfo(file);
 		if (fields == null) {
 			return;
 		}

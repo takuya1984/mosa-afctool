@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.List;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.util.DbioFieldInfoLoader;
 import com.jbcc.MQTool.util.DbioLogReader;
 
-public class GetDbioCompareLog extends StringCompare implements Compare {
+public class GetDbioCompareLog extends ComparableLog {
 
 	private static String DBIO_BASE = PropertyLoader.getDirProp().getProperty(
 			"basedir")
@@ -20,10 +21,14 @@ public class GetDbioCompareLog extends StringCompare implements Compare {
 	public List<String> getCompareLog(String LOG_PATH, String[] fileKye,
 			String fileName) throws IOException {
 
-		// TODO filenameの生成
+		// filenameの生成
 		DbioLogReader tlr = new DbioLogReader(DBIO_BASE + File.separator + fileName);
 		List<String> ret = tlr.getList();
 		tlr.close();
+
+		//FieldInfo 情報の取得とセット
+		super.fieldInfo = DbioFieldInfoLoader.getFieldInfo(fileName, true);
+
 		return ret;
 	}
 }

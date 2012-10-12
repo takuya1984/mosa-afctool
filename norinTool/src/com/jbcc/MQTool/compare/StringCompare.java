@@ -12,8 +12,12 @@ public class StringCompare {
 	public StringCompare() {
 	}
 
-	public void setFieldInfo(List<FieldInfo> fields) {
-		this.fields = fields;
+	public void setFieldInfo(ComparableLog... comparableLogs) {
+		for (ComparableLog cLog : comparableLogs) {
+			if ((fields = cLog.getFieldInfo()) != null) {
+				break;
+			}
+		}
 	}
 
 	/**

@@ -10,7 +10,7 @@ import com.jbcc.MQTool.controller.PropertyLoader;
 
 public class DbioLogReader extends LineReader {
 
-	private static final String SJIS = "Shift-JIS";
+	private static final String SJIS = "Shift-JIS";//"Shift-JIS";
 	private static String DBIO_BASE = PropertyLoader.getDirProp().getProperty(
 			"basedir")
 			+ File.separator
@@ -69,7 +69,7 @@ public class DbioLogReader extends LineReader {
 	private void init(File file) throws IOException {
 		// traceログのフィールド情報を取得
 		StdOut.writeDebug(file.getPath());
-		fields = FieldInfo.getFieldInfoNew(file);
+		fields = DbioFieldInfoLoader.getFieldInfoNew(file);
 		if (fields == null) {
 			return;
 		}

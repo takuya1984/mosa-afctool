@@ -7,12 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jbcc.MQTool.compare.Compare;
+import com.jbcc.MQTool.compare.ComparableLog;
 import com.jbcc.MQTool.compare.StringCompare;
 import com.jbcc.MQTool.constant.LogReaderConstant;
 import com.jbcc.MQTool.controller.ToolCommand;
 import com.jbcc.MQTool.controller.ToolException;
-import com.jbcc.MQTool.util.FieldInfo;
 
 public class CompareData extends ToolCommand {
 
@@ -26,6 +25,7 @@ public class CompareData extends ToolCommand {
 		LogInfo loginfo = logInfoList.get(0);
 		String masterId = "";
 		List<List<String>> lists = new ArrayList<List<String>>();
+		ComparableLog[] comparableLogs = new ComparableLog[2];
 		for (int i = 0; i < 2; i++) {
 			LogInfo logInfo = logInfoList.get(i);
 			masterId = masterId + logInfo.getLogCd();
@@ -41,9 +41,9 @@ public class CompareData extends ToolCommand {
 
 				CompareConfig config = configMap.getMap().get(
 						logInfo.getLogCd());
-				Compare compare = getCompre(config.getCompareClass());
-				lists.add(compare.getCompareLog(config.getPath(), fileKey,
-						logInfo.getLogDataFile()));
+				comparableLogs[i] = getComparableLog(config.getCompareClass());
+				lists.add(comparableLogs[i].getCompareLog(config.getPath(),
+						fileKey, logInfo.getLogDataFile()));
 
 			} catch (FileNotFoundException e) {
 				// ファイルが存在しない場合
@@ -78,16 +78,9 @@ public class CompareData extends ToolCommand {
 		// 比較の実行
 		StringCompare compare = new StringCompare();
 
-		if (logInfoList.get(0).getLogCd()
-				.equals(LogReaderConstant.MASTER_ID_TRACE)
-				|| logInfoList.get(0).getLogCd()
-						.equals(LogReaderConstant.MASTER_ID_DBIO)) {
-			compare.setFieldInfo(FieldInfo.getFieldInfo(logInfoList.get(0)
-					.getLogDataFile(), true));
-			compare.compareAll(lists.get(0), lists.get(1), nonCompareList);
-		} else {
-			compare.compareAll(lists.get(0), lists.get(1), nonCompareList);
-		}
+		compare.setFieldInfo(comparableLogs);// 項目情報セット
+		compare.compareAll(lists.get(0), lists.get(1), nonCompareList);
+
 	}
 
 	/**
@@ -98,10 +91,10 @@ public class CompareData extends ToolCommand {
 	 * @return Compareクラス
 	 * @throws Exception
 	 */
-	private Compare getCompre(String name) throws Exception {
+	private ComparableLog getComparableLog(String name) throws Exception {
 		try {
 			Class<?> clazz = Class.forName("com.jbcc.MQTool.compare." + name);
-			return (Compare) clazz.newInstance();
+			return (ComparableLog) clazz.newInstance();
 		} catch (Exception e) {
 			throw new IllegalArgumentException("各ログ取得クラスの取得に失敗しました。", e);
 		}

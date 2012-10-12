@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.List;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.util.DbioFieldInfoLoader;
 import com.jbcc.MQTool.util.TraceLogReader;
 
-public class GetTraceCompareLog extends StringCompare implements Compare {
+public class GetTraceCompareLog extends ComparableLog {
 
 	private static String TRACE_BASE = PropertyLoader.getDirProp().getProperty(
 			"basedir")
@@ -24,6 +25,9 @@ public class GetTraceCompareLog extends StringCompare implements Compare {
 		TraceLogReader tlr = new TraceLogReader(TRACE_BASE + File.separator + fileName);
 		List<String> ret = tlr.getList();
 		tlr.close();
+
+		//FieldInfo 情報の取得とセット
+		super.fieldInfo = DbioFieldInfoLoader.getFieldInfo(fileName, true);
 
 		return ret;
 	}
