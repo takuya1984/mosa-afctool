@@ -9,9 +9,8 @@ import com.jbcc.MQTool.util.LineWriter;
 
 public class DbioLogConverter {
 
-	//FIXME 出来上がったらデバッグモード削除
+	// FIXME 出来上がったらデバッグモード削除
 	private static boolean debug = true;
-	private static String SJIS = "Shift-JIS";
 
 	/**
 	 * 入力パス
@@ -58,7 +57,7 @@ public class DbioLogConverter {
 	}
 
 	public void readTargets(File file) throws IOException {
-		LineReader reader = new LineReader(file, SJIS);
+		LineReader reader = new LineReader(file, "Shift-JIS");
 
 		// TODO 出力ファイル名はここで設定
 		LineWriter writer = new LineWriter(OUTPUT_BASE + "test"

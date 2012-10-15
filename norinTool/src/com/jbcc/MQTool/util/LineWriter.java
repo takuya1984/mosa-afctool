@@ -8,6 +8,7 @@ public class LineWriter extends BufferedWriter {
 
 	public LineWriter(String path) throws IOException {
 		super(new FileWriter(path));
+		StdOut.writeDebug(path);
 	}
 
 	public void writeLine(String str) throws IOException {
