@@ -19,8 +19,7 @@ public class DbioFieldInfoLoader {
 
 	private static FieldInfo GLOBAL = new FieldInfo(
 			"GLOBAL SKIP(8)スキップ項目GLOBAL");
-	private static FieldInfo MAINT = new FieldInfo(
-			"MAINT SKIP(1)スキップ項目MAINT");
+	private static FieldInfo MAINT = new FieldInfo("MAINT SKIP(1)スキップ項目MAINT");
 
 	/**
 	 * ファイルからフィールド定義情報を読み込む
@@ -36,12 +35,12 @@ public class DbioFieldInfoLoader {
 		return getFieldInfo(f, false);
 	}
 
-	public static List<FieldInfo> getFieldInfo(String s, boolean isNew)
+	public static List<FieldInfo> getFieldInfo(String s, boolean isDbioLog)
 			throws IOException {
-		return getFieldInfo(new File(s), isNew);
+		return getFieldInfo(new File(s), isDbioLog);
 	}
 
-	private static List<FieldInfo> getFieldInfo(File f, boolean isNew)
+	private static List<FieldInfo> getFieldInfo(File f, boolean isDbioLog)
 			throws IOException {
 		ArrayList<FieldInfo> al = new ArrayList<FieldInfo>();
 		HashMap<String, FieldInfo> hm = new HashMap<String, FieldInfo>();
@@ -88,35 +87,36 @@ public class DbioFieldInfoLoader {
 		lr.close();
 
 		// プライマリキーを除いてGLOBAL,MAINTをadd
-		for (int i = 0; i < al.size(); i++) {
-			fi = al.get(i);
-			if (fi.isPrimary()) {
-				continue;
-			}
+		if (!isDbioLog) {
+			for (int i = 0; i < al.size(); i++) {
+				fi = al.get(i);
+				if (fi.isPrimary()) {
+					continue;
+				}
 
-			// GLOBAL,MAINTを入れていいか？
-			if (!isNew && !al.contains(GLOBAL) && fi.compareTo(GLOBAL) >= 0) {
-				al.add(i, GLOBAL);
+				// GLOBAL,MAINTを入れていいか？
+				if (!al.contains(GLOBAL) && fi.compareTo(GLOBAL) >= 0) {
+					al.add(i, GLOBAL);
+				}
+				if (!al.contains(MAINT) && fi.compareTo(MAINT) >= 0) {
+					al.add(i, MAINT);
+				}
 			}
-			if (!isNew && !al.contains(MAINT) && fi.compareTo(MAINT) >= 0) {
-				al.add(i, MAINT);
+			// 最後までGLOBAL,MAINTが挿入されていなかったら？
+			if (!al.contains(GLOBAL)) {
+				al.add(GLOBAL);
+			}
+			if (!al.contains(MAINT)) {
+				al.add(MAINT);
 			}
 		}
-		// 最後までGLOBAL,MAINTが挿入されていなかったら？
-		if (!isNew && !al.contains(GLOBAL)) {
-			al.add(GLOBAL);
-		}
-		if (!isNew && !al.contains(MAINT)) {
-			al.add(MAINT);
-		}
-
 		// 開始オフセットのセット
 		int prev = 0;// 1つ前のオフセット
 		for (int i = 0; i < al.size(); i++) {
 			if (i > 0) {
 				al.get(i).setOffset(prev);
 			}
-			if (isNew) {
+			if (isDbioLog) {
 				// 新ログならサイズがそのままバイト数
 				prev += al.get(i).getSize();
 			} else {
