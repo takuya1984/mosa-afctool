@@ -18,7 +18,7 @@ public abstract class ComparableLog {
 	public abstract List<String> getCompareLog(String LOG_PATH,
 			String[] fileKey, String fileName) throws IOException;
 
-	protected List<FieldInfo> fieldInfo = null;
+	private List<FieldInfo> fieldInfo = null;
 
 	/**
 	 * フィールド情報を取得
@@ -27,5 +27,9 @@ public abstract class ComparableLog {
 	 */
 	public List<FieldInfo> getFieldInfo() {
 		return fieldInfo;
+	}
+
+	public void setFieldInfo(List<FieldInfo> fieldInfo){
+		this.fieldInfo = fieldInfo;
 	}
 }

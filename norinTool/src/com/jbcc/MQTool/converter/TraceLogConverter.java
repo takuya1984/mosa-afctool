@@ -8,11 +8,10 @@ import java.util.List;
 import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
-import com.jbcc.MQTool.util.StdOut;
 
 public class TraceLogConverter {
 
-	private static boolean debug = true;
+	private static boolean debug = false;
 
 	private List<String> KEYWORDS = Arrays.asList(new String[] { "SELECT",
 			"INSERT", "UPDATE", "DELETE" });
@@ -76,7 +75,7 @@ public class TraceLogConverter {
 		String time = null;
 		String tableName = null;
 
-		// ISEC番号は入力ファイル名から
+		// ISPEC番号は入力ファイル名から
 		String ispec = file.getName().replaceAll(".*_", "")
 				.replaceAll("\\..*", "");
 		int dataNo = 0, lastDataNo = 0, maxLength = 0;
@@ -130,9 +129,9 @@ public class TraceLogConverter {
 					}
 				}
 
-				// 固定長を切り取る。足りない場合はmaxまで。
+				// 固定長を切り取る。足りない場合はbuff.length()まで。
 				maxLength = 78;
-				if (buff.length() <= 78) {
+				if (buff.length() < maxLength) {
 					maxLength = buff.length();
 				}
 

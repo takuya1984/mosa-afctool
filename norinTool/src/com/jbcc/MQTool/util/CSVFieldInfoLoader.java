@@ -1,15 +1,15 @@
 package com.jbcc.MQTool.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
 
 public class CSVFieldInfoLoader {
+
+	private static boolean isDebug = true;
 
 	public static int cnt = 0;
 
@@ -28,6 +28,32 @@ public class CSVFieldInfoLoader {
 			+ PropertyLoader.getDirProp().getProperty("denbun")
 			+ File.separator;
 
+	public static void main(String[] args) {
+		try {
+			if (isDebug) {
+				List<FieldInfo> fields = new CSVFieldInfoLoader()
+						.getFieldInfo("yyyymmdd_hhmmss_sss_X_0305020_1.dat");
+
+				for (FieldInfo info : fields) {
+					StdOut.writeDebug(info.getFieldNameJ());
+				}
+			} else {
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<FieldInfo> getFieldInfo(String fileName) throws IOException {
+		// 2012-04-09_1357_00000_2_2301010_1.dat
+		String[] params = fileName.split("_");
+		String dbnId = params[params.length - 2];
+		String upDwKind = params[params.length - 1].split("\\.")[0];
+
+		return getFieldInfo(dbnId, upDwKind);
+	}
+
 	public List<FieldInfo> getFieldInfo(String dbnId, String upDwKind)
 			throws IOException {
 
@@ -35,23 +61,20 @@ public class CSVFieldInfoLoader {
 		LineReader reader = null;
 
 		try {
-			reader = new LineReader(DBN_INFO_PATH + dbnId + "_" + upDwKind);
+			reader = new LineReader(DBN_INFO_PATH + dbnId + "_" + upDwKind
+					+ ".csv");
 
 			String buff = null;
 			String[] params = null;
 			while ((buff = reader.readLine()) != null) {
 				params = buff.split("\t");
-				if (params.length == cnt) {
+				if (params.length > KOUMOKU_NAME) {
 					FieldInfo info = new FieldInfo();
 					info.setFieldNameJ(params[KOUMOKU_NAME]);
 					list.add(info);
 				}
 			}
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		} finally {
 			if (reader != null) {
 				reader.close();

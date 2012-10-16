@@ -27,7 +27,7 @@ public class GetDbioCompareLog extends ComparableLog {
 		tlr.close();
 
 		//FieldInfo 情報の取得とセット
-		super.fieldInfo = DbioFieldInfoLoader.getFieldInfo(fileName, true);
+		setFieldInfo(DbioFieldInfoLoader.getFieldInfo(fileName, true));
 
 		return ret;
 	}
