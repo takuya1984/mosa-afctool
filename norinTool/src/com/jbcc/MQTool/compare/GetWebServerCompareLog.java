@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.jbcc.MQTool.constant.LogReaderConstant;
+import com.jbcc.MQTool.util.CSVFieldInfoLoader;
 import com.jbcc.MQTool.util.GetCompareLog;
 
 
@@ -26,6 +27,8 @@ public class GetWebServerCompareLog extends ComparableLog {
 	public List<String> getCompareLog(String LOG_PATH, String[] fileKye, String fileName) throws IOException {
 
 
+		//項目情報の付加
+		super.setFieldInfo(new CSVFieldInfoLoader().getFieldInfo(fileName));
 
 		if (fileKye[3].equals(LogReaderConstant.ONL_LOG) && fileKye[5].equals(LogReaderConstant.UP_LOG)) {
 			// オンライン上り

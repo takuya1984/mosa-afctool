@@ -26,8 +26,8 @@ public class GetTraceCompareLog extends ComparableLog {
 		List<String> ret = tlr.getList();
 		tlr.close();
 
-		//FieldInfo 情報の取得とセット
-		super.fieldInfo = DbioFieldInfoLoader.getFieldInfo(fileName, true);
+		//FieldInfo 情報の取得とセット(フィールド情報にはスキップ項目を含めない)
+		setFieldInfo(DbioFieldInfoLoader.getFieldInfo(fileName, true));
 
 		return ret;
 	}
