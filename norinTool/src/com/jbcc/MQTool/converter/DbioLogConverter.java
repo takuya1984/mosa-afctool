@@ -2,15 +2,20 @@ package com.jbcc.MQTool.converter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.util.CSVIoCopyLoader;
 import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
 
 public class DbioLogConverter {
 
 	// FIXME 出来上がったらデバッグモード削除
-	private static boolean debug = true;
+	private static boolean debug = false;
+	private List<String> KEYWORDS = 
+			Arrays.asList(new String[] { "INST", "UPDT", "DELE" });
 
 	/**
 	 * 入力パス
@@ -57,21 +62,33 @@ public class DbioLogConverter {
 	}
 
 	public void readTargets(File file) throws IOException {
+		if (!file.exists()) {
+			return;
+		}
 		LineReader reader = new LineReader(file, "Shift-JIS");
 
-		// TODO 出力ファイル名はここで設定
-		LineWriter writer = new LineWriter(OUTPUT_BASE + "test"
-				+ file.getName() + ".txt");
-
+		// ISPEC値は入力ファイル名から取得
+		String ispec = file.getName().replaceAll("_.*", "");
+		
 		String buff = null;// 読み込みバッファ
-
+		int index = 0;
 		while ((buff = reader.readLine()) != null) {
-			// TODO buffに読み込んだデータに対して処理、書き込み
-			writer.writeLine(buff);
+			if (buff.length() < 54)
+				continue;
+			// 開始キーワードでファイルオープン::"INST", "UPDT", "DELE"が対象
+			String key = buff.substring(49, 53);
+			if (!KEYWORDS.contains(key))
+				continue;
+
+			// ファイル出力
+			String logOutputDate = buff.substring(0, 8);
+			String logTableName = buff.substring(39, 44);
+			int startindex = new CSVIoCopyLoader().getStartIndex(logTableName);
+			LineWriter writer = new LineWriter(OUTPUT_BASE + 
+					logOutputDate + "_" + ++index + "_" + ispec + "_" + logTableName + ".dat");
+			writer.writeLine(buff.substring(0, 53) + buff.substring(53 + startindex));
+			writer.close();
 		}
-
 		reader.close();
-		writer.close();
 	}
-
 }
