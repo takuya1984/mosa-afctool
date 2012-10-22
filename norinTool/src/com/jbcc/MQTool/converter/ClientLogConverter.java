@@ -53,10 +53,11 @@ public class ClientLogConverter {
 	}
 
 	public void readTargets(String filePath) throws IOException {
-		readTargets(new File(filePath));
+		readTargets(new File(INPUT_BASE + filePath));
 	}
 
 	public void readTargets(File file) throws IOException {
+		System.out.println(file.getPath() + file.getName());
 
 		if (!file.exists()) {
 			return;
