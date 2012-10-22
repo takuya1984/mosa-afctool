@@ -38,14 +38,13 @@ case "$MODE" in
 			continue
 		fi
 
-		# UTF-8変換
-		iconv -f SJIS -t UTF8 ${CLIENT_LOG_DIR_TARGET}/${file} -o ${CLIENT_LOG_DIR_UTF8}/${file} > /dev/null 2>&1
-
-		# 改行対応
-#		${BIN_DIR}/log_conv_linefeed.sh "${CLIENT_LOG_UTF8_DIR}/${file}"
-
-		# ログ抽出
-		${BASEDIR}/bin/conv_client.sh "${CLIENT_LOG_DIR_UTF8}/${file}"
+#		# UTF-8変換
+# 		iconv -f SJIS -t UTF8 ${CLIENT_LOG_DIR_TARGET}/${file} -o ${CLIENT_LOG_DIR_UTF8}/${file} > /dev/null 2>&1
+# 		# 改行対応
+# #		${BIN_DIR}/log_conv_linefeed.sh "${CLIENT_LOG_UTF8_DIR}/${file}"
+# 		# ログ抽出
+# 		${BASEDIR}/bin/conv_client.sh "${CLIENT_LOG_DIR_UTF8}/${file}"
+		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.ClientLogConverter ${file}
 		RC=$?
 		if [ $RC -ne 0 ]
 		then
@@ -68,14 +67,13 @@ case "$MODE" in
 		fi
 
 		# UTF-8変換
-#		iconv -f SJIS -t UTF8 ${WEB_LOG_DIR_TARGET}/${file} -o ${WEB_LOG_DIR_UTF8}/${file} > /dev/null 2>&1
-		cp -p ${WEB_LOG_DIR_TARGET}/${file} ${WEB_LOG_DIR_UTF8}/${file}
-
-		# 改行対応
-#		${BIN_DIR}/log_conv_linefeed.sh "${WEB_LOG_UTF8_DIR}/${file}"
-
-		# ログ抽出
-		${BASEDIR}/bin/conv_web.sh "${WEB_LOG_DIR_UTF8}/${file}"
+# #		iconv -f SJIS -t UTF8 ${WEB_LOG_DIR_TARGET}/${file} -o ${WEB_LOG_DIR_UTF8}/${file} > /dev/null 2>&1
+# 		cp -p ${WEB_LOG_DIR_TARGET}/${file} ${WEB_LOG_DIR_UTF8}/${file}
+# 		# 改行対応
+# #		${BIN_DIR}/log_conv_linefeed.sh "${WEB_LOG_UTF8_DIR}/${file}"
+# 		# ログ抽出
+# 		${BASEDIR}/bin/conv_web.sh "${WEB_LOG_DIR_UTF8}/${file}"
+		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.WebServerLogConverter ${file}
 		RC=$?
 		if [ $RC -ne 0 ]
 		then
@@ -161,8 +159,8 @@ case "$MODE" in
 
 		# UTF-8変換
 		FILE_UTF8="${DBIO_LOG_DIR_UTF8}/${file}"
-#		iconv -f SJIS -t UTF8 ${DBIO_LOG_DIR_TARGET}/${file} -o ${FILE_UTF8} > /dev/null 2>&1
-		cp -p ${DBIO_LOG_DIR_TARGET}/${file} ${FILE_UTF8}
+		iconv -f SJIS -t UTF-8 ${DBIO_LOG_DIR_TARGET}/${file} -o ${FILE_UTF8} > /dev/null 2>&1
+#		cp -p ${DBIO_LOG_DIR_TARGET}/${file} ${FILE_UTF8}
 
 		# ログ抽出
 		${BASEDIR}/bin/conv_dbio.sh "${FILE_UTF8}"
@@ -173,7 +171,7 @@ case "$MODE" in
 			return -1
 		fi
 
-		rm -f ${FILE_UTF8}
+#		rm -f ${FILE_UTF8}
 	done
 	;;
 "9" | "10")
