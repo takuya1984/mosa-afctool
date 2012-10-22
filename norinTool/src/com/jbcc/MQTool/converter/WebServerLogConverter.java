@@ -28,7 +28,7 @@ public class WebServerLogConverter {
 	private String OUTPUT_BASE = PropertyLoader.getDirProp().getProperty(
 			"basedir")
 			+ File.separator
-			+ PropertyLoader.getDirProp().getProperty("log")
+			+ PropertyLoader.getDirProp().getProperty("logtemp")
 			+ File.separator
 			+ PropertyLoader.getDirProp().getProperty("02_web")
 			+ File.separator;
@@ -57,7 +57,6 @@ public class WebServerLogConverter {
 	}
 
 	public void readTargets(File file) throws IOException {
-		System.out.println(file.getPath() + file.getName());
 
 		if (!file.exists()) {
 			return;
