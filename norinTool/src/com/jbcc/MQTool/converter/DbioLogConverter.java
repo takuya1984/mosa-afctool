@@ -14,7 +14,7 @@ public class DbioLogConverter {
 
 	// FIXME 出来上がったらデバッグモード削除
 	private static boolean debug = false;
-	private List<String> KEYWORDS = 
+	private List<String> KEYWORDS =
 			Arrays.asList(new String[] { "INST", "UPDT", "DELE" });
 
 	/**
@@ -34,7 +34,7 @@ public class DbioLogConverter {
 	private String OUTPUT_BASE = PropertyLoader.getDirProp().getProperty(
 			"basedir")
 			+ File.separator
-			+ PropertyLoader.getDirProp().getProperty("logbase")
+			+ PropertyLoader.getDirProp().getProperty("logtemp")
 			+ File.separator
 			+ PropertyLoader.getDirProp().getProperty("08_dbio")
 			+ File.separator;
@@ -69,7 +69,7 @@ public class DbioLogConverter {
 
 		// ISPEC値は入力ファイル名から取得
 		String ispec = file.getName().replaceAll("_.*", "");
-		
+
 		String buff = null;// 読み込みバッファ
 		int index = 0;
 		while ((buff = reader.readLine()) != null) {
@@ -84,7 +84,7 @@ public class DbioLogConverter {
 			String logOutputDate = buff.substring(0, 8);
 			String logTableName = buff.substring(39, 44);
 			int startindex = new CSVIoCopyLoader().getStartIndex(logTableName);
-			LineWriter writer = new LineWriter(OUTPUT_BASE + 
+			LineWriter writer = new LineWriter(OUTPUT_BASE +
 					logOutputDate + "_" + ++index + "_" + ispec + "_" + logTableName + ".dat");
 			writer.writeLine(buff.substring(0, 53) + buff.substring(53 + startindex));
 			writer.close();

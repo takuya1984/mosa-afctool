@@ -33,7 +33,7 @@ public class TraceLogConverter {
 	private String OUTPUT_BASE = PropertyLoader.getDirProp().getProperty(
 			"basedir")
 			+ File.separator
-			+ PropertyLoader.getDirProp().getProperty("logbase")
+			+ PropertyLoader.getDirProp().getProperty("logtemp")
 			+ File.separator
 			+ PropertyLoader.getDirProp().getProperty("07_trace")
 			+ File.separator;
