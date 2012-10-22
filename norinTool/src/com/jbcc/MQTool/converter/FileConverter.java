@@ -5,18 +5,15 @@ import java.io.IOException;
 
 import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
+import com.jbcc.MQTool.util.StdOut;
 
 public class FileConverter {
 
 	private static boolean isDebug = false;
 
 	public static void main(String[] fileNames) throws IOException {
-		if (isDebug) {
-			FileConverter.convert("/Users/MOSA/test.log", "Shift-JIS", "UTF-8");
-		} else {
-			for (String file : fileNames) {
-				FileConverter.convertSJIStoUTF8(file);
-			}
+		for (String file : fileNames) {
+			FileConverter.convertSJIStoUTF8(file);
 		}
 	}
 
@@ -44,7 +41,13 @@ public class FileConverter {
 	public static void convert(File inFile, String decode, String encode)
 			throws IOException {
 
+		if (!inFile.exists()) {
+			StdOut.write("コピー元：" + inFile.getPath() + " が存在しません");
+			return;
+		}
+
 		LineReader reader = new LineReader(inFile, decode);
+
 		// ワークファイルの作成
 		File outFile = new File(inFile.getPath() + System.currentTimeMillis());
 		LineWriter writer = new LineWriter(outFile, encode);
