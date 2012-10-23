@@ -11,7 +11,7 @@ import com.jbcc.denbunCsv.constant.DenbunCsvConstant;
 public class ExcelUtil {
 	
 	/**
-	 * ƒZƒ‹‚Ì’l‚ğæ“¾
+	 * ã‚»ãƒ«ã®å€¤ã‚’å–å¾—
 	 * @param row
 	 * @param i
 	 * @return
@@ -26,7 +26,7 @@ public class ExcelUtil {
 	}
 	
 	/**
-	 * ƒZƒ‹‚Ì’l‚ğæ“¾
+	 * ã‚»ãƒ«ã®å€¤ã‚’å–å¾—
 	 * @param cell
 	 * @param evaluator
 	 * @return

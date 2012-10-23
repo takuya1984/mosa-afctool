@@ -9,7 +9,7 @@ import com.jbcc.denbunCsv.util.ExcelUtil;
 public abstract class DenbunInfo {
 	
 	/**
-	 * ƒtƒ@ƒCƒ‹–¼‚æ‚è“d•¶ID‚ðŽæ“¾
+	 * ãƒ•ã‚¡ã‚¤ãƒ«åã‚ˆã‚Šé›»æ–‡IDã‚’å–å¾—
 	 * @param fileName
 	 * @return
 	 */
@@ -26,7 +26,7 @@ public abstract class DenbunInfo {
 	}
 	
 	/**
-	 * “d•¶ƒV[ƒg‚ªã‚è‚©‰º‚è‚©‚ð”»’è
+	 * é›»æ–‡ã‚·ãƒ¼ãƒˆãŒä¸Šã‚Šã‹ä¸‹ã‚Šã‹ã‚’åˆ¤å®š
 	 * @param sheet
 	 * @param rowNo
 	 * @return
@@ -38,9 +38,9 @@ public abstract class DenbunInfo {
 			HSSFRow rowData = sheet.getRow(rowNo);
 			if (rowData == null) return "";
 			String cell = ExcelUtil.getCellData(rowData,0,evaluator);
-			if (cell.indexOf("ã‚è") >= 0){
+			if (cell.indexOf("ä¸Šã‚Š") >= 0){
 				return "_1";
-			} else if(cell.indexOf("‰º‚è") >= 0) {
+			} else if(cell.indexOf("ä¸‹ã‚Š") >= 0) {
 				return "_2";
 			}
 			rowNo++;
@@ -49,7 +49,7 @@ public abstract class DenbunInfo {
 	}
 	
 	/**
-	 * “d•¶î•ñ‹LÚ‚Ìs”‚ðŽæ“¾
+	 * é›»æ–‡æƒ…å ±è¨˜è¼‰ã®è¡Œæ•°ã‚’å–å¾—
 	 * @param sheet
 	 * @param rowNo
 	 * @param evaluator
@@ -59,7 +59,7 @@ public abstract class DenbunInfo {
 		boolean flg = true;
 		while (flg) {
 			String cell = ExcelUtil.getCellData(sheet.getRow(rowNo),1,evaluator);
-			if(cell.indexOf("€–Ú") >= 0) {
+			if(cell.indexOf("é …ç›®") >= 0) {
 				flg = false;
 			}
 			rowNo++;
