@@ -96,9 +96,9 @@ public class ClientLogConverter {
 				}
 				writer = new LineWriter(OUTPUT_BASE + 
 						date + time + "_" + 
-						header.substring(0, 6) + "_"+ 
-						header.substring(6, 7) + "_"+ 
-						header.substring(7, 13) + "_"+ 
+						header.substring(0, 5) + "_"+ 
+						header.substring(5, 6) + "_"+ 
+						header.substring(6, 13) + "_"+ 
 						upDown + ".dat");
 			}
 			writer.writeLine(buff);

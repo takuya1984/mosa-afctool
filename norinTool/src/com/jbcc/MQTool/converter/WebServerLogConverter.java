@@ -78,10 +78,9 @@ public class WebServerLogConverter {
 		while ((buff = reader.readLine()) != null) {
 
 			// 不要電文チェック
-			if (
-					buff.indexOf("<bon:ResponseMessageList") > -1 || 
-					buff.indexOf("<faultcode>") > -1 ||
-					buff.indexOf("</soapenv:Envelope>") > -1) {
+			if (buff.indexOf("<bon:ResponseMessageList") > -1 || 
+				buff.indexOf("<faultcode>") > -1 ||
+				buff.indexOf("</soapenv:Envelope>") > -1) {
 				process = false;
 				continue;
 			}
@@ -118,9 +117,9 @@ public class WebServerLogConverter {
 			if (process && buff.indexOf("</env:Envelope>") > -1) {
 				writer = new LineWriter(OUTPUT_BASE + 
 						date + time + msec + "_" + 
-						header.substring(0, 6) + "_"+ 
-						header.substring(6, 7) + "_"+ 
-						header.substring(7, 13) + "_"+ 
+						header.substring(0, 5) + "_"+ 
+						header.substring(5, 6) + "_"+ 
+						header.substring(6, 13) + "_"+ 
 						upDown + ".dat");
 				process = false;
 				writer.writeLine(logBuff.toString());
