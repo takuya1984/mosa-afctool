@@ -37,13 +37,15 @@ regist_log_data() {
 	case "$MODE" in
 		"1")
 			# Clientログ登録
-			${BASEDIR}/bin/regist_client.sh
+#			${BASEDIR}/bin/regist_client.sh
+			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.ClientLogCreator
 			mv ${CLIENT_LOG_DIR}/* ${CLIENT_LOG_DIR_REGIST}/
 			;;
 
 		"2")
 			# WEBServerログ登録
-			${BASEDIR}/bin/regist_web.sh
+#			${BASEDIR}/bin/regist_web.sh
+			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.WebServerLogCreator
 			mv ${WEB_LOG_DIR}/* ${WEB_LOG_DIR_REGIST}/
 			;;
 

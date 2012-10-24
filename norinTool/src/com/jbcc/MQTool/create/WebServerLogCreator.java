@@ -7,10 +7,10 @@ import com.jbcc.MQTool.controller.EntryPoint;
 import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 
-public class ClientLogCreator {
+public class WebServerLogCreator {
 	public static void main(String[] args) {
 		try {
-			new ClientLogCreator().createLog();
+			new WebServerLogCreator().createLog();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -22,7 +22,7 @@ public class ClientLogCreator {
 				+ File.separator
 				+ PropertyLoader.getDirProp().getProperty("logtemp")
 				+ File.separator
-				+ PropertyLoader.getDirProp().getProperty("01_client")
+				+ PropertyLoader.getDirProp().getProperty("02_web")
 				+ File.separator;
 		File target = new File(INPUT_BASE);
 		File[] files = target.listFiles();
@@ -42,49 +42,63 @@ public class ClientLogCreator {
 		String upDown = "";
 		String header = "";
 		String logOutputDate = "";
-		String date = "";String time = "";
-		String logcd = "log_cd=1";
+		String date = "";String time = "";String msec = "";
+		String functioncd = "";
+		String logcd = "log_cd=2";
 		String clcd = "";
 		String opecd = "";
 		String denbuncd = "";
 		String clientSerialNumber = "";
 		String continueDenbunFlg = "";
 		String transactionNumber = "";
+		String multiDenbunType = "";
+		String denbunKind = "";
 		boolean creatflg = false;
 		while ((buff = reader.readLine()) != null) {
 			tokens = buff.split(" {1,}");
-			if (tokens.length < 4)
-				continue;
-
 			// 上り下り判定
-			if (buff.indexOf("送信") > -1)
+			if (file.getName().endsWith("1.dat"))
 				upDown = "1";
 			else
 				upDown = "2";
 
-			// オペレーションコード
-			String ope = tokens[4];
-			if ("Com".equals(ope)) {
-				header = buff.replaceFirst(".* Com ", "");
+			// ログ時間
+			if (buff.indexOf("TRACE") > -1) {
 				date = tokens[0].replaceAll("/", "");
 				time = tokens[1].split(",")[0].replaceAll(":", "");
-				logOutputDate = date + time;
+				msec = tokens[1].substring(9, 12);
+				logOutputDate = date + time + msec;
+				continue;
+			}
+			
+			// functionID
+			if (buff.indexOf("<ns1:RequestMessage") > -1) {
+				String[] functionkeies = buff.split("/");
+				functioncd = functionkeies[functionkeies.length - 2].replaceAll("Service", "");
+				continue;
+			}
+			
+			// ヘッダー情報
+			if (buff.indexOf("<strComUpHeadDt>") > -1) {
+				header = buff.replaceFirst(".*<strComUpHeadDt>", "").replaceAll("/strComUpHeadDt>", "");
 				clcd = header.substring(0, 5);
 				opecd = header.substring(5, 6);
 				denbuncd = header.substring(6, 13);
 				clientSerialNumber = header.substring(13, 17);
 				continueDenbunFlg = header.substring(17, 18);
+				multiDenbunType = header.substring(18, 19);
 				
 				// 下りの場合
-				if (upDown.indexOf("2") > -1)
+				if (upDown.indexOf("2") > -1) {
 					transactionNumber = header.substring(22, 30);
+					denbunKind = header.substring(20, 22);
+				}
 				
 				creatflg = true;
 				break;
 			}
 		}
 		reader.close();
-
 		if (creatflg)
 			EntryPoint.main(new String[]{
 					"RegistLogData", 
@@ -97,6 +111,10 @@ public class ClientLogCreator {
 					"client_serial_number=".concat(clientSerialNumber), 
 					"continue_denbun_flg=".concat(continueDenbunFlg), 
 					"transaction_number=".concat(transactionNumber), 
-					"log_data_file=".concat(file.getName())});
+					"log_data_file=".concat(file.getName()),
+					"function_cd=".concat(functioncd),
+					"multi_denbun_type=".concat(multiDenbunType),
+					"denbun_kind=".concat(denbunKind)
+					});
 	}
 }
