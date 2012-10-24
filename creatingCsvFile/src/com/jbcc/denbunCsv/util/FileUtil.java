@@ -12,7 +12,7 @@ public class FileUtil {
 	
 	
 	/**
-	 * CSVo—Í
+	 * CSVå‡ºåŠ›
 	 * @param outCsvData
 	 * @param fileName
 	 * @throws IOException
@@ -26,7 +26,7 @@ public class FileUtil {
 	}
 	
 	/**
-	 * w’èƒpƒX”z‰ºƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+	 * æŒ‡å®šãƒ‘ã‚¹é…ä¸‹ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 	 * @param param
 	 * @param filePathList
 	 */
@@ -45,7 +45,7 @@ public class FileUtil {
 	}
 	
 	/**
-	 * ƒtƒ@ƒCƒ‹‚ªƒGƒNƒZƒ‹‚©”»’è
+	 * ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚¨ã‚¯ã‚»ãƒ«ã‹åˆ¤å®š
 	 * @param path
 	 * @return
 	 */
@@ -59,7 +59,7 @@ public class FileUtil {
 	}
 	
 	/**
-	 * ƒpƒX‚ÌÅŒã‚Ì•¶š‚ªf/f‚©”»’è‚µAˆÈŠO‚Ìê‡f/f‚ğ’Ç‰Á
+	 * ãƒ‘ã‚¹ã®æœ€å¾Œã®æ–‡å­—ãŒâ€™/â€™ã‹åˆ¤å®šã—ã€ä»¥å¤–ã®å ´åˆâ€™/â€™ã‚’è¿½åŠ 
 	 * @param path
 	 * @return
 	 */

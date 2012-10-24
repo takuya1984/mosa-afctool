@@ -1,2 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/com/jbcc/denbunCsv/constant/DenbunCsvConstant.java=UTF-8
 encoding//src/com/jbcc/denbunCsv/creating/CreatingCsvFile.java=UTF-8
+encoding//src/com/jbcc/denbunCsv/creating/DenbunInfo.java=UTF-8
+encoding//src/com/jbcc/denbunCsv/util/ExcelUtil.java=UTF-8
+encoding//src/com/jbcc/denbunCsv/util/FileUtil.java=UTF-8
