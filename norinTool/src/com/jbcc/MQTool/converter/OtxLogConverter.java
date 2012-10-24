@@ -30,7 +30,7 @@ public class OtxLogConverter {
 //				for (File file : target.listFiles()) {
 //					conv.readTargets("3", file.getPath());
 //				}
-				conv.readTargets("3", "Cl=00099_Msg=0801030_Tsq=0002.20121023144352.tmp.2219");
+				conv.readTargets("5", "Cl=00123_Msg=2301010_Tsq=0000.20121024180147.tmp.884");
 			} else {
 				new OtxLogConverter().readTargets(args[0], args[1]);
 			}

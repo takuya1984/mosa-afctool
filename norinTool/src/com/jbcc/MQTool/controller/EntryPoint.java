@@ -74,7 +74,8 @@ public class EntryPoint {
 			rcmng.release();
 		}
 
-		System.exit(result);
+		if (!args[0].startsWith("RegistLogData"))
+			System.exit(result);
 	}
 
 	private static ToolCommand getCommand(String name) throws Exception {
