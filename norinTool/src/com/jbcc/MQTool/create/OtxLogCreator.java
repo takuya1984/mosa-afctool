@@ -8,25 +8,31 @@ import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 
 public class OtxLogCreator {
+	private static boolean debug = true;
 	public String mode = null;
 	
 	public static void main(String[] args) {
 		try {
-			new OtxLogCreator().createLog(args[0]);
+			if (debug)
+				new OtxLogCreator().createLog("3");
+			else
+				new OtxLogCreator().createLog(args[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void createLog(String mode) throws IOException {
-		if ("3".equals(mode)) {
-			mode = "03_otx-css";
-		} else if ("4".equals(mode)) {
-			mode = "04_otx-onl";
-		} else if ("5".equals(mode)) {
-			mode = "05_apinfo";
-		} else if ("6".equals(mode)) {
-			mode = "06_aphost";
+	public void createLog(String pmode) throws IOException {
+		mode = pmode;
+		String key = "";
+		if ("3".equals(pmode)) {
+			key = "03_otx-css";
+		} else if ("4".equals(pmode)) {
+			key = "04_otx-onl";
+		} else if ("5".equals(pmode)) {
+			key = "05_apinfo";
+		} else if ("6".equals(pmode)) {
+			key = "06_aphost";
 		}
 
 		String INPUT_BASE = PropertyLoader.getDirProp().getProperty(
@@ -34,7 +40,7 @@ public class OtxLogCreator {
 				+ File.separator
 				+ PropertyLoader.getDirProp().getProperty("logtemp")
 				+ File.separator
-				+ PropertyLoader.getDirProp().getProperty(mode)
+				+ PropertyLoader.getDirProp().getProperty(key)
 				+ File.separator;
 		File target = new File(INPUT_BASE);
 		File[] files = target.listFiles();
@@ -100,7 +106,7 @@ public class OtxLogCreator {
 			}
 			// functionID
 			if (buff.indexOf(" Ope=") > -1) {
-				functioncd = buff.replaceAll(".*Ope=", "").split(" {1,}")[1];
+				functioncd = buff.replaceAll(".*Ope=", "").split(" {1,}")[0];
 				continue;
 			}
 		}

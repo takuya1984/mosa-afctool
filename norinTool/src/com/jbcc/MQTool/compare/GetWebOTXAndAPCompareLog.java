@@ -29,22 +29,22 @@ public class GetWebOTXAndAPCompareLog extends ComparableLog {
 		//項目情報の付加
 		super.setFieldInfo(new CSVFieldInfoLoader().getFieldInfo(fileName));
 
-		if (fileKye[3].equals(LogReaderConstant.ONL_LOG) && fileKye[5].equals(LogReaderConstant.UP_LOG)) {
+		if (fileKye[2].equals(LogReaderConstant.ONL_LOG) && fileKye[4].equals(LogReaderConstant.UP_LOG)) {
 			// オンライン上り
 			return GetCompareLog.getFixedLengthDataList(
 					LOG_PATH,fileName,LogReaderConstant.OTX_UP_ONL_KEY,0);
 
-		} else if (fileKye[3].equals(LogReaderConstant.ONL_LOG) && fileKye[5].equals(LogReaderConstant.DW_LOG)) {
+		} else if (fileKye[2].equals(LogReaderConstant.ONL_LOG) && fileKye[4].equals(LogReaderConstant.DW_LOG)) {
 			// オンライン下り
 			return GetCompareLog.getTabDelimitedLogData(
 					LOG_PATH,fileName,LogReaderConstant.OTX_DW_ONL_KEY,LogReaderConstant.DELIMITED_TAB,0,false);
 
-		} else if (fileKye[3].equals(LogReaderConstant.CSS_LOG) && fileKye[5].equals(LogReaderConstant.UP_LOG)) {
+		} else if (fileKye[2].equals(LogReaderConstant.CSS_LOG) && fileKye[4].equals(LogReaderConstant.UP_LOG)) {
 			// CSS上り
 			return GetCompareLog.getTabDelimitedLogData(
 					LOG_PATH,fileName,LogReaderConstant.OTX_UP_CSS_KEY,LogReaderConstant.DELIMITED_TAB,0,false);
 
-		} else if (fileKye[3].equals(LogReaderConstant.CSS_LOG) && fileKye[5].equals(LogReaderConstant.DW_LOG)) {
+		} else if (fileKye[2].equals(LogReaderConstant.CSS_LOG) && fileKye[4].equals(LogReaderConstant.DW_LOG)) {
 			// CSS下り
 			return GetCompareLog.getTabDelimitedLogData(
 					LOG_PATH,fileName,LogReaderConstant.OTX_DW_CSS_KEY,LogReaderConstant.DELIMITED_TAB,0,false);

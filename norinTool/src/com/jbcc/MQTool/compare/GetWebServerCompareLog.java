@@ -30,7 +30,7 @@ public class GetWebServerCompareLog extends ComparableLog {
 		//項目情報の付加
 		super.setFieldInfo(new CSVFieldInfoLoader().getFieldInfo(fileName));
 
-		if (fileKye[3].equals(LogReaderConstant.ONL_LOG) && fileKye[5].equals(LogReaderConstant.UP_LOG)) {
+		if (fileKye[2].equals(LogReaderConstant.ONL_LOG) && fileKye[3].equals(LogReaderConstant.UP_LOG)) {
 			// オンライン上り
 			return GetCompareLog.getFixedLengthDataList(
 					LOG_PATH,fileName,LogReaderConstant.SOAP_TAG,LogReaderConstant.SOAP_TAG.length() + 1);
