@@ -45,8 +45,10 @@ public class EntryPointTest {
 	}
 	@Test
 	public void Compare1() {
+//		EntryPoint
+//		.main(new String[] { "CompareData", "265", "272"});
 		EntryPoint
-				.main(new String[] { "CompareData", "265", "272"});
+		.main(new String[] { "CompareData", "1", "355"});
 
 	}
 //	@Test
