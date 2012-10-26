@@ -33,7 +33,7 @@ case "$MODE" in
 
 	for file in $(ls ${CLIENT_LOG_DIR_TARGET})
 	do
-		if [ -d $file ]
+		if [ -d ${CLIENT_LOG_DIR_TARGET}/$file ]
 		then
 			continue
 		fi
@@ -51,6 +51,12 @@ case "$MODE" in
 			echo "error : ログ抽出エラー"
 			return -1
 		fi
+
+		if [ ! -e ${CLIENT_LOG_DIR_TARGET}/backup ]
+		then
+			mkdir -p ${CLIENT_LOG_DIR_TARGET}/backup
+		fi
+		mv ${CLIENT_LOG_DIR_TARGET}/${file} ${CLIENT_LOG_DIR_TARGET}/backup/$file
 	done
 
 	;;
@@ -61,7 +67,7 @@ case "$MODE" in
 
 	for file in $(ls ${WEB_LOG_DIR_TARGET})
 	do
-		if [ -d $file ]
+		if [ -d ${WEB_LOG_DIR_TARGET}/$file ]
 		then
 			continue
 		fi
@@ -80,6 +86,12 @@ case "$MODE" in
 			echo "error : ログ抽出エラー"
 			return -1
 		fi
+
+		if [ ! -e ${WEB_LOG_DIR_TARGET}/backup ]
+		then
+			mkdir -p ${WEB_LOG_DIR_TARGET}/backup
+		fi
+		mv ${WEB_LOG_DIR_TARGET}/${file} ${WEB_LOG_DIR_TARGET}/backup/$file
 	done
 
 	;;
@@ -123,6 +135,19 @@ case "$MODE" in
 		return -1
 	fi
 
+	if [ ! -e ${LOG_DIR_TARGET}/backup ]
+	then
+		mkdir -p ${LOG_DIR_TARGET}/backup
+	fi
+	
+	for file in $(ls ${LOG_DIR_TARGET})
+	do
+		if [ -d ${LOG_DIR_TARGET}/${file} ];then
+			continue
+		fi
+		mv ${LOG_DIR_TARGET}/${file} ${LOG_DIR_TARGET}/backup/$file
+	done
+
 	rm -f ${MARGE_FILE} ${MARGE_FILE_UTF8}
 	;;
 "7")
@@ -145,6 +170,13 @@ case "$MODE" in
 			echo "error : ログ抽出エラー"
 			return -1
 		fi
+
+		if [ ! -e ${TRACE_LOG_DIR_TARGET}/backup ]
+		then
+			mkdir -p ${TRACE_LOG_DIR_TARGET}/backup
+		fi
+		mv ${TRACE_LOG_DIR_TARGET}/${file} ${TRACE_LOG_DIR_TARGET}/backup/$file
+
 	done
 	;;
 "8")
@@ -154,18 +186,19 @@ case "$MODE" in
 
 	for file in $(ls ${DBIO_LOG_DIR_TARGET})
 	do
-		if [ -d $file ]
+		if [ -d ${DBIO_LOG_DIR_TARGET}/${file} ]
 		then
 			continue
 		fi
 
 		# UTF-8変換
-		FILE_UTF8="${DBIO_LOG_DIR_UTF8}/${file}"
-		iconv -f SJIS -t UTF-8 ${DBIO_LOG_DIR_TARGET}/${file} -o ${FILE_UTF8} > /dev/null 2>&1
+#		FILE_UTF8="${DBIO_LOG_DIR_UTF8}/${file}"
+#		iconv -f SJIS -t UTF-8 ${DBIO_LOG_DIR_TARGET}/${file} -o ${FILE_UTF8} > /dev/null 2>&1
 #		cp -p ${DBIO_LOG_DIR_TARGET}/${file} ${FILE_UTF8}
 
 		# ログ抽出
-		${BASEDIR}/bin/conv_dbio.sh "${FILE_UTF8}"
+#		${BASEDIR}/bin/conv_dbio.sh "${FILE_UTF8}"
+		${BASEDIR}/bin/conv_dbio.sh ${DBIO_LOG_DIR_TARGET}/${file}
 		RC=$?
 		if [ $RC -ne 0 ]
 		then
@@ -173,6 +206,12 @@ case "$MODE" in
 			return -1
 		fi
 
+		if [ ! -e ${DBIO_LOG_DIR_TARGET}/backup ]
+		then
+			mkdir -p ${DBIO_LOG_DIR_TARGET}/backup
+		fi
+		mv ${DBIO_LOG_DIR_TARGET}/${file} ${DBIO_LOG_DIR_TARGET}/backup/$file
+		
 #		rm -f ${FILE_UTF8}
 	done
 	;;
@@ -208,6 +247,18 @@ case "$MODE" in
 		return -1
 	fi
 
+	if [ ! -e ${LOG_DIR_TARGET}/backup ]
+	then
+		mkdir -p ${LOG_DIR_TARGET}/backup
+	fi
+	for file in $(ls ${LOG_DIR_TARGET})
+	do
+		if [ -d ${LOG_DIR_TARGET}/${file} ];then
+			continue
+		fi
+		mv ${LOG_DIR_TARGET}/${file} ${LOG_DIR_TARGET}/backup/$file
+	done
+	
 	rm -f ${MARGE_FILE} ${MARGE_FILE_UTF8}
 	;;
 *)

@@ -58,9 +58,8 @@ public class WebServerLogConverter {
 
 	public void readTargets(File file) throws IOException {
 
-		if (!file.exists()) {
-			return;
-		}
+		if (!file.exists()) return;
+		if (file.isDirectory()) return;
 
 		LineReader reader = new LineReader(file);
 
