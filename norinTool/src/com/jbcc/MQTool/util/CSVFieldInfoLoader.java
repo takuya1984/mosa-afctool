@@ -61,6 +61,12 @@ public class CSVFieldInfoLoader {
 		LineReader reader = null;
 
 		try {
+			File file = new File(DBN_INFO_PATH + dbnId + "_" + upDwKind
+					+ ".csv");
+			if (!file.exists()) {
+				return list;
+			}
+
 			reader = new LineReader(DBN_INFO_PATH + dbnId + "_" + upDwKind
 					+ ".csv");
 
