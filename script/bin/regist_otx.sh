@@ -67,7 +67,7 @@ do
 		if echo "${LINE}" | grep "共通ヘッダ部" > /dev/null 2>&1
 		then
 			COM=$(echo "${LINE}" | sed -e "s/.*共通ヘッダ部=//")
-			LOG_OUTPUT_DATE=$(echo "${LINE}" | awk '{print $1 $2}' | sed -e "s/\///g" -e "s/://g")
+			LOG_OUTPUT_DATE=$(echo "${LINE}" | awk '{print $1 $2}' | sed -e "s/\///g" -e "s/://g" -e "s/|//g")
 			LOG_CD=$MODE
 			CL_CD=$(echo "${COM}" | cut -b1-5)
 			OPE_CD=$(echo "${COM}" | cut -b6-6)

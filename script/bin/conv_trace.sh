@@ -35,9 +35,10 @@ do
 	# DBアクセス処理部分から情報を抽出
 	if echo "${LINE}" | grep "DB:.*SELECT\|DB:.*UPDATE\|DB:.*INSERT\|DB:.*DELETE" > /dev/null 2>&1
 	then
+
 		# 1つ前の抽出情報を整形しファイル生成
 		if [ $status -eq 2 ];then
-			cat $TMP_FILE_NAME | awk -f trace_conv.awk > $FILE_NAME
+			cat $TMP_FILE_NAME | awk -f ${BASEDIR}/bin/trace_conv.awk > $FILE_NAME
 			rm -rf ${TMP_FILE_NAME}
 		fi
 

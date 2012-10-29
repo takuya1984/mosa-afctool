@@ -157,19 +157,20 @@ case "$MODE" in
 
 	for file in $(ls ${TRACE_LOG_DIR_TARGET})
 	do
-		if [ -d $file ]
+		if [ -d ${TRACE_LOG_DIR_TARGET}/$file ]
 		then
 			continue
 		fi
 
 		# ログ抽出
-		${BASEDIR}/bin/conv_trace.sh "${TRACE_LOG_DIR_TARGET}/${file}"
-		RC=$?
-		if [ $RC -ne 0 ]
-		then
-			echo "error : ログ抽出エラー"
-			return -1
-		fi
+		# ${BASEDIR}/bin/conv_trace.sh "${TRACE_LOG_DIR_TARGET}/${file}"
+		# RC=$?
+		# if [ $RC -ne 0 ]
+		# then
+		# 	echo "error : ログ抽出エラー"
+		# 	return -1
+		# fi
+		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.TraceLogConverter ${TRACE_LOG_DIR_TARGET}/${file}
 
 		if [ ! -e ${TRACE_LOG_DIR_TARGET}/backup ]
 		then
@@ -198,13 +199,14 @@ case "$MODE" in
 
 		# ログ抽出
 #		${BASEDIR}/bin/conv_dbio.sh "${FILE_UTF8}"
-		${BASEDIR}/bin/conv_dbio.sh ${DBIO_LOG_DIR_TARGET}/${file}
-		RC=$?
-		if [ $RC -ne 0 ]
-		then
-			echo "error : ログ抽出エラー"
-			return -1
-		fi
+		# ${BASEDIR}/bin/conv_dbio.sh ${DBIO_LOG_DIR_TARGET}/${file}
+		# RC=$?
+		# if [ $RC -ne 0 ]
+		# then
+		# 	echo "error : ログ抽出エラー"
+		# 	return -1
+		# fi
+		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.DbioLogConverter ${DBIO_LOG_DIR_TARGET}/${file}
 
 		if [ ! -e ${DBIO_LOG_DIR_TARGET}/backup ]
 		then
