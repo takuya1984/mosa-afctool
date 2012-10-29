@@ -94,7 +94,7 @@ public class ClientLogConverter {
 					header = buff.split(" Com ")[1];
 				}
 				writer = new LineWriter(OUTPUT_BASE + 
-						date + time + "_" + 
+						date + "-" + time + "_" + 
 						header.substring(0, 5) + "_"+ 
 						header.substring(5, 6) + "_"+ 
 						header.substring(6, 13) + "_"+ 

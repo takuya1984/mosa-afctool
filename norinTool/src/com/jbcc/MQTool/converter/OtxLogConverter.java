@@ -109,7 +109,7 @@ public class OtxLogConverter {
 				logBuffUp.append(buff + "\n");
 				
 				writerUp = new LineWriter(OUTPUT_BASE + 
-						dateUp + timeUp + msecUp + "_" + 
+						dateUp + "-" + timeUp + msecUp + "_" + 
 						headerUp.substring(0, 5) + "_"+ 
 						headerUp.substring(5, 6) + "_"+ 
 						headerUp.substring(6, 13) + "_"+ 
@@ -146,7 +146,7 @@ public class OtxLogConverter {
 				logBuffDw.append(buff + "\n");
 				
 				writerDw = new LineWriter(OUTPUT_BASE + 
-						dateDw + timeDw + msecDw + "_" + 
+						dateDw + "-" + timeDw + msecDw + "_" + 
 						headerDw.substring(0, 5) + "_"+ 
 						headerDw.substring(5, 6) + "_"+ 
 						headerDw.substring(6, 13) + "_"+ 
