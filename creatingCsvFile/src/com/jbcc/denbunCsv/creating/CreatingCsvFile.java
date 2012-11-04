@@ -19,6 +19,12 @@ import com.jbcc.denbunCsv.util.FileUtil;
 
 public class CreatingCsvFile extends DenbunInfo {
 
+	/**
+	 * 電文仕様書CSV作成
+	 * @param args
+	 * 		第一引数：電文仕様書ファイル名(フルパス) or 電文仕様書取得パス
+	 * 		第二引数：CSV出力先パス
+	 */
 	public static void main (String[] args) {
 		
 		if (args.length < 2) {
