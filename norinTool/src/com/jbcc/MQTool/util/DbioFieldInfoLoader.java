@@ -21,6 +21,21 @@ public class DbioFieldInfoLoader {
 			"GLOBAL SKIP(8)スキップ項目GLOBAL");
 	private static FieldInfo MAINT = new FieldInfo("MAINT SKIP(1)スキップ項目MAINT");
 
+	// 取得対象フィールドタイプ定義リスト
+	private static String[] targets = { "CHAR", "NUMBER", "TIMESTAMP",
+			"VARCHAR2" };
+
+	public static void main(String[] args) throws IOException {
+		File f = new File(TABLE_INFO_PATH);
+
+		File[] files = f.listFiles();
+System.out.println(TABLE_INFO_PATH);
+		for (File file : files) {
+			getFieldInfo(file);
+		}
+
+	}
+
 	/**
 	 * ファイルからフィールド定義情報を読み込む
 	 *
@@ -63,7 +78,7 @@ public class DbioFieldInfoLoader {
 		String buff = null;
 		FieldInfo fi = null;
 		while ((buff = lr.readLine()) != null) {
-			if (buff.indexOf("CHAR") >= 0 || buff.indexOf("NUMBER") >= 0) {
+			if (isTarget(buff)) {
 				// FIELD定義項目ならFieldInfoをリストに追加
 				fi = new FieldInfo(buff);
 				al.add(fi);
@@ -126,6 +141,16 @@ public class DbioFieldInfoLoader {
 		}
 
 		return al;
+	}
+
+	private static boolean isTarget(String buff) {
+		boolean ret = false;
+		for (String s : targets) {
+			if (buff.indexOf(s) >= 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static List<FieldInfo> getFieldInfoNew(File f) throws IOException {
