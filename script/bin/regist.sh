@@ -72,7 +72,8 @@ regist_log_data() {
 
 		"8")
 			# 登録 DBIOログ
-			${BASEDIR}/bin/regist_dbio.sh
+#			${BASEDIR}/bin/regist_dbio.sh
+			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.DbioLogCreator
 			mv ${DBIO_LOG_DIR}/* ${DBIO_LOG_DIR_REGIST}/
 			;;
 
