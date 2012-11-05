@@ -17,9 +17,9 @@ public abstract class DenbunInfo {
 		
 		String[] file = fileName.split("_");
         
-        if (file.length == 2 && file[1].length() > 7) {
+        if (file.length == 2 && file[1].length() > 6) {
         	return file[1].substring(0,7);
-        } else if (file.length == 3 && file[2].length() > 7) {
+        } else if (file.length > 2 && file[2].length() > 6) {
         	return file[2].substring(0,7);
         }
 		return "";
