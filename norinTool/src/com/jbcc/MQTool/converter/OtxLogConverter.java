@@ -74,7 +74,7 @@ public class OtxLogConverter {
 		if (!file.exists()) return;
 		if (file.isDirectory()) return;
 
-		LineReader reader = new LineReader(file);
+		LineReader reader = new LineReader(file, "UTF-8");
 
 		String buff = null;
 		String[] tokens = null;

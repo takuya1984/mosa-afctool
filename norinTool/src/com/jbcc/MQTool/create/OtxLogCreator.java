@@ -8,7 +8,7 @@ import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 
 public class OtxLogCreator {
-	private static boolean debug = true;
+	private static boolean debug = false;
 	public String mode = null;
 	
 	public static void main(String[] args) {
