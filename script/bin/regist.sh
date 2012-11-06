@@ -51,7 +51,8 @@ regist_log_data() {
 
 		"3" | "4" | "5" | "6")
 			# 登録 OTX-CSS,OTX-ONL,AP-INFO,AP-HOST
-			${BASEDIR}/bin/regist_otx.sh $MODE
+#			${BASEDIR}/bin/regist_otx.sh $MODE
+			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.OtxLogCreator "$MODE"
 
 			if [ $MODE == "3" ];then
 				mv ${OTXCSS_LOG_DIR}/* ${OTXCSS_LOG_DIR_REGIST}/
