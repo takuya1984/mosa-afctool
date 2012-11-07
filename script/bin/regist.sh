@@ -67,7 +67,8 @@ regist_log_data() {
 
 		"7")
 			# 登録 Tracelog
-			${BASEDIR}/bin/regist_trace.sh
+#			${BASEDIR}/bin/regist_trace.sh
+			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.TraceLogCreator
 			mv ${TRACE_LOG_DIR}/* ${TRACE_LOG_DIR_REGIST}/
 			;;
 
