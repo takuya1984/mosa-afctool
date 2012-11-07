@@ -7,6 +7,10 @@ import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
 
+/**
+ * Clientlog抽出クラス.
+ *
+ */
 public class ClientLogConverter {
 
 	private static boolean debug = false;
@@ -52,10 +56,20 @@ public class ClientLogConverter {
 
 	}
 
+	/**
+	 * ログ抽出処理.
+	 * @param filePath 対象ファイル名
+	 * @throws IOException
+	 */
 	public void readTargets(String filePath) throws IOException {
 		readTargets(new File(INPUT_BASE + filePath));
 	}
 
+	/**
+	 * ログ抽出処理.
+	 * @param file 対象ファイル名
+	 * @throws IOException
+	 */
 	public void readTargets(File file) throws IOException {
 
 		if (!file.exists()) return;

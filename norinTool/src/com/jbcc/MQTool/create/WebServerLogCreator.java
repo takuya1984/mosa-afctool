@@ -7,6 +7,10 @@ import com.jbcc.MQTool.controller.EntryPoint;
 import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 
+/**
+ * WebServerログ登録クラス.
+ *
+ */
 public class WebServerLogCreator {
 	public static void main(String[] args) {
 		try {
@@ -16,6 +20,11 @@ public class WebServerLogCreator {
 		}
 	}
 
+	/**
+	 * ログのDB登録.
+	 * @param file 対象ファイル
+	 * @throws IOException
+	 */
 	public void createLog() throws IOException {
 		String INPUT_BASE = PropertyLoader.getDirProp().getProperty(
 				"basedir")

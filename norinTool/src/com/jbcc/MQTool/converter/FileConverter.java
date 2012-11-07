@@ -7,6 +7,10 @@ import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
 import com.jbcc.MQTool.util.StdOut;
 
+/**
+ * ファイル文字コード変換クラス.
+ *
+ */
 public class FileConverter {
 
 	private static boolean isDebug = false;
@@ -17,14 +21,32 @@ public class FileConverter {
 		}
 	}
 
+	/**
+	 * SJISからUTF-8に変換する.
+	 * @param file ファイル名
+	 * @throws IOException
+	 */
 	public static void convertSJIStoUTF8(String file) throws IOException {
 		convert(file, "Shift-JIS", "UTF-8");
 	}
 
+	/**
+	 * SJISからUTF-8に変換する.
+	 * @param file ファイルオブジェクト
+	 * @throws IOException
+	 */
 	public static void convertSJIStoUTF8(File file) throws IOException {
 		convert(file, "Shift-JIS", "UTF-8");
 	}
 
+	/**
+	 * 文字コード変換処理.
+	 * 
+	 * @param inFile 変換対象ファイル
+	 * @param decode 変換元コード
+	 * @param encode 変換対象コード
+	 * @throws IOException
+	 */
 	public static void convert(String inFile, String decode, String encode)
 			throws IOException {
 		convert(new File(inFile), decode, encode);
@@ -33,9 +55,9 @@ public class FileConverter {
 	/**
 	 * ファイルの変換
 	 *
-	 * @param inFile
-	 * @param decode
-	 * @param encode
+	 * @param inFile 変換対象ファイル
+	 * @param decode 変換元コード
+	 * @param encode 変換対象コード
 	 * @throws IOException
 	 */
 	public static void convert(File inFile, String decode, String encode)

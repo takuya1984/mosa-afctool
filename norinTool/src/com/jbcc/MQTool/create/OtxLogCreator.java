@@ -7,6 +7,10 @@ import com.jbcc.MQTool.controller.EntryPoint;
 import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 
+/**
+ * OTX系ログ登録クラス.
+ *
+ */
 public class OtxLogCreator {
 	private static boolean debug = false;
 	public String mode = null;
@@ -22,6 +26,11 @@ public class OtxLogCreator {
 		}
 	}
 
+	/**
+	 * ログのDB登録.
+	 * @param file 対象ファイル
+	 * @throws IOException
+	 */
 	public void createLog(String pmode) throws IOException {
 		mode = pmode;
 		String key = "";

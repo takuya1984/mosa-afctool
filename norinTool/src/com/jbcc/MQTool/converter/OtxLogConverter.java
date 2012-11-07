@@ -7,6 +7,10 @@ import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
 
+/**
+ * OTXlog抽出クラス.
+ *
+ */
 public class OtxLogConverter {
 
 	private static boolean debug = false;
@@ -40,6 +44,12 @@ public class OtxLogConverter {
 
 	}
 
+	/**
+	 * ログ抽出処理.
+	 * @param mode
+	 * @param filename
+	 * @throws IOException
+	 */
 	public void readTargets(String mode, String filename) throws IOException {
 		String key = "";
 		if ("3".equals(mode)) {
@@ -69,6 +79,11 @@ public class OtxLogConverter {
 		readTargets(new File(INPUT_BASE + filename));
 	}
 
+	/**
+	 * ログ抽出処理.
+	 * @param file 対象ファイル名
+	 * @throws IOException
+	 */
 	public void readTargets(File file) throws IOException {
 
 		if (!file.exists()) return;

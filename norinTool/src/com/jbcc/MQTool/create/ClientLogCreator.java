@@ -7,6 +7,10 @@ import com.jbcc.MQTool.controller.EntryPoint;
 import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 
+/**
+ * Clientログ登録クラス.
+ *
+ */
 public class ClientLogCreator {
 	public static void main(String[] args) {
 		try {
@@ -31,6 +35,11 @@ public class ClientLogCreator {
 		}
 	}
 
+	/**
+	 * ログのDB登録.
+	 * @param file 対象ファイル
+	 * @throws IOException
+	 */
 	public void createLog(File file) throws IOException {
 		if (!file.exists()) {
 			return;

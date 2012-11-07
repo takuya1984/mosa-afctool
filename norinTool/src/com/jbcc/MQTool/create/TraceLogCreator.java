@@ -6,6 +6,10 @@ import java.io.IOException;
 import com.jbcc.MQTool.controller.EntryPoint;
 import com.jbcc.MQTool.controller.PropertyLoader;
 
+/**
+ * tracelog登録クラス.
+ *
+ */
 public class TraceLogCreator {
 	public static void main(String[] args) {
 		try {
@@ -30,6 +34,11 @@ public class TraceLogCreator {
 		}
 	}
 
+	/**
+	 * ログのDB登録.
+	 * @param file 対象ファイル
+	 * @throws IOException
+	 */
 	public void createLog(File file) throws IOException {
 		if (!file.exists()) {
 			return;
