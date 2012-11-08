@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.controller.ToolException;
 import com.jbcc.MQTool.util.CSVIoCopyLoader;
 import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
@@ -66,7 +67,7 @@ public class DbioLogConverter {
 	 * @param filePath 対象ファイル名
 	 * @throws IOException
 	 */
-	public void readTargets(String filePath) throws IOException {
+	public void readTargets(String filePath) throws Exception {
 		readTargets(new File(filePath));
 	}
 
@@ -75,32 +76,38 @@ public class DbioLogConverter {
 	 * @param file 対象ファイル名
 	 * @throws IOException
 	 */
-	public void readTargets(File file) throws IOException {
+	@SuppressWarnings("resource")
+	public void readTargets(File file) throws Exception {
 		if (!file.exists()) return;
 		if (file.isDirectory()) return;
 
 		LineReader reader = new LineReader(file, "Shift-JIS");
 
 		// ISPEC値は入力ファイル名から取得
-		String ispec = file.getName().replaceAll("_.*", "");
+		String[] filenames = file.getName().split("_");
+		if (filenames.length < 2) {
+			String msg = "ファイル名の形式が異なります. file=" + file.getName() + " RDBOUTLOG_<ISPEC値>_yyyymmdd.log";
+			throw new ToolException(msg);
+		}
+		String ispec = filenames[1];
 
 		String buff = null;// 読み込みバッファ
 		int index = 0;
 		while ((buff = reader.readLine()) != null) {
-			if (buff.length() < 54)
+			if (buff.length() < 64)
 				continue;
 			// 開始キーワードでファイルオープン::"INST", "UPDT", "DELE"が対象
-			String key = buff.substring(49, 53);
+			String key = buff.substring(60, 64);
 			if (!KEYWORDS.contains(key))
 				continue;
 
 			// ファイル出力
-			String logOutputDate = buff.substring(0, 8);
-			String logTableName = buff.substring(39, 44);
+			String logOutputDate = buff.substring(0, 14);
+			String logTableName = buff.substring(50, 55);
 			int startindex = new CSVIoCopyLoader().getStartIndex(logTableName);
 			LineWriter writer = new LineWriter(OUTPUT_BASE +
 					logOutputDate + "_" + ++index + "_" + ispec + "_" + logTableName + ".dat");
-			writer.writeLine(buff.substring(0, 53) + buff.substring(53 + startindex));
+			writer.writeLine(buff.substring(0, 64) + buff.substring(64 + startindex));
 			writer.close();
 		}
 		reader.close();
