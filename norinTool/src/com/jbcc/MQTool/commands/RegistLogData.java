@@ -11,9 +11,9 @@ import com.jbcc.MQTool.util.Utility;
 
 /**
  * ログデータを登録する IDが重複する場合はupdate IDが存在しない場合はinsertになる
- * 
+ *
  * @author jetbrand
- * 
+ *
  */
 public class RegistLogData extends ToolCommand {
 
@@ -40,11 +40,17 @@ public class RegistLogData extends ToolCommand {
 		values.addAll(datas.values());
 
 		// SQL実行
-		int counts = RESOURCE.updateDB(
-				MessageFormat.format(sql, updateQuery, insertQuery),
-				values.toArray());
-		if (counts == 0) {
-			throw new ToolException("一行も追加、更新されませんでした");
+		try {
+			int counts = RESOURCE.updateDB(
+					MessageFormat.format(sql, updateQuery, insertQuery),
+					values.toArray());
+			if (counts == 0) {
+				throw new ToolException("一行も追加、更新されませんでした");
+			}
+		} catch (java.sql.SQLIntegrityConstraintViolationException e) {
+			if (!e.getMessage().startsWith("ORA-00001")) {
+				throw e;
+			}
 		}
 	}
 
