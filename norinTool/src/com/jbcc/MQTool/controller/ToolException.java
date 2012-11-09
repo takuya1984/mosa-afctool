@@ -1,9 +1,10 @@
 ﻿package com.jbcc.MQTool.controller;
 
+
 public class ToolException extends Exception {
 	
 	private int errcode;
-
+	
 	public int getErrcode() {
 		return errcode;
 	}

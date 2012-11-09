@@ -39,14 +39,14 @@ regist_log_data() {
 			# Clientログ登録
 #			${BASEDIR}/bin/regist_client.sh
 			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.ClientLogCreator
-			mv ${CLIENT_LOG_DIR}/* ${CLIENT_LOG_DIR_REGIST}/
+			mv ${CLIENT_LOG_DIR}/* ${CLIENT_LOG_DIR_REGIST}/ > /dev/null 2>&1
 			;;
 
 		"2")
 			# WEBServerログ登録
 #			${BASEDIR}/bin/regist_web.sh
 			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.WebServerLogCreator
-			mv ${WEB_LOG_DIR}/* ${WEB_LOG_DIR_REGIST}/
+			mv ${WEB_LOG_DIR}/* ${WEB_LOG_DIR_REGIST}/ > /dev/null 2>&1
 			;;
 
 		"3" | "4" | "5" | "6")
@@ -54,38 +54,45 @@ regist_log_data() {
 #			${BASEDIR}/bin/regist_otx.sh $MODE
 			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.OtxLogCreator "$MODE"
 
+			LOG_DIR="";LOG_DIR_REGIST=""
 			if [ $MODE == "3" ];then
-				mv ${OTXCSS_LOG_DIR}/* ${OTXCSS_LOG_DIR_REGIST}/
+				LOG_DIR=${OTXCSS_LOG_DIR}
+				LOG_DIR_REGIST=${OTXCSS_LOG_DIR_REGIST}
 			elif [ $MODE == "4" ];then
-				mv ${OTXONL_LOG_DIR}/* ${OTXONL_LOG_DIR_REGIST}/
+				LOG_DIR=${OTXONL_LOG_DIR}
+				LOG_DIR_REGIST=${OTXONL_LOG_DIR_REGIST}
 			elif [ $MODE == "5" ];then
-				mv ${APINFO_LOG_DIR}/* ${APINFO_LOG_DIR_REGIST}/
+				LOG_DIR=${APINFO_LOG_DIR}
+				LOG_DIR_REGIST=${APINFO_LOG_DIR_REGIST}
 			elif [ $MODE == "6" ];then
-				mv ${APHOST_LOG_DIR}/* ${APHOST_LOG_DIR_REGIST}/
+				LOG_DIR=${APHOST_LOG_DIR}
+				LOG_DIR_REGIST=${APHOST_LOG_DIR_REGIST}
 			fi
+
+			mv ${LOG_DIR}/* ${LOG_DIR_REGIST}/ > /dev/null 2>&1
 			;;
 
 		"7")
 			# 登録 Tracelog
 #			${BASEDIR}/bin/regist_trace.sh
 			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.TraceLogCreator
-			mv ${TRACE_LOG_DIR}/* ${TRACE_LOG_DIR_REGIST}/
+			mv ${TRACE_LOG_DIR}/* ${TRACE_LOG_DIR_REGIST}/ > /dev/null 2>&1
 			;;
 
 		"8")
 			# 登録 DBIOログ
 #			${BASEDIR}/bin/regist_dbio.sh
 			java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.create.DbioLogCreator
-			mv ${DBIO_LOG_DIR}/* ${DBIO_LOG_DIR_REGIST}/
+			mv ${DBIO_LOG_DIR}/* ${DBIO_LOG_DIR_REGIST}/ > /dev/null 2>&1
 			;;
 
 		"9" | "10")
 			# 登録 OTX-SQL,AP-SQL
 			${BASEDIR}/bin/regist_sql.sh $MODE
 			if [ $MODE == "9" ];then
-				mv ${OTXSQL_LOG_DIR}/* ${OTXSQL_LOG_DIR_REGIST}/
+				mv ${OTXSQL_LOG_DIR}/* ${OTXSQL_LOG_DIR_REGIST}/ > /dev/null 2>&1
 			elif [ $MODE == "10" ];then
-				mv ${APSQL_LOG_DIR}/* ${APSQL_LOG_DIR_REGIST}/
+				mv ${APSQL_LOG_DIR}/* ${APSQL_LOG_DIR_REGIST}/ > /dev/null 2>&1
 			fi
 			;;
 
