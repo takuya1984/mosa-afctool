@@ -12,13 +12,13 @@ import com.jbcc.MQTool.util.LineReader;
  *
  */
 public class OtxLogCreator {
-	private static boolean debug = false;
+	private static boolean debug = true;
 	public String mode = null;
 	
 	public static void main(String[] args) {
 		try {
 			if (debug)
-				new OtxLogCreator().createLog("3");
+				new OtxLogCreator().createLog("4");
 			else
 				new OtxLogCreator().createLog(args[0]);
 		} catch (Exception e) {
@@ -31,7 +31,7 @@ public class OtxLogCreator {
 	 * @param file 対象ファイル
 	 * @throws IOException
 	 */
-	public void createLog(String pmode) throws IOException {
+	public void createLog(String pmode) throws Exception {
 		mode = pmode;
 		String key = "";
 		if ("3".equals(pmode)) {
@@ -58,7 +58,7 @@ public class OtxLogCreator {
 		}
 	}
 
-	public void createLog(File file) throws IOException {
+	public void createLog(File file) throws Exception {
 		if (!file.exists()) {
 			return;
 		}
@@ -120,7 +120,7 @@ public class OtxLogCreator {
 			}
 		}
 		reader.close();
-		if (creatflg)
+		if (creatflg) {
 			EntryPoint.main(new String[]{
 					"RegistLogData", 
 					logcd, 
@@ -137,5 +137,6 @@ public class OtxLogCreator {
 					"multi_denbun_type=".concat(multiDenbunType),
 					"denbun_kind=".concat(denbunKind)
 					});
+		}
 	}
 }

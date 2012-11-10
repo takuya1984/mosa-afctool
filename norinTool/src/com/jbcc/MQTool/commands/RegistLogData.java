@@ -51,6 +51,8 @@ public class RegistLogData extends ToolCommand {
 			if (!e.getMessage().startsWith("ORA-00001")) {
 				throw e;
 			}
+			System.out.println(
+					"duplicate error. log_cd=[" + datas.get("log_cd") + "], log_data_file=[" + datas.get("log_data_file") + "]");
 		}
 	}
 

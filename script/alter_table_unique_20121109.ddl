@@ -1,0 +1,1 @@
+alter table kanri add unique (log_cd, log_data_file);
