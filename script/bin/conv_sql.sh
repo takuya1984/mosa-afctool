@@ -69,12 +69,12 @@ do
 			upstatus=0;dwstatus=0
 			UpCom=`echo "${LINE}" | sed -e "s/.*上り共通ヘッダ部=//"`
 			upstatus=1
-			TIME=$(echo "${LINE}"| cut -b1-19 | sed -e "s/\//-/g" -e "s/ /_/g" -e "s/://g")
+			TIME=$(echo "${LINE}"| cut -b1-19 | sed -e "s/\//-/g" -e "s/ /-/g" -e "s/://g")
 			DATA_FILE="$(echo "${TIME}")_$(echo "${UpCom}" | cut -b1-5)_$(echo "${UpCom}" | cut -b6-6)_$(echo "${UpCom}" | cut -b7-13)_sql.dat"
 #			TMP_DATA_FILE_SQL="${TMP_DIR}/${DATA_FILE}.$$"
 
 			echo "${LINE}" >> $TMP_DATA_FILE_SQL
-			continue
+ 			continue
 		fi
 
 		# 上り-オンライン
