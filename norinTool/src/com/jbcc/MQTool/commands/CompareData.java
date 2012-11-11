@@ -15,10 +15,23 @@ import com.jbcc.MQTool.controller.ToolException;
 
 public class CompareData extends ToolCommand {
 
+	/**
+	 * ログファイルの比較
+	 * @param args　
+	 *（ID指定　　　　　 ：第一引数：実行クラス名(CompareData)、第二引数：KANRI.ID、第三引数：KANRI.ID）
+	 *（ログファイル名指定：第一引数：実行クラス名(CompareData)、第二引数：マスターID、第三引数：ファイル名１、第三引数：ファイル名２）
+	 */
 	public void execute(String[] args) throws Exception {
 
-		// ログ情報を取得
-		List<LogInfo> logInfoList = this.getCompareLog(args);
+		List<LogInfo> logInfoList = null;
+		if ( args.length == 3) {
+			// ログ情報をDBから取得
+			logInfoList = this.getCompareLog(args);
+		} else {
+			// ログ情報をファイル名から取得
+			logInfoList = this.getCompareLogFileInfo(args);
+		}
+		
 
 		CompareConfigMap configMap = new CompareConfigMap();
 
@@ -100,6 +113,12 @@ public class CompareData extends ToolCommand {
 		}
 	}
 
+	/**
+	 *DBからログ情報を取得
+	 * @param args
+	 * @return
+	 * @throws Exception
+	 */
 	private List<LogInfo> getCompareLog(String[] args) throws Exception {
 		String[] params = new String[2];
 		params[0] = args[1];
@@ -127,7 +146,83 @@ public class CompareData extends ToolCommand {
 		if (masterId.length() < 2) {
 			throw new ToolException(2);
 		}
+		
+		// マスターIDチェック
+		this.checkMasterId(masterId);
 
+		return logInfoList;
+	}
+	
+	/**
+	 * ログファイル名からログ情報を取得	
+	 * @param args
+	 * @return
+	 * @throws Exception
+	 */
+	private List<LogInfo> getCompareLogFileInfo(String[] args) throws Exception {
+		
+		String master_Id = args[1];
+		String fileName[] = new String[2];
+		fileName[0] = args[2];
+		fileName[1] = args[3];
+		
+		// マスターIDチェック
+		this.checkMasterId(master_Id);
+		
+		// マスターIDを分割
+		String id[] = new String[2];
+		if (master_Id.length() == 2) {
+			id[0] = master_Id.substring(0, 1);
+			id[1] = master_Id.substring(1, 2);
+		} else if (master_Id.indexOf("0") == 2) {
+			id[0] = master_Id.substring(0, 1);
+			id[1] = master_Id.substring(1, 3);
+		} else {
+			id[0] = master_Id.substring(0, 2);
+			id[1] = master_Id.substring(2, 3);
+		}
+		
+		// ファイル名より情報を取得
+		List<LogInfo> logInfoList = new ArrayList<LogInfo>();
+		for (int i = 0; i < 2; i++) {
+			
+			LogInfo loginfo = new LogInfo();
+			// 拡張子を除外し_区切りで分割
+			String fileKeys[] = (fileName[i].substring(0, fileName[i].length()-4)).split("_");
+			// ファイル名より『KANRI.LOG_CD』と同等の値を取得
+			loginfo.setLogCd(this.getString(id[i]));
+			// ファイル名より『KANRI.LOG_DATA_FILE』と同等の値を取得
+			loginfo.setLogDataFile(this.getString(fileName[i]));
+			
+			if (id[i].equals("7")) {
+				String tablName = "";
+				// Traceログ ファイル名より『KANRI.LOG_TABLE_NAME』と同等の値を取得
+				for (int n = 2; n < fileKeys.length; n++) {
+					if (!tablName.equals("")) tablName = tablName + "_";
+					tablName = tablName + this.getString(fileKeys[n]);
+				}
+				loginfo.setLogTableName(tablName);
+			} else if (id[i].equals("8")) {
+				// DBIOログ ファイル名より『KANRI.LOG_TABLE_NAME』と同等の値を取得
+				loginfo.setLogTableName(this.getString(fileKeys[3]));
+			} else {
+				// ファイル名より『KANRI.DENBUN_CD』と同等の値を取得
+				loginfo.setDenbunCd(this.getString(fileKeys[3]));
+				if (!id[i].equals("9") && !id[i].equals("10")) {
+					// ファイル名より『KANRI.UP_DOWN_CD』と同等の値を取得
+					loginfo.setCompareUpDw(this.getString(fileKeys[4]));
+				}
+			}
+			logInfoList.add(loginfo);
+		}
+		return logInfoList;
+	}
+	/**
+	 * マスターIDの組み合わせをチェック
+	 * @param masterId
+	 * @throws Exception
+	 */
+	private void checkMasterId(String masterId) throws Exception {
 		// ログ比較の組み合わせチェック
 		boolean err = true;
 		for (String master_Id : LogReaderConstant.MASTER_ID_LIST) {
@@ -139,8 +234,6 @@ public class CompareData extends ToolCommand {
 		// ログ比較の組み合わせが不正な場合
 		if (err)
 			throw new ToolException(3);
-
-		return logInfoList;
 	}
 
 	private String getString(Object obj) {
