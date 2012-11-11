@@ -26,19 +26,28 @@ compare_log() {
 	MODE=$1
 	TODAY=`date +"%Y%m%d%H%M%S"`
 
-	if [ $# -ne 2 ]
-	then
-		echo "Usage : <command> ID-old ID-new"
+
+	if [ $# -eq 2 ];then
+		idold=$1
+		idnew=$2
+
+		java -Dfile.encoding=utf-8 -jar ${JAVA_NORIN_JAR} CompareData $idold $idnew
+		RC=$?
+	elif [ $# -eq 3 ];then
+		masterid=$1
+		idold=$2
+		idnew=$3
+		
+		java -Dfile.encoding=utf-8 -jar ${JAVA_NORIN_JAR} CompareData $masterid $idold $idnew
+		RC=$?
+	else
+		echo "Usage : <command> masterid ID-srcfilename ID-newfilename"
 		return -1
 	fi
 
-	idold=$1
-	idnew=$2
 	#---------------------------------------------
 	# 比較処理実行
 	#---------------------------------------------
-	java -Dfile.encoding=utf-8 -jar ${JAVA_NORIN_JAR} CompareData $idold $idnew
-	RC=$?
 	
 	#---------------------------------------------
 	# 結果コードの処理
