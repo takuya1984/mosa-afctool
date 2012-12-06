@@ -88,8 +88,8 @@ public class WebServerLogCreator {
 			}
 			
 			// ヘッダー情報
-			if (buff.indexOf("<strComUpHeadDt>") > -1) {
-				header = buff.replaceFirst(".*<strComUpHeadDt>", "").replaceAll("/strComUpHeadDt>", "");
+			if (buff.indexOf("<strComUpHeadDt>") > -1 || buff.indexOf("<strbufComDwHeadDt>") > -1) {
+				header = buff.replaceFirst(".*<str.?.?.?Com..HeadDt>","").replaceAll("/str.?.?.?Com..HeadDt>","");
 				clcd = header.substring(0, 5);
 				opecd = header.substring(5, 6);
 				denbuncd = header.substring(6, 13);
