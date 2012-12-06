@@ -36,8 +36,8 @@ public class LogReaderConstant {
 	public static final String CLIENT_DW_ONL_KEY = "受信 Onl ";
 	public static final String CLIENT_UP_CSS_KEY = "送信 Css ";
 	public static final String CLIENT_DW_CSS_KEY = "受信 Css ";
-	public static final String OTX_UP_ONL_KEY = "上りonl業務固有部=";
-	public static final String OTX_DW_ONL_KEY = "下りonl業務固有部=";
+	public static final String OTX_UP_ONL_KEY = "上りオンライン業務固有部=";
+	public static final String OTX_DW_ONL_KEY = "下りオンライン業務固有部=";
 	public static final String OTX_UP_CSS_KEY = "上りCSS業務固有部=";
 	public static final String OTX_DW_CSS_KEY = "下りCSS業務固有部=";
 //	public static final String SOAP_UP_ONL_TAG = "<strSvrUpOnlPrvDt>";
