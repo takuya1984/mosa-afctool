@@ -16,7 +16,20 @@ public class EntryPoint {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+		EntryPoint entry = new EntryPoint();
+		int ret = entry.execute(args);
+		if (ret != RESULT_SUCCESS)
+			System.exit(ret);
+	}
+	
+	/**
+	 * このアプリのエントリーポイント リソース管理と例外ハンドリングを行う
+	 * 
+	 * コマンドライン第一引数の文字列で、実行コマンドクラスをインスタンス化し実行する。
+	 * 
+	 * @param args
+	 */
+	public int execute(String[] args) {
 		int result = RESULT_SUCCESS;
 		ResourceManager rcmng = new ResourceManager();
 		try {
@@ -24,8 +37,9 @@ public class EntryPoint {
 			// 引数チェック
 			if (args.length < 1) {
 				StdOut.write("引数が不正です。第一引数は実行クラス名");
-				System.exit(RESULT_ERROR);
-				return;
+//				System.exit(RESULT_ERROR);
+//				return;
+				return RESULT_ERROR;
 			}
 
 			// コマンド処理の制御
@@ -53,20 +67,22 @@ public class EntryPoint {
 				err = te.getErrcode();
 			else
 				err = RESULT_ERROR;
-			System.exit(err);
-			return;
+//			System.exit(err);
+			return RESULT_ERROR;
 
 		} catch (Exception e) {
 
 			// ハンドリングされない例外を集約してキャッチ
-			e.printStackTrace();
+			if (!e.getMessage().startsWith("ORA-00001")) {
+				e.printStackTrace();
+			}
 			try {
 				rcmng.rollback();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			System.exit(RESULT_EXCEPTION);
-			return;
+//			System.exit(RESULT_EXCEPTION);
+			return RESULT_EXCEPTION;
 
 		} finally {
 
@@ -74,8 +90,11 @@ public class EntryPoint {
 			rcmng.release();
 		}
 
-		if (!args[0].startsWith("RegistLogData"))
-			System.exit(result);
+//		if (!args[0].startsWith("RegistLogData")) {
+//			System.exit(result);
+//			return result;
+//		}
+		return result;
 	}
 
 	private static ToolCommand getCommand(String name) throws Exception {

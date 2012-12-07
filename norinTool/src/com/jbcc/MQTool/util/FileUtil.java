@@ -9,7 +9,7 @@ import java.nio.channels.FileChannel;
  * ファイルコピークラス.
  *
  */
-public class FileCopy {
+public class FileUtil {
 
 	/**
 	 * @param args
@@ -17,7 +17,7 @@ public class FileCopy {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		FileCopy copy = new FileCopy();
+		FileUtil copy = new FileUtil();
 		copy.copy("/Users/kohgami/tmp/mail.txt", "/Users/kohgami/tmp/mail.txt2");
 	}
 

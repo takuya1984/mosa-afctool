@@ -48,11 +48,11 @@ public class RegistLogData extends ToolCommand {
 				throw new ToolException("一行も追加、更新されませんでした");
 			}
 		} catch (java.sql.SQLIntegrityConstraintViolationException e) {
-			if (!e.getMessage().startsWith("ORA-00001")) {
-				throw e;
+			if (e.getMessage().startsWith("ORA-00001")) {
+				System.out.println(
+						"duplicate error. log_cd=[" + datas.get("log_cd") + "], log_data_file=[" + datas.get("log_data_file") + "]");
 			}
-			System.out.println(
-					"duplicate error. log_cd=[" + datas.get("log_cd") + "], log_data_file=[" + datas.get("log_data_file") + "]");
+			throw e;
 		}
 	}
 

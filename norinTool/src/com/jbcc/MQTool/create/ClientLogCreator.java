@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.jbcc.MQTool.controller.EntryPoint;
 import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.util.FileUtil;
 import com.jbcc.MQTool.util.LineReader;
 
 /**
@@ -28,10 +29,23 @@ public class ClientLogCreator {
 				+ File.separator
 				+ PropertyLoader.getDirProp().getProperty("01_client")
 				+ File.separator;
+		String OUPUT_BASE = PropertyLoader.getDirProp().getProperty(
+				"basedir")
+				+ File.separator
+				+ PropertyLoader.getDirProp().getProperty("logbase")
+				+ File.separator
+				+ PropertyLoader.getDirProp().getProperty("01_client")
+				+ File.separator;
 		File target = new File(INPUT_BASE);
 		File[] files = target.listFiles();
 		for (File file : files) {
-			createLog(file);
+			int ret = createLog(file);
+			if (ret == 0) {
+				// ファイル移動
+				FileUtil copy = new FileUtil();
+				copy.copy(INPUT_BASE + "/" + file.getName(), OUPUT_BASE + "/" + file.getName());
+				file.delete();
+			}
 		}
 	}
 
@@ -40,9 +54,9 @@ public class ClientLogCreator {
 	 * @param file 対象ファイル
 	 * @throws IOException
 	 */
-	public void createLog(File file) throws IOException {
+	public int createLog(File file) throws IOException {
 		if (!file.exists()) {
-			return;
+			return 1;
 		}
 		LineReader reader = new LineReader(file);
 
@@ -94,8 +108,10 @@ public class ClientLogCreator {
 		}
 		reader.close();
 
-		if (creatflg)
-			EntryPoint.main(new String[]{
+		if (creatflg) {
+			EntryPoint entry = new EntryPoint();
+			return entry.execute(
+				new String[]{
 					"RegistLogData", 
 					logcd, 
 					"log_output_date=".concat(logOutputDate), 
@@ -106,6 +122,9 @@ public class ClientLogCreator {
 					"client_serial_number=".concat(clientSerialNumber), 
 					"continue_denbun_flg=".concat(continueDenbunFlg), 
 					"transaction_number=".concat(transactionNumber), 
-					"log_data_file=".concat(file.getName())});
+					"log_data_file=".concat(file.getName())
+					});
+		}
+		return 1;
 	}
 }

@@ -9,13 +9,19 @@ import com.jbcc.MQTool.util.FileUtil;
 import com.jbcc.MQTool.util.LineReader;
 
 /**
- * WebServerログ登録クラス.
+ * SQL系ログ登録クラス.
  *
  */
-public class WebServerLogCreator {
+public class SqlLogCreator {
+	private static boolean debug = false;
+	public String mode = null;
+	
 	public static void main(String[] args) {
 		try {
-			new WebServerLogCreator().createLog();
+			if (debug)
+				new SqlLogCreator().createLog("4");
+			else
+				new SqlLogCreator().createLog(args[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -26,20 +32,28 @@ public class WebServerLogCreator {
 	 * @param file 対象ファイル
 	 * @throws IOException
 	 */
-	public void createLog() throws IOException {
+	public void createLog(String pmode) throws Exception {
+		mode = pmode;
+		String key = "";
+		if ("9".equals(pmode)) {
+			key = "09_otx-sql";
+		} else if ("10".equals(pmode)) {
+			key = "10_ap-sql";
+		}
+
 		String INPUT_BASE = PropertyLoader.getDirProp().getProperty(
 				"basedir")
 				+ File.separator
 				+ PropertyLoader.getDirProp().getProperty("logtemp")
 				+ File.separator
-				+ PropertyLoader.getDirProp().getProperty("02_web")
+				+ PropertyLoader.getDirProp().getProperty(key)
 				+ File.separator;
 		String OUPUT_BASE = PropertyLoader.getDirProp().getProperty(
 				"basedir")
 				+ File.separator
 				+ PropertyLoader.getDirProp().getProperty("logbase")
 				+ File.separator
-				+ PropertyLoader.getDirProp().getProperty("02_web")
+				+ PropertyLoader.getDirProp().getProperty(key)
 				+ File.separator;
 		File target = new File(INPUT_BASE);
 		File[] files = target.listFiles();
@@ -51,10 +65,11 @@ public class WebServerLogCreator {
 				copy.copy(INPUT_BASE + "/" + file.getName(), OUPUT_BASE + "/" + file.getName());
 				file.delete();
 			}
+
 		}
 	}
 
-	public int createLog(File file) throws IOException {
+	public int createLog(File file) throws Exception {
 		if (!file.exists()) {
 			return 1;
 		}
@@ -67,7 +82,7 @@ public class WebServerLogCreator {
 		String logOutputDate = "";
 		String date = "";String time = "";String msec = "";
 		String functioncd = "";
-		String logcd = "log_cd=2";
+		String logcd = "log_cd=" + mode;
 		String clcd = "";
 		String opecd = "";
 		String denbuncd = "";
@@ -80,30 +95,19 @@ public class WebServerLogCreator {
 		while ((buff = reader.readLine()) != null) {
 			tokens = buff.split(" {1,}");
 			// 上り下り判定
-			if (file.getName().endsWith("1.dat"))
+			if (buff.indexOf("上り") > -1)
 				upDown = "1";
 			else
 				upDown = "2";
-
-			// ログ時間
-			if (buff.indexOf("TRACE") > -1) {
+			
+			// ヘッダー情報
+			if (buff.indexOf("Execute") > -1 && buff.indexOf("共通ヘッダ部") > -1) {
+				header = buff.replaceFirst(".*共通ヘッダ部=", "");
 				date = tokens[0].replaceAll("/", "");
 				time = tokens[1].split(",")[0].replaceAll(":", "");
 				msec = tokens[1].substring(9, 12);
 				logOutputDate = date + time + msec;
-				continue;
-			}
-			
-			// functionID
-			if (buff.indexOf("<ns1:RequestMessage") > -1) {
-				String[] functionkeies = buff.split("/");
-				functioncd = functionkeies[functionkeies.length - 2].replaceAll("Service", "");
-				continue;
-			}
-			
-			// ヘッダー情報
-			if (buff.indexOf("<strComUpHeadDt>") > -1 || buff.indexOf("<strbufComDwHeadDt>") > -1) {
-				header = buff.replaceFirst(".*<str.?.?.?Com..HeadDt>","").replaceAll("/str.?.?.?Com..HeadDt>","");
+
 				clcd = header.substring(0, 5);
 				opecd = header.substring(5, 6);
 				denbuncd = header.substring(6, 13);
@@ -112,13 +116,18 @@ public class WebServerLogCreator {
 				multiDenbunType = header.substring(18, 19);
 				
 				// 下りの場合
-				if (upDown.indexOf("2") > -1) {
+				if (upDown.equals("2")) {
 					transactionNumber = header.substring(22, 30);
 					denbunKind = header.substring(20, 22);
 				}
 				
 				creatflg = true;
-				break;
+				continue;
+			}
+			// functionID
+			if (buff.indexOf(" Ope=") > -1) {
+				functioncd = buff.replaceAll(".*Ope=", "").split(" {1,}")[0];
+				continue;
 			}
 		}
 		reader.close();
@@ -141,6 +150,7 @@ public class WebServerLogCreator {
 					"multi_denbun_type=".concat(multiDenbunType),
 					"denbun_kind=".concat(denbunKind)
 					});
+			
 		}
 		return 1;
 	}

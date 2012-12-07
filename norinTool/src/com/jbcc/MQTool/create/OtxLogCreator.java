@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.jbcc.MQTool.controller.EntryPoint;
 import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.util.FileUtil;
 import com.jbcc.MQTool.util.LineReader;
 
 /**
@@ -51,16 +52,30 @@ public class OtxLogCreator {
 				+ File.separator
 				+ PropertyLoader.getDirProp().getProperty(key)
 				+ File.separator;
+		String OUPUT_BASE = PropertyLoader.getDirProp().getProperty(
+				"basedir")
+				+ File.separator
+				+ PropertyLoader.getDirProp().getProperty("logbase")
+				+ File.separator
+				+ PropertyLoader.getDirProp().getProperty(key)
+				+ File.separator;
 		File target = new File(INPUT_BASE);
 		File[] files = target.listFiles();
 		for (File file : files) {
-			createLog(file);
+			int ret = createLog(file);
+			if (ret == 0) {
+				// ファイル移動
+				FileUtil copy = new FileUtil();
+				copy.copy(INPUT_BASE + "/" + file.getName(), OUPUT_BASE + "/" + file.getName());
+				file.delete();
+			}
+
 		}
 	}
 
-	public void createLog(File file) throws Exception {
+	public int createLog(File file) throws Exception {
 		if (!file.exists()) {
-			return;
+			return 1;
 		}
 		LineReader reader = new LineReader(file);
 
@@ -121,7 +136,9 @@ public class OtxLogCreator {
 		}
 		reader.close();
 		if (creatflg) {
-			EntryPoint.main(new String[]{
+			EntryPoint entry = new EntryPoint();
+			return entry.execute(
+				new String[]{
 					"RegistLogData", 
 					logcd, 
 					"log_output_date=".concat(logOutputDate), 
@@ -137,6 +154,8 @@ public class OtxLogCreator {
 					"multi_denbun_type=".concat(multiDenbunType),
 					"denbun_kind=".concat(denbunKind)
 					});
+			
 		}
+		return 1;
 	}
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.jbcc.MQTool.controller.EntryPoint;
 import com.jbcc.MQTool.controller.PropertyLoader;
+import com.jbcc.MQTool.util.FileUtil;
 
 /**
  * tracelog登録クラス.
@@ -19,6 +20,10 @@ public class TraceLogCreator {
 		}
 	}
 
+	/**
+	 * ログ登録処理.
+	 * @throws IOException
+	 */
 	public void createLog() throws IOException {
 		String INPUT_BASE = PropertyLoader.getDirProp().getProperty(
 				"basedir")
@@ -27,10 +32,23 @@ public class TraceLogCreator {
 				+ File.separator
 				+ PropertyLoader.getDirProp().getProperty("07_trace")
 				+ File.separator;
+		String OUPUT_BASE = PropertyLoader.getDirProp().getProperty(
+				"basedir")
+				+ File.separator
+				+ PropertyLoader.getDirProp().getProperty("logbase")
+				+ File.separator
+				+ PropertyLoader.getDirProp().getProperty("07_trace")
+				+ File.separator;
 		File target = new File(INPUT_BASE);
 		File[] files = target.listFiles();
 		for (File file : files) {
-			createLog(file);
+			int ret = createLog(file);
+			if (ret == 0) {
+				// ファイル移動
+				FileUtil copy = new FileUtil();
+				copy.copy(INPUT_BASE + "/" + file.getName(), OUPUT_BASE + "/" + file.getName());
+				file.delete();
+			}
 		}
 	}
 
@@ -39,14 +57,14 @@ public class TraceLogCreator {
 	 * @param file 対象ファイル
 	 * @throws IOException
 	 */
-	public void createLog(File file) throws IOException {
+	public int createLog(File file) throws IOException {
 		if (!file.exists()) {
-			return;
+			return 1;
 		}
 		String logcd = "log_cd=7";
 		String[] fileinfos = file.getName().split("_");
 		if (fileinfos.length < 3)
-			return;
+			return 1;
 		
 		// 時間
 		String logOutputDate = fileinfos[0];
@@ -55,7 +73,9 @@ public class TraceLogCreator {
 		// テーブル名
 		String tablename = fileinfos[2].split(".log")[0];
 
-		EntryPoint.main(new String[]{
+		EntryPoint entry = new EntryPoint();
+		return entry.execute(
+			new String[]{
 				"RegistLogData", 
 				logcd, 
 				"log_output_date=".concat(logOutputDate),
