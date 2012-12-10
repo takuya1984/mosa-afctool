@@ -58,8 +58,8 @@ compare_log() {
 			;;
 		1)
 			# Clientログ登録
-			${BASEDIR}/bin/regist_client.sh
-			mv ${CLIENT_LOG_DIR}/* ${CLIENT_LOG_DIR_REGIST}/
+#			${BASEDIR}/bin/regist_client.sh
+#			mv ${CLIENT_LOG_DIR}/* ${CLIENT_LOG_DIR_REGIST}/
 			;;
 		
 		2)
