@@ -87,7 +87,7 @@ public class WebServerLogCreator {
 
 			// ログ時間
 			if (buff.indexOf("TRACE") > -1) {
-				date = tokens[0].replaceAll("/", "");
+				date = tokens[0].replaceAll("/", "").replaceAll("-", "");
 				time = tokens[1].split(",")[0].replaceAll(":", "");
 				msec = tokens[1].substring(9, 12);
 				logOutputDate = date + time + msec;

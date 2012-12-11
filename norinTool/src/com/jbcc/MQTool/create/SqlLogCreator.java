@@ -104,7 +104,14 @@ public class SqlLogCreator {
 			if (buff.indexOf("Execute") > -1 && buff.indexOf("共通ヘッダ部") > -1) {
 				header = buff.replaceFirst(".*共通ヘッダ部=", "");
 				date = tokens[0].replaceAll("/", "");
-				time = tokens[1].split(",")[0].replaceAll(":", "");
+				time = tokens[1];
+				if (time.indexOf(":") > -1)
+					time = time.replaceAll(":", "");
+				if (time.indexOf(".") > -1)
+					time = time.replaceAll("\\.", "");
+				if (time.indexOf("|") > -1)
+					time = time.split("\\|")[0];
+
 				msec = tokens[1].substring(9, 12);
 				logOutputDate = date + time + msec;
 

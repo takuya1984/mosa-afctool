@@ -108,9 +108,15 @@ public class OtxLogCreator {
 			if (buff.indexOf("共通ヘッダ部") > -1) {
 				header = buff.replaceFirst(".*共通ヘッダ部=", "");
 				date = tokens[0].replaceAll("/", "");
-				time = tokens[1].split(",")[0].replaceAll(":", "");
-				msec = tokens[1].substring(9, 12);
-				logOutputDate = date + time + msec;
+				time = tokens[1];
+				if (time.indexOf(":") > -1)
+					time = time.replaceAll(":", "");
+				if (time.indexOf(".") > -1)
+					time = time.replaceAll("\\.", "");
+				if (time.indexOf("|") > -1)
+					time = time.split("\\|")[0];
+				
+				logOutputDate = date + time;
 
 				clcd = header.substring(0, 5);
 				opecd = header.substring(5, 6);

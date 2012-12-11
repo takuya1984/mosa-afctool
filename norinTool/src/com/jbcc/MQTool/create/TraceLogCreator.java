@@ -68,6 +68,9 @@ public class TraceLogCreator {
 		
 		// 時間
 		String logOutputDate = fileinfos[0];
+		if (logOutputDate.indexOf(".") > -1)
+			logOutputDate = logOutputDate.replaceAll("\\.", "");
+
 		// ISPEC
 		String ispec = fileinfos[1];
 		// テーブル名
