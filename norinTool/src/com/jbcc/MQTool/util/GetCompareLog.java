@@ -130,7 +130,10 @@ public class GetCompareLog {
 	private static String catString(String line,int cutNumber) {
 		if (cutNumber == -1) {
 			// SOAP電文閉じタグを削除
-			cutNumber = line.length() - line.indexOf("</");
+			if (line.indexOf("</") > -1)
+				cutNumber = line.length() - line.indexOf("</");
+			else
+				cutNumber = 0;
 		}
 		return line.substring(0, line.length() - cutNumber);
 	}
