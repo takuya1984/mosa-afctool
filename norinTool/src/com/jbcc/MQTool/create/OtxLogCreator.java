@@ -84,7 +84,7 @@ public class OtxLogCreator {
 		String upDown = "";
 		String header = "";
 		String logOutputDate = "";
-		String date = "";String time = "";String msec = "";
+		String date = "";String time = "";
 		String functioncd = "";
 		String logcd = "log_cd=" + mode;
 		String clcd = "";

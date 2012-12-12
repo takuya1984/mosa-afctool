@@ -80,7 +80,7 @@ public class SqlLogCreator {
 		String upDown = "";
 		String header = "";
 		String logOutputDate = "";
-		String date = "";String time = "";String msec = "";
+		String date = "";String time = "";
 		String functioncd = "";
 		String logcd = "log_cd=" + mode;
 		String clcd = "";
@@ -112,8 +112,7 @@ public class SqlLogCreator {
 				if (time.indexOf("|") > -1)
 					time = time.split("\\|")[0];
 
-				msec = tokens[1].substring(9, 12);
-				logOutputDate = date + time + msec;
+				logOutputDate = date + time;
 
 				clcd = header.substring(0, 5);
 				opecd = header.substring(5, 6);
