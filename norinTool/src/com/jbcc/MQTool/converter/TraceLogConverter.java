@@ -89,8 +89,17 @@ public class TraceLogConverter {
 		String tableName = null;
 
 		// ISPEC番号は入力ファイル名から
-		String ispec = file.getName().replaceAll(".*_", "")
-				.replaceAll("\\..*", "");
+
+//		String ispec = file.getName().replaceAll(".*_", "")
+//				.replaceAll("\\..*", "");
+		// ファイル名[TRACE_<ISPEC値>_<オリジナルファイル識別子>_<yyyymmdd>.txt]から以下の情報を取得		
+		String[] filename = file.getName().split("_");
+		String ispec = "";String date = "";
+		if (filename.length > 1)
+			ispec = filename[1];
+		if (filename.length > 3)
+			date = filename[3].replaceAll("\\..*", "");
+		
 		int dataNo = 0, lastDataNo = 0, maxLength = 0;
 		String prev = null;
 
@@ -114,7 +123,11 @@ public class TraceLogConverter {
 			tableName = tokens[tokens.length - 1].replaceAll(":.*", "")
 					.replaceAll("^.*\\.", "");
 
-			writer = new LineWriter(OUTPUT_BASE + time + "_" + ispec + "_"
+			writer = new LineWriter(OUTPUT_BASE + 
+					date.substring(0, 4) + "-" +
+					date.substring(4, 6) + "-" +
+					date.substring(6, 8) + "-" +
+					time + "_" + ispec + "_"
 					+ tableName + ".log");
 
 			// AFTERが出るまでリード

@@ -62,14 +62,14 @@ public class TraceLogCreator {
 			return 1;
 		}
 		String logcd = "log_cd=7";
-		String[] fileinfos = file.getName().split("_");
+		String[] fileinfos = file.getName().split("_", 3);
 		if (fileinfos.length < 3)
 			return 1;
 		
-		// 時間
+		// 日付 + 時間
 		String logOutputDate = fileinfos[0];
 		if (logOutputDate.indexOf(".") > -1)
-			logOutputDate = logOutputDate.replaceAll("\\.", "");
+			logOutputDate = logOutputDate.replaceAll("-", "").replaceAll("\\.", "");
 
 		// ISPEC
 		String ispec = fileinfos[1];
