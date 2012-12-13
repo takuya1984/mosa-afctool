@@ -19,7 +19,7 @@ public class SqlLogCreator {
 	public static void main(String[] args) {
 		try {
 			if (debug)
-				new SqlLogCreator().createLog("4");
+				new SqlLogCreator().createLog("9");
 			else
 				new SqlLogCreator().createLog(args[0]);
 		} catch (Exception e) {

@@ -238,7 +238,9 @@ case "$MODE" in
 	sort -m -k2 ${LOG_DIR_TARGET}/*log* > ${MARGE_FILE} 2>&1
 
 	# UTF-8変換
-#	iconv -f SJIS -t UTF8 ${MARGE_FILE} -o ${MARGE_FILE_UTF8} > /dev/null 2>&1
+	if [[ $MODE -eq 9 ]];then
+		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.FileConverter ${MARGE_FILE}
+	fi
 	cp -p ${MARGE_FILE} ${MARGE_FILE_UTF8}
 
 	# ログ抽出

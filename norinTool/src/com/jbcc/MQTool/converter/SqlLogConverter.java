@@ -8,10 +8,10 @@ import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
 
 /**
- * OTXlog抽出クラス.
+ * SQLlog抽出クラス.
  *
  */
-public class OtxLogConverter {
+public class SqlLogConverter {
 
 	private static boolean debug = false;
 
@@ -31,15 +31,15 @@ public class OtxLogConverter {
 	public static void main(String[] args) {
 		try {
 			if (debug) {
-				OtxLogConverter conv = new OtxLogConverter();
+				SqlLogConverter conv = new SqlLogConverter();
 
 //				File target = new File("/Users/kohgami/tmp/script/tmp/");
 //				for (File file : target.listFiles()) {
 //					conv.readTargets("3", file.getPath());
 //				}
-				conv.readTargets("5", "Cl=00123_Msg=2301010_Tsq=0000.20121024180147.tmp.884");
+				conv.readTargets("9", "Cl=00046_Msg=0202030_Tsq=0032.20121213153659.tmp.1420");
 			} else {
-				new OtxLogConverter().readTargets(args[0], args[1]);
+				new SqlLogConverter().readTargets(args[0], args[1]);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -55,14 +55,10 @@ public class OtxLogConverter {
 	 */
 	public void readTargets(String mode, String filename) throws IOException {
 		String key = "";
-		if ("3".equals(mode)) {
-			key = "03_otx-css";
-		} else if ("4".equals(mode)) {
-			key = "04_otx-onl";
-		} else if ("5".equals(mode)) {
-			key = "05_apinfo";
-		} else if ("6".equals(mode)) {
-			key = "06_aphost";
+		if ("9".equals(mode)) {
+			key = "09_otx-sql";
+		} else if ("10".equals(mode)) {
+			key = "10_ap-sql";
 		}
 
 		INPUT_BASE = PropertyLoader.getDirProp().getProperty(
@@ -96,15 +92,13 @@ public class OtxLogConverter {
 
 		String buff = null;
 		String[] tokens = null;
-		LineWriter writerUp = null;
-		LineWriter writerDw = null;
+		LineWriter writer = null;
 
-		String dateUp = "";String dateDw = "";
-		String timeUp = "";String timeDw = "";
-		String msecUp = "";String msecDw = "";
-		String headerUp = "";String headerDw = "";
-		StringBuffer logBuffUp = new StringBuffer();;
-		StringBuffer logBuffDw = new StringBuffer();;
+		String dateUp = "";String timeUp = "";
+		String headerUp = "";
+		StringBuffer logBuff = null;
+		String filename = "";
+
 		boolean process = false;
 		while ((buff = reader.readLine()) != null) {
 			tokens = buff.split(" {1,}");
@@ -113,68 +107,71 @@ public class OtxLogConverter {
 
 			// 上りヘッダ情報取得
 			if (buff.indexOf("上り共通ヘッダ部") > -1) {
+				logBuff = new StringBuffer();
 				process = true;
 				headerUp = buff.replaceFirst(".*上り共通ヘッダ部=", "");
-				dateUp = tokens[0].replaceAll("/", "-");
-				timeUp = tokens[1].substring(0, 8).replaceAll(":", "");
-				msecUp = tokens[1].substring(9, 12);
-				logBuffUp.append(buff + "\n");
+				dateUp = tokens[0].replaceAll("/", "");
+				timeUp = tokens[1].replaceAll(":", "");
+				if (timeUp.indexOf(".") > -1)
+					timeUp = timeUp.replaceAll("\\.", "");
+				if (timeUp.indexOf("|") > -1)
+					timeUp = timeUp.replaceAll("\\|.*", "");
+				
+				filename = 
+						dateUp.substring(0, 4) + "-" + 
+						dateUp.substring(4, 6) + "-" + 
+						dateUp.substring(6, 8) + "-" + 
+						timeUp + "_" + 
+						headerUp.substring(0, 5) + "_"+ 
+						headerUp.substring(5, 6) + "_"+ 
+						headerUp.substring(6, 13) + "_sql.dat";
+
+				logBuff.append(buff + "\n");
 				continue;
 			}
 			if (process && (
 					buff.indexOf("上りオンライン業務固有部") > -1 ||
 					buff.indexOf("上りCSS業務固有部") > -1)) {
-				logBuffUp.append(buff + "\n");
-				
-				writerUp = new LineWriter(OUTPUT_BASE + 
-						dateUp + "-" + timeUp + msecUp + "_" + 
-						headerUp.substring(0, 5) + "_"+ 
-						headerUp.substring(5, 6) + "_"+ 
-						headerUp.substring(6, 13) + "_"+ 
-						"1.dat");
-				writerUp.writeLine(logBuffUp.toString());
-				writerUp.close();
-				logBuffUp = new StringBuffer();
-				process = false;
+				logBuff.append(buff + "\n");
+				continue;
+			}
+			if (process && (
+					buff.indexOf("=<select") > -1 ||
+					buff.indexOf("=<insert") > -1 ||
+					buff.indexOf("=<update") > -1 ||
+					buff.indexOf("=<delete") > -1
+					)) {
+				logBuff.append(buff + "\n");
 				continue;
 			}
 			// 下りヘッダ情報取得
-			if (buff.indexOf("下り共通ヘッダ部") > -1) {
-				process = true;
-				headerDw = buff.replaceFirst(".*下り共通ヘッダ部=", "");
-				dateDw = tokens[0].replaceAll("/", "-");
-				timeDw = tokens[1].substring(0, 8).replaceAll(":", "");
-				msecDw = tokens[1].substring(9, 12);
-				logBuffDw.append(buff + "\n");
+			if (process && buff.indexOf("下り共通ヘッダ部") > -1) {
+				logBuff.append(buff + "\n");
 				continue;
 			}
 			if (process && buff.indexOf("エラー制御部") > -1) {
-				logBuffDw.append(buff + "\n");
+				logBuff.append(buff + "\n");
 				continue;
 			}
 			if (process && (
 					buff.indexOf("下りオンライン業務固有部") > -1 ||
 					buff.indexOf("下りCSS業務固有部") > -1)) {
 				
-				logBuffDw.append(buff + "\n");
+				logBuff.append(buff + "\n");
 				continue;
 			}
 			// 画面IDの取得
 			if (process && buff.indexOf("Ope=") > -1) {
-				logBuffDw.append(buff + "\n");
-				
-				writerDw = new LineWriter(OUTPUT_BASE + 
-						dateDw + "-" + timeDw + msecDw + "_" + 
-						headerDw.substring(0, 5) + "_"+ 
-						headerDw.substring(5, 6) + "_"+ 
-						headerDw.substring(6, 13) + "_"+ 
-						"2.dat");
-				writerDw.writeLine(logBuffDw.toString());
-				writerDw.close();
-				
-				logBuffDw = new StringBuffer();
+				logBuff.append(buff + "\n");
+			}
+			
+			if (process) {
+				writer = new LineWriter(OUTPUT_BASE + filename); 
+				writer.writeLine(logBuff.toString());
+				writer.close();
 				process = false;
 			}
+
 		}
 		reader.close();
 	}

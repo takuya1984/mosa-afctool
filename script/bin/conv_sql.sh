@@ -50,89 +50,15 @@ for ope in `cat "${OPE_LIST}"`
 do
 
 	# 識別子毎にデータ抽出
-	TMP_OPE_FILE="${TMP_DIR}/${ope}.${TODAY}.tmp.$$"
+	TMP_FILE="${ope}.${TODAY}.tmp.$$"
+	TMP_OPE_FILE="${TMP_DIR}/${TMP_FILE}"
+
 	grep "Execute\|Ope=\|=<select\|=<insert\|=<update\|=<delete" $LOG | grep "`echo "${ope}" | sed -e "s/_/ /g"`" > ${TMP_OPE_FILE}
 
-	UpCom="";DownCom="";OpeId=""
-	TMP_DATA_FILE="";TIME=""
-	upstatus=0;dwstatus=0
-	TMP_DATA_FILE_SQL="${TMP_DIR}/consql_${ope}.tmp.$$"
 	#--------------------------------------------------
 	# 電文抽出処理
 	#--------------------------------------------------
-	while IFS= read LINE
-	do
-
-		# 上り-共通ヘッダ
-		if echo "${LINE}" | grep "上り共通ヘッダ部" > /dev/null 2>&1
-		then
-			upstatus=0;dwstatus=0
-			UpCom=`echo "${LINE}" | sed -e "s/.*上り共通ヘッダ部=//"`
-			upstatus=1
-			TIME=$(echo "${LINE}"| cut -b1-19 | sed -e "s/\//-/g" -e "s/ /-/g" -e "s/://g")
-			DATA_FILE="$(echo "${TIME}")_$(echo "${UpCom}" | cut -b1-5)_$(echo "${UpCom}" | cut -b6-6)_$(echo "${UpCom}" | cut -b7-13)_sql.dat"
-#			TMP_DATA_FILE_SQL="${TMP_DIR}/${DATA_FILE}.$$"
-
-			echo "${LINE}" >> $TMP_DATA_FILE_SQL
- 			continue
-		fi
-
-		# 上り-オンライン
-		# 上り-CSS
-		if echo "${LINE}" | grep "上りオンライン業務固有部\|上りCSS業務固有部" > /dev/null 2>&1
-		then
-#			upstatus=0
-			echo "${LINE}" >> $TMP_DATA_FILE_SQL
-			continue
-		fi
-
-		#--------------------------------------
-		# SQL抽出
-		#--------------------------------------
-		if [ $upstatus -eq 1 ];then
-			echo "${LINE}" | awk '$9 ~ /=<select|=<insert|=<update|=<delete/{print $0}' >> $TMP_DATA_FILE_SQL
-		fi
-
-		# 下り-共通ヘッダ
-		if echo "${LINE}" | grep "下り共通ヘッダ部" > /dev/null 2>&1
-		then
-			DownCom=`echo "${LINE}" | sed -e "s/.*下り共通ヘッダ部=//"`
-			dwstatus=1
-			echo "${LINE}" >> $TMP_DATA_FILE_SQL
-			continue
-		fi
-
-		# 下り-エラー制御
-		if echo "${LINE}" | grep "エラー制御部" > /dev/null 2>&1
-		then
-			echo "${LINE}" >> $TMP_DATA_FILE_SQL
-			continue
-		fi
-
-		# 下り-オンライン
-		# 下り-CSS
-		if echo "${LINE}" | grep "下りオンライン業務固有部\|下りCSS業務固有部" > /dev/null 2>&1
-		then
-#			dwstatus=0
-			echo "${LINE}" >> $TMP_DATA_FILE_SQL
-			continue
-		fi
-
-		if [ $dwstatus -eq 1 ];then
-			# 画面ID_電文ID取得
-			if echo "${LINE}" | tr -d ${LINE_FEED_CD} | grep "Ope=.*終了$" > /dev/null 2>&1
-			then
-				echo "${LINE}" >> $TMP_DATA_FILE_SQL
-			fi
-		fi
-
-		if [[ $upstatus -eq 1 && $dwstatus -eq 1 ]];then
-			cp -p ${TMP_DATA_FILE_SQL} ${LOG_DATA_DIR}/${DATA_FILE}
-			rm -f ${TMP_DATA_FILE_SQL}
-			
-			upstatus=0;dwstatus=0
-		fi
-	done < ${TMP_OPE_FILE}
+	java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.SqlLogConverter "${MODE}" "${TMP_FILE}"
 	
 	# tempファイル削除
 	rm -rf ${TMP_OPE_FILE}

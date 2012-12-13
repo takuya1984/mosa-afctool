@@ -40,7 +40,7 @@ do
 
 	java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.OtxLogConverter "${MODE}" "${TMP_FILE}"
 
-	rm -f ${TMP_OPE_FILE}
+#	rm -f ${TMP_OPE_FILE}
 done
 
 # tempファイル削除
