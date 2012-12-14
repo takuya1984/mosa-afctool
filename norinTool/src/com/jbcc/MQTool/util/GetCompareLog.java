@@ -33,7 +33,7 @@ public class GetCompareLog {
 		List<String> data = new ArrayList<String>();
 		for (String line : lines) {
 			// 指定文字で区切りリストに格納
-			data.addAll(Arrays.asList(line.split(delimited)));
+			data.addAll(Arrays.asList(line.split(delimited, -1)));
 		}
 		return data;
 	}
