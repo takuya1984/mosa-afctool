@@ -79,7 +79,10 @@ case "$MODE" in
 # #		${BIN_DIR}/log_conv_linefeed.sh "${WEB_LOG_UTF8_DIR}/${file}"
 # 		# ログ抽出
 # 		${BASEDIR}/bin/conv_web.sh "${WEB_LOG_DIR_UTF8}/${file}"
-		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.WebServerLogConverter ${file}
+
+		tmpfile=${TMP_DIR}/webserverlog_.${TODAY}.tmp.$$
+		perl -pe 's/&lt;CR&gt;/\n/g','s/\\n/\n/g' ${WEB_LOG_DIR_TARGET}/$file > ${tmpfile}
+		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.WebServerLogConverter ${tmpfile}
 		RC=$?
 		if [ $RC -ne 0 ]
 		then
