@@ -95,6 +95,7 @@ case "$MODE" in
 			mkdir -p ${WEB_LOG_DIR_TARGET}/backup
 		fi
 		mv ${WEB_LOG_DIR_TARGET}/${file} ${WEB_LOG_DIR_TARGET}/backup/$file
+		rm -f $tmpfile
 	done
 
 	;;
