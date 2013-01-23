@@ -80,9 +80,8 @@ case "$MODE" in
 # 		# ログ抽出
 # 		${BASEDIR}/bin/conv_web.sh "${WEB_LOG_DIR_UTF8}/${file}"
 
-		tmpfile=${TMP_DIR}/webserverlog_.${TODAY}.tmp.$$
-		perl -pe 's/&lt;CR&gt;/\n/g','s/\\n/\n/g' ${WEB_LOG_DIR_TARGET}/$file > ${tmpfile}
-		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.WebServerLogConverter ${tmpfile}
+		perl -pi -e 's/&lt;CR&gt;/\n/g','s/\\n/\n/g' ${WEB_LOG_DIR_TARGET}/$file
+		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.WebServerLogConverter ${file}
 		RC=$?
 		if [ $RC -ne 0 ]
 		then
@@ -95,7 +94,6 @@ case "$MODE" in
 			mkdir -p ${WEB_LOG_DIR_TARGET}/backup
 		fi
 		mv ${WEB_LOG_DIR_TARGET}/${file} ${WEB_LOG_DIR_TARGET}/backup/$file
-		rm -f $tmpfile
 	done
 
 	;;
