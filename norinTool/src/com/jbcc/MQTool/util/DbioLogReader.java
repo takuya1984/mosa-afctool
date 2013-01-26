@@ -23,7 +23,7 @@ public class DbioLogReader extends LineReader {
 	private byte[] record = null;
 	private int[] offset = null;
 
-	private final int OFFSET = 53;// 固定オフセット(無視する部分)
+	private final int OFFSET = 64;// 固定オフセット(無視する部分)
 
 	public static void main(String[] args) {
 		try {
@@ -99,18 +99,34 @@ public class DbioLogReader extends LineReader {
 		int size = f.getSize();
 		String s = null;
 		if (f.getType().equals("NUMBER")) {
+			// ログより区切り位置が大きい場合
+			if (record.length <= f.getOffset()) {
+				return null;
+			}
 			s = new String(record, f.getOffset(), 1);
 			if (s.equals("+") || s.equals("-")) {
 				slideOffset(i + 1, 1);
 				size++;
 			}
-			s = new String(record, f.getOffset(), size, SJIS);
+			// テーブル定義該当絡むの指定文字数よりログが短い場合
+			if (record.length < f.getOffset() + size) {
+				s = new String(record, f.getOffset(), record.length - f.getOffset(), SJIS);
+			} else {
+				s = new String(record, f.getOffset(), size, SJIS);
+			}
 			s = s.replaceAll("^\\+0{0,}", "");
 			s = s.replaceAll("^\\-0{0,}", "-");
 			if (s.equals("") || s.equals("-")) {
 				s = "0";
 			}
 		} else {
+			// ログより区切り位置が大きい場合
+			if (record.length <= f.getOffset()) {
+				return null;
+			// テーブル定義該当カラムの指定文字数よりログが短い場合
+			} else if (record.length < f.getOffset() + size) {
+				return new String(record, f.getOffset(), record.length - f.getOffset(), SJIS);
+			}
 			s = new String(record, f.getOffset(), size, SJIS);
 		}
 		return s;
