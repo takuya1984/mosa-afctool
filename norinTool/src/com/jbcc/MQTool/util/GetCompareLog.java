@@ -48,14 +48,52 @@ public class GetCompareLog {
 	 * @return
 	 * @throws IOException
 	 */
-	public static List<String> getFixedLengthDataList(String path, String fileName, String key, int cutNumber) throws IOException {
+	public static List<String> getFixedLengthDataList(String path, String fileName, String key, int cutNumber, List<FieldInfo> fieldInfo) throws IOException {
 		
 		// オンライン上り電文でのみ使用。１ファイルに１行の為
 		String line = getLog(path,fileName,key,cutNumber).get(0);
 		List<String> list = new ArrayList<String>();
-		for (int i = 0; i < line.length(); i++) {
-			// １文字づつ区切りリストに格納
-			list.add(line.substring(i, i+1));
+		
+		if (fieldInfo != null && fieldInfo.size() > 0) {
+			int i = 0;
+			int size = 0;
+			int n = 0;
+			int listSize = fieldInfo.size();
+			while (i < line.length()) {
+				if (listSize > n) {
+					size = fieldInfo.get(n).getSize();
+				} else {
+					size = 1;
+				}
+				String data = null;
+				// 指定文字づつ区切る
+				if (line.length() <= i) {
+					return list;
+				} else if (line.length() < i+size) {
+					size = line.length() - i;
+					data =line.substring(i, i+size);
+				} else {
+					data =line.substring(i, i+size);
+				}
+				
+				// 全角文字の場合、仕様書の桁数の半分になる
+				if (data.getBytes("Windows-31J").length != size) {
+					size = size / 2;
+					data =line.substring(i, i+size);
+				}
+				
+				// 取得した値を格納
+				list.add(data);
+				i=i+size;
+				n++;
+				
+			}
+			
+		} else {
+			for (int i = 0; i < line.length(); i++) {
+				// １文字づつ区切りリストに格納
+				list.add(line.substring(i, i+1));
+			}
 		}
 		return list;
 	}

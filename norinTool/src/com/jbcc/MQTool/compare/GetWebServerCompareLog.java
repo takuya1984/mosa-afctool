@@ -33,7 +33,7 @@ public class GetWebServerCompareLog extends ComparableLog {
 		if (fileKye[2].equals(LogReaderConstant.ONL_LOG) && fileKye[4].equals(LogReaderConstant.UP_LOG)) {
 			// オンライン上り
 			return GetCompareLog.getFixedLengthDataList(
-					LOG_PATH,fileName,LogReaderConstant.SOAP_TAG,LogReaderConstant.SOAP_TAG.length() + 1);
+					LOG_PATH,fileName,LogReaderConstant.SOAP_TAG,LogReaderConstant.SOAP_TAG.length() + 13,super.getFieldInfo());
 
 //		} else if (fileKye[3].equals(LogReaderConstant.ONL_LOG) && fileKye[5].equals(LogReaderConstant.DW_LOG)) {
 //			// オンライン下り

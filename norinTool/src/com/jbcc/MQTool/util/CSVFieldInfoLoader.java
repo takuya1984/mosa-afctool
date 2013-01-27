@@ -77,6 +77,7 @@ public class CSVFieldInfoLoader {
 				if (params.length > KOUMOKU_NAME) {
 					FieldInfo info = new FieldInfo();
 					info.setFieldNameJ(params[KOUMOKU_NAME]);
+					info.setSize(params[KETASU]);
 					list.add(info);
 				}
 			}

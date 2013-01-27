@@ -32,7 +32,7 @@ public class GetWebOTXAndAPCompareLog extends ComparableLog {
 		if (fileKye[2].equals(LogReaderConstant.ONL_LOG) && fileKye[4].equals(LogReaderConstant.UP_LOG)) {
 			// オンライン上り
 			return GetCompareLog.getFixedLengthDataList(
-					LOG_PATH,fileName,LogReaderConstant.OTX_UP_ONL_KEY,0);
+					LOG_PATH,fileName,LogReaderConstant.OTX_UP_ONL_KEY,0,super.getFieldInfo());
 
 		} else if (fileKye[2].equals(LogReaderConstant.ONL_LOG) && fileKye[4].equals(LogReaderConstant.DW_LOG)) {
 			// オンライン下り
