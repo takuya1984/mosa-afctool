@@ -82,7 +82,7 @@ public class FieldInfo {
 	}
 
 	public void setSize(String size) {
-		this.size = Integer.valueOf(size.split(",")[0]);
+		this.size = Integer.valueOf(size.split(",")[0].split("¥¥.")[0]);
 	}
 
 	public String getFieldNameJ() {
