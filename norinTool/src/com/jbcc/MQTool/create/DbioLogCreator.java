@@ -73,6 +73,9 @@ public class DbioLogCreator {
 		String ispec = fileinfos[2];
 		// テーブル名
 		String tablename = fileinfos[3];
+		if (tablename.endsWith(".dat")) {
+			tablename = tablename.substring(0, tablename.length()-4);
+		}
 		// 職員番号
 		String empNo = "";
 		while ((buff = reader.readLine()) != null) {
