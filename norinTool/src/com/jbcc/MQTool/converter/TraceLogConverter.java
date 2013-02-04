@@ -8,6 +8,7 @@ import java.util.List;
 import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
 import com.jbcc.MQTool.util.LineWriter;
+import com.jbcc.MQTool.util.StdOut;
 
 /**
  * Tracelog抽出クラス.
@@ -99,6 +100,10 @@ public class TraceLogConverter {
 			ispec = filename[1];
 		if (filename.length > 3)
 			date = filename[3].replaceAll("\\..*", "");
+		if (filename.length < 3) {
+			StdOut.write("抽出元ログファイル名が規定のログファイル名「TRACE_ISPEC値_ORIGINAL_yyyymmdd.txt」で無い為抽出出来ません。");
+			return;
+		}
 		
 		int dataNo = 0, lastDataNo = 0, maxLength = 0;
 		String prev = null;
@@ -108,7 +113,7 @@ public class TraceLogConverter {
 			tokens = buff.split(" {1,}");
 
 			// 開始キーワードでファイルオープン::select,update,insert,deleteが対象
-			if (tokens.length >= 3 && tokens[1].equals("DB:")) {
+			if (tokens.length >= 4 && tokens[1].equals("DB:")) {
 				if (!KEYWORDS.contains(tokens[3])) {
 					// 対象行ではないので読み込み続行
 					continue;
