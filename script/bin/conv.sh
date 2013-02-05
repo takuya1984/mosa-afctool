@@ -79,8 +79,6 @@ case "$MODE" in
 # #		${BIN_DIR}/log_conv_linefeed.sh "${WEB_LOG_UTF8_DIR}/${file}"
 # 		# ログ抽出
 # 		${BASEDIR}/bin/conv_web.sh "${WEB_LOG_DIR_UTF8}/${file}"
-
-		perl -pi -e 's/&lt;CR&gt;/\n/g','s/\\n/\n/g' ${WEB_LOG_DIR_TARGET}/$file
 		java -Dfile.encoding=utf-8 -cp ${JAVA_NORIN_JAR} com.jbcc.MQTool.converter.WebServerLogConverter ${file}
 		RC=$?
 		if [ $RC -ne 0 ]
@@ -95,6 +93,11 @@ case "$MODE" in
 		fi
 		mv ${WEB_LOG_DIR_TARGET}/${file} ${WEB_LOG_DIR_TARGET}/backup/$file
 	done
+
+    for logfile in `ls ${WEB_LOG_DIR}/*`
+    do
+        perl -pi -e 's/&lt;CR&gt;/¥r/g','s/¥¥r/¥r/g' $logfile
+    done
 
 	;;
 
