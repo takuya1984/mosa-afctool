@@ -2,6 +2,8 @@ package com.jbcc.MQTool.converter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.jbcc.MQTool.controller.PropertyLoader;
 import com.jbcc.MQTool.util.LineReader;
@@ -14,6 +16,8 @@ import com.jbcc.MQTool.util.LineWriter;
 public class WebServerLogConverter {
 
 	private static boolean debug = false;
+	private static final String ESB_LOG_KYE_UP = "<ns1.*EsbRequest";
+	private static final String ESB_LOG_KYE_DW = "<es.*EsbResponse";
 
 	/**
 	 * 入力パス
@@ -89,12 +93,23 @@ public class WebServerLogConverter {
 		String header = "";
 		boolean process = false;
 		StringBuffer logBuff = null;
+
+		Pattern pUp = Pattern.compile(ESB_LOG_KYE_UP);
+		Pattern pDw = Pattern.compile(ESB_LOG_KYE_DW);
+		Matcher mUp = null;
+		Matcher mDw = null;
+
 		while ((buff = reader.readLine()) != null) {
 
+			mUp = pUp.matcher(buff);
+			mDw = pDw.matcher(buff);
+			
 			// 不要電文チェック
 			if (buff.indexOf("<bon:ResponseMessageList") > -1 || 
 				buff.indexOf("<faultcode>") > -1 ||
-				buff.indexOf("</soapenv:Envelope>") > -1) {
+				buff.indexOf("</soapenv:Envelope>") > -1 ||
+				mUp.find() ||
+				mDw.find()) {
 				process = false;
 				continue;
 			}
